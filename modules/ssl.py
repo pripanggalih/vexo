@@ -5,6 +5,8 @@ import os
 from config import NGINX_SITES_AVAILABLE
 from ui.components import (
     console,
+    clear_screen,
+    show_header,
     show_panel,
     show_table,
     show_success,

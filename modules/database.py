@@ -2,6 +2,8 @@
 
 from ui.components import (
     console,
+    clear_screen,
+    show_header,
     show_panel,
     show_table,
     show_success,

@@ -2,6 +2,8 @@
 
 from ui.components import (
     console,
+    clear_screen,
+    show_header,
     show_panel,
     show_table,
     show_success,
@@ -171,16 +173,28 @@ def install_basic_tools():
         return
     
     packages = " ".join(to_install)
-    returncode = run_command_realtime(
+    run_command_realtime(
         f"apt install -y {packages}",
         f"Installing {len(to_install)} packages..."
     )
     
+    # Verify installation results
+    installed = []
+    failed = []
+    for tool in to_install:
+        if is_installed(tool):
+            installed.append(tool)
+        else:
+            failed.append(tool)
+    
+    # Show summary
     console.print()
-    if returncode == 0:
-        show_success(f"Successfully installed {len(to_install)} tools!")
-    else:
-        show_warning("Some tools may have failed to install. Check the output above.")
+    if installed:
+        show_success(f"Installed: {', '.join(installed)}")
+    if failed:
+        show_error(f"Failed: {', '.join(failed)}")
+    if not failed:
+        show_success("All tools installed successfully!")
     
     press_enter_to_continue()
 

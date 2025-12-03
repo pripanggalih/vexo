@@ -6,6 +6,8 @@ import re
 from config import PHP_FPM_PATH, NVM_DIR, NVM_INSTALL_URL
 from ui.components import (
     console,
+    clear_screen,
+    show_header,
     show_panel,
     show_table,
     show_success,
