@@ -1,4 +1,4 @@
-"""System Setup module for vexo-cli."""
+"""System info, update, and basic tools installation."""
 
 from ui.components import (
     console,
@@ -12,7 +12,7 @@ from ui.components import (
     show_info,
     press_enter_to_continue,
 )
-from ui.menu import confirm_action, run_menu_loop
+from ui.menu import confirm_action
 from utils.shell import (
     run_command,
     run_command_with_progress,
@@ -25,7 +25,6 @@ from utils.shell import (
 )
 
 
-# List of basic tools to install
 BASIC_TOOLS = [
     "curl",
     "wget",
@@ -42,30 +41,8 @@ BASIC_TOOLS = [
 ]
 
 
-def show_menu():
-    """Display the System Setup submenu."""
-    options = [
-        ("info", "1. Show System Info"),
-        ("update", "2. Update & Upgrade System"),
-        ("tools", "3. Install Basic Tools"),
-        ("back", "← Back to Main Menu"),
-    ]
-    
-    handlers = {
-        "info": show_system_info,
-        "update": update_system,
-        "tools": install_basic_tools,
-    }
-    
-    run_menu_loop("System Setup & Update", options, handlers)
-
-
 def update_system():
-    """
-    Update package lists and upgrade all packages.
-    
-    Runs: apt update && apt upgrade -y
-    """
+    """Update package lists and upgrade all packages."""
     clear_screen()
     show_header()
     show_panel("System Update & Upgrade", title="System Setup", style="cyan")
@@ -117,11 +94,7 @@ def update_system():
 
 
 def install_basic_tools():
-    """
-    Install essential tools for server management.
-    
-    Checks each tool before installing (idempotent).
-    """
+    """Install essential tools for server management."""
     clear_screen()
     show_header()
     show_panel("Install Basic Tools", title="System Setup", style="cyan")
@@ -200,9 +173,7 @@ def install_basic_tools():
 
 
 def show_system_info():
-    """
-    Display system information including OS, hostname, and IP.
-    """
+    """Display system information including OS, hostname, and IP."""
     clear_screen()
     show_header()
     show_panel("System Information", title="System Setup", style="cyan")
