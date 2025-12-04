@@ -235,6 +235,22 @@ uninstall() {
     echo -e "${GREEN}vexo uninstalled successfully${NC}"
 }
 
+# Clean uninstall function
+clean_uninstall() {
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    
+    if [ -f "$SCRIPT_DIR/scripts/clean-uninstall.sh" ]; then
+        bash "$SCRIPT_DIR/scripts/clean-uninstall.sh"
+    elif [ -f "/opt/vexo/scripts/clean-uninstall.sh" ]; then
+        bash "/opt/vexo/scripts/clean-uninstall.sh"
+    else
+        print_error "Clean uninstall script not found."
+        print_info "Download and run manually:"
+        echo "  curl -sSL https://raw.githubusercontent.com/pripanggalih/vexo/main/scripts/clean-uninstall.sh | sudo bash"
+        exit 1
+    fi
+}
+
 # Update function
 update() {
     print_banner
@@ -275,6 +291,10 @@ case "${1:-}" in
         check_root
         uninstall
         ;;
+    --clean-uninstall)
+        check_root
+        clean_uninstall
+        ;;
     --update)
         check_root
         update
@@ -285,6 +305,7 @@ case "${1:-}" in
         echo "  sudo ./install.sh              Install vexo"
         echo "  sudo ./install.sh --update     Update to latest version"
         echo "  sudo ./install.sh --uninstall  Uninstall vexo"
+        echo "  sudo ./install.sh --clean-uninstall  Remove vexo + ALL packages/data"
         echo "  ./install.sh --help            Show this help"
         ;;
     *)

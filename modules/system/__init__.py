@@ -10,6 +10,7 @@ from modules.system.swap import show_swap_menu
 from modules.system.security import show_security_menu
 from modules.system.cleanup import system_cleanup
 from modules.system.power import show_power_menu
+from modules.system.clean_uninstall import show_clean_uninstall
 
 
 def show_menu():
@@ -24,6 +25,7 @@ def show_menu():
         ("security", "7. Security Hardening"),
         ("cleanup", "8. System Cleanup"),
         ("power", "9. Reboot / Shutdown"),
+        ("clean_uninstall", "⚠️ Clean Uninstall (remove everything)"),
         ("back", "← Back to Main Menu"),
     ]
     
@@ -37,6 +39,7 @@ def show_menu():
         "security": show_security_menu,
         "cleanup": system_cleanup,
         "power": show_power_menu,
+        "clean_uninstall": show_clean_uninstall,
     }
     
     run_menu_loop("System Setup & Update", options, handlers)
