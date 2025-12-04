@@ -7,11 +7,11 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import confirm_action
 from utils.shell import (
     run_command,
@@ -67,7 +67,7 @@ def update_system():
     )
     
     if result.returncode != 0:
-        show_error("Failed to update package lists.")
+        handle_error("E1002", "Failed to update package lists")
         if result.stderr:
             console.print(f"[dim]{result.stderr}[/dim]")
         press_enter_to_continue()
@@ -88,7 +88,7 @@ def update_system():
     if returncode == 0:
         show_success("System upgraded successfully!")
     else:
-        show_error("Some packages may have failed to upgrade.")
+        handle_error("E1006", "Some packages may have failed to upgrade")
     
     press_enter_to_continue()
 
@@ -141,7 +141,7 @@ def install_basic_tools():
     
     result = run_command_with_progress("apt update", "Updating package lists...")
     if result.returncode != 0:
-        show_error("Failed to update package lists.")
+        handle_error("E1002", "Failed to update package lists")
         press_enter_to_continue()
         return
     
@@ -165,7 +165,7 @@ def install_basic_tools():
     if installed:
         show_success(f"Installed: {', '.join(installed)}")
     if failed:
-        show_error(f"Failed: {', '.join(failed)}")
+        handle_error("E1006", f"Failed to install: {chr(39)}, {chr(39)}.join(failed)}")
     if not failed:
         show_success("All tools installed successfully!")
     

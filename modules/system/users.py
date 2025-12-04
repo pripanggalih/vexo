@@ -2,6 +2,7 @@
 
 import os
 import re
+from utils.error_handler import handle_error
 from ui.components import (
     console,
     clear_screen,
@@ -9,7 +10,7 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
+    
     show_warning,
     show_info,
     press_enter_to_continue,
@@ -56,7 +57,7 @@ def list_users():
     
     result = run_command("awk -F: '$3 >= 1000 && $3 < 65534 {print $1\":\"$3\":\"$7}' /etc/passwd", check=False, silent=True)
     if result.returncode != 0:
-        show_error("Failed to list users.")
+        handle_error("E1005", "Failed to list users.")
         press_enter_to_continue()
         return
     
@@ -105,8 +106,8 @@ def add_user():
     
     # Validate username format using centralized validation
     if not validate_username(username):
-        show_error("Invalid username. Use lowercase letters, numbers, underscore, dash.")
-        show_error("Must start with a letter, max 32 characters.")
+        handle_error("E1005", "Invalid username. Use lowercase letters, numbers, underscore, dash.")
+        handle_error("E1005", "Must start with a letter, max 32 characters.")
         press_enter_to_continue()
         return
     
@@ -115,7 +116,7 @@ def add_user():
     
     result = run_command(f"id {safe_user}", check=False, silent=True)
     if result.returncode == 0:
-        show_error(f"User '{username}' already exists.")
+        handle_error("E1005", f"User '{username}' already exists.")
         press_enter_to_continue()
         return
     
@@ -131,7 +132,7 @@ def add_user():
     cmd = f"useradd -m -s /bin/bash {safe_user}"
     result = run_command(cmd, check=False, silent=True)
     if result.returncode != 0:
-        show_error(f"Failed to create user: {result.stderr}")
+        handle_error("E1005", f"Failed to create user: {result.stderr}")
         press_enter_to_continue()
         return
     
@@ -164,13 +165,13 @@ def add_ssh_key():
     
     result = run_command("awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd", check=False, silent=True)
     if result.returncode != 0:
-        show_error("Failed to list users.")
+        handle_error("E1005", "Failed to list users.")
         press_enter_to_continue()
         return
     
     users = [u.strip() for u in result.stdout.strip().split('\n') if u.strip()]
     if not users:
-        show_error("No regular users found.")
+        handle_error("E1005", "No regular users found.")
         press_enter_to_continue()
         return
     
@@ -193,7 +194,7 @@ def _add_ssh_key_for_user(username):
         return
     
     if not (ssh_key.startswith("ssh-rsa ") or ssh_key.startswith("ssh-ed25519 ")):
-        show_error("Invalid SSH key format. Must start with 'ssh-rsa' or 'ssh-ed25519'.")
+        handle_error("E1005", "Invalid SSH key format. Must start with 'ssh-rsa' or 'ssh-ed25519'.")
         return
     
     try:
@@ -217,7 +218,7 @@ def _add_ssh_key_for_user(username):
         with open(auth_keys, "a") as f:
             f.write(ssh_key.strip() + "\n")
     except (PermissionError, IOError) as e:
-        show_error(f"Failed to write SSH key: {e}")
+        handle_error("E1005", f"Failed to write SSH key: {e}")
         return
     
     run_command(f"chmod 600 {safe_auth_keys}", check=False, silent=True)
@@ -239,7 +240,7 @@ def delete_user():
     
     result = run_command("awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd", check=False, silent=True)
     if result.returncode != 0:
-        show_error("Failed to list users.")
+        handle_error("E1005", "Failed to list users.")
         press_enter_to_continue()
         return
     
@@ -278,6 +279,6 @@ def delete_user():
     if result.returncode == 0:
         show_success(f"User '{username}' deleted.")
     else:
-        show_error(f"Failed to delete user: {result.stderr}")
+        handle_error("E1005", f"Failed to delete user: {result.stderr}")
     
     press_enter_to_continue()

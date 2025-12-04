@@ -1,13 +1,14 @@
 """Hostname and timezone management."""
 
 import re
+from utils.error_handler import handle_error
 from ui.components import (
     console,
     clear_screen,
     show_header,
     show_panel,
     show_success,
-    show_error,
+    
     show_warning,
     press_enter_to_continue,
 )
@@ -58,8 +59,8 @@ def change_hostname():
         return
     
     if not re.match(r'^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$', new_hostname):
-        show_error("Invalid hostname. Use alphanumeric and hyphens only.")
-        show_error("Must start and end with alphanumeric character.")
+        handle_error("E1005", "Invalid hostname. Use alphanumeric and hyphens only.")
+        handle_error("E1005", "Must start and end with alphanumeric character.")
         press_enter_to_continue()
         return
     
@@ -76,7 +77,7 @@ def change_hostname():
     
     result = run_command(f"hostnamectl set-hostname {new_hostname}", check=False, silent=True)
     if result.returncode != 0:
-        show_error("Failed to set hostname.")
+        handle_error("E1005", "Failed to set hostname.")
         press_enter_to_continue()
         return
     
@@ -108,7 +109,7 @@ def set_timezone():
     if choice == "Other (search)...":
         result = run_command("timedatectl list-timezones", check=False, silent=True)
         if result.returncode != 0:
-            show_error("Failed to list timezones.")
+            handle_error("E1005", "Failed to list timezones.")
             press_enter_to_continue()
             return
         
@@ -136,6 +137,6 @@ def set_timezone():
     if result.returncode == 0:
         show_success(f"Timezone set to {timezone}")
     else:
-        show_error("Failed to set timezone.")
+        handle_error("E1005", "Failed to set timezone.")
     
     press_enter_to_continue()

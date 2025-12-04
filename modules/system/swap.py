@@ -1,5 +1,6 @@
 """Swap management - status, create, remove."""
 
+from utils.error_handler import handle_error
 from ui.components import (
     console,
     clear_screen,
@@ -7,7 +8,7 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
+    
     show_warning,
     show_info,
     press_enter_to_continue,
@@ -145,14 +146,14 @@ def create_swap():
         try:
             swap_size = int(size_input)
         except ValueError:
-            show_error("Invalid size. Enter a number.")
+            handle_error("E1005", "Invalid size. Enter a number.")
             press_enter_to_continue()
             return
     else:
         swap_size = default_size
     
     if swap_size < 1 or swap_size > 64:
-        show_error("Swap size must be between 1 and 64 GB.")
+        handle_error("E1005", "Swap size must be between 1 and 64 GB.")
         press_enter_to_continue()
         return
     

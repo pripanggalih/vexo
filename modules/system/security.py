@@ -1,12 +1,13 @@
 """Security hardening - SSH settings, unattended upgrades."""
 
+from utils.error_handler import handle_error
 from ui.components import (
     console,
     clear_screen,
     show_header,
     show_panel,
     show_success,
-    show_error,
+    
     show_warning,
     show_info,
     press_enter_to_continue,
@@ -100,7 +101,7 @@ def toggle_root_login():
             with open(sshd_config, "a") as f:
                 f.write(f"\nPermitRootLogin {new_value}\n")
         except (PermissionError, IOError) as e:
-            show_error(f"Failed to update sshd_config: {e}")
+            handle_error("E1005", f"Failed to update sshd_config: {e}")
             press_enter_to_continue()
             return
     
@@ -134,13 +135,13 @@ def change_ssh_port():
         if port < 1024 or port > 65535:
             raise ValueError()
     except ValueError:
-        show_error("Invalid port. Must be between 1024 and 65535.")
+        handle_error("E1005", "Invalid port. Must be between 1024 and 65535.")
         press_enter_to_continue()
         return
     
     result = run_command(f"ss -tuln | grep -q ':{port} '", check=False, silent=True)
     if result.returncode == 0:
-        show_error(f"Port {port} is already in use.")
+        handle_error("E1005", f"Port {port} is already in use.")
         press_enter_to_continue()
         return
     
@@ -164,7 +165,7 @@ def change_ssh_port():
             with open(sshd_config, "a") as f:
                 f.write(f"\nPort {port}\n")
         except (PermissionError, IOError) as e:
-            show_error(f"Failed to update sshd_config: {e}")
+            handle_error("E1005", f"Failed to update sshd_config: {e}")
             press_enter_to_continue()
             return
     
@@ -216,7 +217,7 @@ def setup_unattended_upgrades():
             "Installing..."
         )
         if result.returncode != 0:
-            show_error("Failed to install.")
+            handle_error("E1005", "Failed to install.")
             press_enter_to_continue()
             return
     
@@ -241,7 +242,7 @@ Unattended-Upgrade::Automatic-Reboot-Time "{reboot_time}";
         with open("/etc/apt/apt.conf.d/50unattended-upgrades", "w") as f:
             f.write(config)
     except (PermissionError, IOError) as e:
-        show_error(f"Failed to write config: {e}")
+        handle_error("E1005", f"Failed to write config: {e}")
         press_enter_to_continue()
         return
     
@@ -254,7 +255,7 @@ APT::Periodic::AutocleanInterval "7";
         with open("/etc/apt/apt.conf.d/20auto-upgrades", "w") as f:
             f.write(periodic)
     except (PermissionError, IOError) as e:
-        show_error(f"Failed to write config: {e}")
+        handle_error("E1005", f"Failed to write config: {e}")
         press_enter_to_continue()
         return
     

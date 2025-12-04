@@ -1,13 +1,14 @@
 """Power management - reboot, shutdown, schedule."""
 
 import time
+from utils.error_handler import handle_error
 from ui.components import (
     console,
     clear_screen,
     show_header,
     show_panel,
     show_success,
-    show_error,
+    
     show_warning,
     show_info,
     press_enter_to_continue,
@@ -132,7 +133,7 @@ def schedule_reboot():
         if mins < 1:
             raise ValueError()
     except ValueError:
-        show_error("Invalid number of minutes.")
+        handle_error("E1005", "Invalid number of minutes.")
         press_enter_to_continue()
         return
     
