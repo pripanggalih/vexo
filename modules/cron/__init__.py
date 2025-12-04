@@ -49,6 +49,7 @@ def job_management_menu():
                 ("clone", "3. Clone Job"),
                 ("remove", "4. Remove Job"),
                 ("list", "5. List Jobs"),
+                ("builder", "6. Schedule Builder"),
                 ("back", "← Back"),
             ],
         )
@@ -63,8 +64,24 @@ def job_management_menu():
             remove_cron_job_interactive()
         elif choice == "list":
             list_cron_jobs()
+        elif choice == "builder":
+            _show_builder_standalone()
         elif choice == "back" or choice is None:
             break
+
+
+def _show_builder_standalone():
+    """Show schedule builder as standalone tool."""
+    from modules.cron.builder import schedule_builder
+    from ui.components import console, press_enter_to_continue
+    
+    result = schedule_builder()
+    if result:
+        console.print()
+        console.print(f"[bold green]Generated schedule:[/bold green] {result}")
+        console.print()
+        console.print("[dim]You can use this schedule when adding a new job.[/dim]")
+        press_enter_to_continue()
 
 
 def backup_restore_menu():
