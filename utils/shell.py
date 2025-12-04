@@ -3,7 +3,8 @@
 import subprocess
 import os
 
-from ui.components import console, show_error
+from ui.components import console
+from utils.error_handler import handle_error
 
 
 def run_command(command, capture_output=True, check=True, silent=False):
@@ -45,14 +46,12 @@ def run_command(command, capture_output=True, check=True, silent=False):
     
     except subprocess.CalledProcessError as e:
         if not silent:
-            show_error(f"Command failed: {command}")
-            if e.stderr:
-                console.print(f"[dim]{e.stderr.strip()}[/dim]")
+            handle_error("E1006", f"Command failed: {command}", details=e.stderr.strip() if e.stderr else None)
         raise
     
     except FileNotFoundError:
         if not silent:
-            show_error(f"Command not found: {command}")
+            handle_error("E1004", f"Command not found: {command}")
         raise
 
 
@@ -199,7 +198,7 @@ def service_control(service, action):
     """
     valid_actions = ["start", "stop", "restart", "reload", "enable", "disable"]
     if action not in valid_actions:
-        show_error(f"Invalid action: {action}. Must be one of: {valid_actions}")
+        handle_error("E1005", f"Invalid action: {action}", details=f"Must be one of: {valid_actions}")
         return False
     
     try:
@@ -227,8 +226,7 @@ def require_root():
         PermissionError: If not running as root
     """
     if not check_root():
-        show_error("This operation requires root privileges.")
-        console.print("[dim]Run with: sudo python3 main.py[/dim]")
+        handle_error("E1001", "This operation requires root privileges", suggestions=["Run with: sudo vexo"])
         raise PermissionError("Root privileges required")
 
 
