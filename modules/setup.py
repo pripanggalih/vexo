@@ -15,7 +15,7 @@ from ui.components import (
     show_info,
     press_enter_to_continue,
 )
-from utils.shell import run_command, run_apt_with_progress, is_installed
+from utils.shell import run_command, run_apt_with_progress, run_apt_update_with_progress, is_installed
 from utils.error_handler import handle_error
 
 
@@ -256,7 +256,7 @@ def install_component(component, step_current=1, step_total=1):
         )
         if result.returncode != 0:
             show_warning(f"Failed to add PPA for {name}")
-        run_command("apt update", check=False, silent=True)
+        run_apt_update_with_progress()
     
     # Install packages with progress bar
     if "packages" in component:
@@ -354,9 +354,8 @@ def run_setup(selected_keys):
     console.print("[bold]Installing selected components...[/bold]")
     console.print()
     
-    # Update apt first
-    show_info("Updating package lists...")
-    run_command("apt update", check=False, silent=True)
+    # Update apt first with progress
+    run_apt_update_with_progress()
     
     total = len(selected_keys)
     success_count = 0
