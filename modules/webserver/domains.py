@@ -11,10 +11,11 @@ from config import (
 )
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list
 from utils.shell import (
+from utils.error_handler import handle_error
     run_command, is_installed, service_control, require_root,
 )
 from modules.webserver.utils import (
@@ -176,7 +177,7 @@ def add_domain_interactive():
     show_panel("Add New Domain", title="Domain & Nginx", style="cyan")
     
     if not is_installed("nginx"):
-        show_error("Nginx is not installed. Please install it first.")
+        handle_error("E2002", "Nginx is not installed. Please install it first.")
         press_enter_to_continue()
         return
     
@@ -193,13 +194,13 @@ def add_domain_interactive():
     
     domain = domain.strip().lower()
     if not is_valid_domain(domain):
-        show_error(f"Invalid domain name: {domain}")
+        handle_error("E2002", f"Invalid domain name: {domain}")
         press_enter_to_continue()
         return
     
     config_path = os.path.join(NGINX_SITES_AVAILABLE, domain)
     if os.path.exists(config_path):
-        show_error(f"Domain {domain} already exists.")
+        handle_error("E2002", f"Domain {domain} already exists.")
         press_enter_to_continue()
         return
     
@@ -234,7 +235,7 @@ def add_domain_interactive():
         try:
             proxy_port = int(proxy_port)
         except ValueError:
-            show_error("Invalid port number.")
+            handle_error("E2002", "Invalid port number.")
             press_enter_to_continue()
             return
     else:
@@ -342,9 +343,9 @@ def add_domain_interactive():
             if root_path:
                 console.print(f"[dim]Root: {root_path}[/dim]")
         else:
-            show_error(f"Failed to enable domain {domain}")
+            handle_error("E2002", f"Failed to enable domain {domain}")
     except Exception as e:
-        show_error(f"Error: {e}")
+        handle_error("E2002", f"Error: {e}")
     
     press_enter_to_continue()
 
@@ -381,7 +382,7 @@ def add_domain(domain, root_path):
         return enable_domain(domain)
     
     except Exception as e:
-        show_error(f"Error adding domain: {e}")
+        handle_error("E2002", f"Error adding domain: {e}")
         return False
 
 
@@ -400,7 +401,7 @@ def enable_domain(domain):
         target = os.path.join(NGINX_SITES_ENABLED, domain)
         
         if not os.path.exists(source):
-            show_error(f"Config not found: {source}")
+            handle_error("E2002", f"Config not found: {source}")
             return False
         
         if os.path.islink(target):
@@ -410,7 +411,7 @@ def enable_domain(domain):
         
         result = run_command("nginx -t", check=False, silent=True)
         if result.returncode != 0:
-            show_error("Nginx configuration test failed!")
+            handle_error("E2002", "Nginx configuration test failed!")
             console.print(f"[dim]{result.stderr}[/dim]")
             os.remove(target)
             return False
@@ -419,7 +420,7 @@ def enable_domain(domain):
         return reload_nginx(silent=True)
     
     except Exception as e:
-        show_error(f"Error enabling domain: {e}")
+        handle_error("E2002", f"Error enabling domain: {e}")
         return False
 
 
@@ -443,7 +444,7 @@ def disable_domain(domain):
         return reload_nginx(silent=True)
     
     except Exception as e:
-        show_error(f"Error disabling domain: {e}")
+        handle_error("E2002", f"Error disabling domain: {e}")
         return False
 
 
@@ -524,7 +525,7 @@ def remove_domain_interactive():
     if success:
         show_success(f"Domain {domain} removed successfully!")
     else:
-        show_error(f"Failed to remove domain {domain}")
+        handle_error("E2002", f"Failed to remove domain {domain}")
     
     press_enter_to_continue()
 
@@ -552,5 +553,5 @@ def remove_domain(domain):
         return reload_nginx(silent=True)
     
     except Exception as e:
-        show_error(f"Error removing domain: {e}")
+        handle_error("E2002", f"Error removing domain: {e}")
         return False

@@ -7,10 +7,11 @@ from datetime import datetime
 from config import NGINX_SITES_AVAILABLE
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, select_from_list, run_menu_loop
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.webserver.utils import get_configured_domains, NGINX_BACKUP_DIR
 
 
@@ -56,7 +57,7 @@ def backup_domain():
     
     config_path = os.path.join(NGINX_SITES_AVAILABLE, domain)
     if not os.path.exists(config_path):
-        show_error("Config file not found.")
+        handle_error("E2002", "Config file not found.")
         press_enter_to_continue()
         return
     
@@ -154,7 +155,7 @@ def restore_domain():
     # Test nginx config
     result = run_command("nginx -t", check=False, silent=True)
     if result.returncode != 0:
-        show_error("Nginx config test failed after restore!")
+        handle_error("E2002", "Nginx config test failed after restore!")
         console.print(f"[dim]{result.stderr}[/dim]")
         press_enter_to_continue()
         return

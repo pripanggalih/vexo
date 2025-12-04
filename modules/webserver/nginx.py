@@ -2,10 +2,11 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action
 from utils.shell import (
+from utils.error_handler import handle_error
     run_command, run_command_with_progress, is_installed,
     is_service_running, service_control, require_root,
 )
@@ -40,13 +41,13 @@ def install_nginx():
     
     result = run_command_with_progress("apt update", "Updating package lists...")
     if result.returncode != 0:
-        show_error("Failed to update package lists.")
+        handle_error("E2002", "Failed to update package lists.")
         press_enter_to_continue()
         return
     
     result = run_command_with_progress("apt install -y nginx", "Installing Nginx...")
     if result.returncode != 0:
-        show_error("Failed to install Nginx.")
+        handle_error("E2002", "Failed to install Nginx.")
         press_enter_to_continue()
         return
     
@@ -101,7 +102,7 @@ def show_nginx_status():
     
     if not config_ok:
         console.print()
-        show_error("Configuration test failed:")
+        handle_error("E2002", "Configuration test failed:")
         console.print(f"[dim]{result.stderr}[/dim]")
     
     press_enter_to_continue()
@@ -119,7 +120,7 @@ def test_and_reload():
     result = run_command("nginx -t 2>&1", check=False, silent=True)
     
     if result.returncode != 0:
-        show_error("Configuration test FAILED!")
+        handle_error("E2002", "Configuration test FAILED!")
         console.print()
         console.print(f"[red]{result.stderr}[/red]")
         press_enter_to_continue()
@@ -137,7 +138,7 @@ def test_and_reload():
     if success:
         show_success("Nginx reloaded successfully!")
     else:
-        show_error("Failed to reload Nginx.")
+        handle_error("E2002", "Failed to reload Nginx.")
     
     press_enter_to_continue()
     return success
@@ -149,7 +150,7 @@ def reload_nginx(silent=False):
         result = run_command("nginx -t", check=False, silent=True)
         if result.returncode != 0:
             if not silent:
-                show_error("Nginx configuration test failed!")
+                handle_error("E2002", "Nginx configuration test failed!")
                 console.print(f"[dim]{result.stderr}[/dim]")
             return False
         
@@ -159,12 +160,12 @@ def reload_nginx(silent=False):
             if success:
                 show_success("Nginx reloaded successfully!")
             else:
-                show_error("Failed to reload Nginx.")
+                handle_error("E2002", "Failed to reload Nginx.")
             press_enter_to_continue()
         
         return success
     except Exception as e:
         if not silent:
-            show_error(f"Error reloading Nginx: {e}")
+            handle_error("E2002", f"Error reloading Nginx: {e}")
             press_enter_to_continue()
         return False

@@ -4,11 +4,11 @@ import os
 from collections import Counter
 
 from ui.components import (
-    console, clear_screen, show_header, show_panel, show_table,
-    show_error, show_info, press_enter_to_continue,
+    console, clear_screen, show_header, show_panel, show_table, show_info, press_enter_to_continue,
 )
 from ui.menu import select_from_list
 from utils.shell import run_command
+from utils.error_handler import handle_error
 from modules.webserver.utils import get_configured_domains
 
 
@@ -43,7 +43,7 @@ def show_traffic_stats():
             log_path = os.path.join(NGINX_LOG_DIR, "access.log")
     
     if not os.path.exists(log_path):
-        show_error("Log file not found.")
+        handle_error("E2002", "Log file not found.")
         press_enter_to_continue()
         return
     

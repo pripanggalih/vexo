@@ -5,10 +5,11 @@ import os
 from config import NGINX_SITES_AVAILABLE, NGINX_SITES_ENABLED
 from ui.components import (
     console, clear_screen, show_header, show_panel,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, run_menu_loop
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.webserver.utils import get_configured_domains, is_domain_enabled
 from modules.webserver.nginx import reload_nginx
 
@@ -103,7 +104,7 @@ def bulk_enable():
         reload_nginx(silent=True)
         show_success(f"Enabled {success_count} domain(s)!")
     else:
-        show_error("Nginx config test failed!")
+        handle_error("E2002", "Nginx config test failed!")
         console.print(f"[dim]{result.stderr}[/dim]")
     
     press_enter_to_continue()

@@ -5,10 +5,11 @@ import os
 from config import NGINX_SITES_AVAILABLE
 from ui.components import (
     console, clear_screen, show_header, show_panel,
-    show_success, show_error, show_info, press_enter_to_continue,
+    show_success, show_info, press_enter_to_continue,
 )
 from ui.menu import show_submenu, confirm_action, text_input, select_from_list
 from utils.shell import run_command
+from utils.error_handler import handle_error
 from modules.webserver.utils import (
     SITE_TYPES, get_site_config, get_configured_domains, get_domain_root,
 )
@@ -32,14 +33,14 @@ def _save_site_config(domain, config):
         
         result = run_command("nginx -t", check=False, silent=True)
         if result.returncode != 0:
-            show_error("Nginx config test failed!")
+            handle_error("E2002", "Nginx config test failed!")
             console.print(f"[dim]{result.stderr}[/dim]")
             return False
         
         reload_nginx(silent=True)
         return True
     except Exception as e:
-        show_error(f"Error saving config: {e}")
+        handle_error("E2002", f"Error saving config: {e}")
         return False
 
 
@@ -160,7 +161,7 @@ def configure_php_version(domain, config):
     installed = get_installed_php_versions()
     
     if not installed:
-        show_error("No PHP versions installed.")
+        handle_error("E2002", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -334,7 +335,7 @@ def view_site_config(domain):
     config_path = os.path.join(NGINX_SITES_AVAILABLE, domain)
     
     if not os.path.exists(config_path):
-        show_error("Config file not found.")
+        handle_error("E2002", "Config file not found.")
         press_enter_to_continue()
         return
     
@@ -353,7 +354,7 @@ def edit_raw_config(domain):
     config_path = os.path.join(NGINX_SITES_AVAILABLE, domain)
     
     if not os.path.exists(config_path):
-        show_error("Config file not found.")
+        handle_error("E2002", "Config file not found.")
         press_enter_to_continue()
         return
     
@@ -366,7 +367,7 @@ def edit_raw_config(domain):
         reload_nginx(silent=True)
         show_success("Config saved and Nginx reloaded!")
     else:
-        show_error("Nginx config test failed!")
+        handle_error("E2002", "Nginx config test failed!")
         console.print(f"[dim]{result.stderr}[/dim]")
     
     press_enter_to_continue()

@@ -3,11 +3,11 @@
 import os
 
 from ui.components import (
-    console, clear_screen, show_header, show_panel,
-    show_error, show_info, press_enter_to_continue,
+    console, clear_screen, show_header, show_panel, show_info, press_enter_to_continue,
 )
 from ui.menu import text_input, select_from_list, run_menu_loop
 from utils.shell import run_command
+from utils.error_handler import handle_error
 from modules.webserver.utils import get_configured_domains
 
 
@@ -66,7 +66,7 @@ def view_access_log():
         log_path = _get_log_path(domain, "access")
     
     if not log_path or not os.path.exists(log_path):
-        show_error("Log file not found.")
+        handle_error("E2002", "Log file not found.")
         press_enter_to_continue()
         return
     
@@ -78,7 +78,7 @@ def view_access_log():
     if result.returncode == 0:
         console.print(result.stdout)
     else:
-        show_error("Failed to read log file.")
+        handle_error("E2002", "Failed to read log file.")
     
     press_enter_to_continue()
 
@@ -102,7 +102,7 @@ def view_error_log():
         log_path = _get_log_path(domain, "error")
     
     if not log_path or not os.path.exists(log_path):
-        show_error("Log file not found.")
+        handle_error("E2002", "Log file not found.")
         press_enter_to_continue()
         return
     
@@ -121,7 +121,7 @@ def view_error_log():
             else:
                 console.print(line)
     else:
-        show_error("Failed to read log file.")
+        handle_error("E2002", "Failed to read log file.")
     
     press_enter_to_continue()
 

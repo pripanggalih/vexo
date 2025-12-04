@@ -5,10 +5,11 @@ import os
 from config import NGINX_SITES_AVAILABLE, DEFAULT_WEB_ROOT
 from ui.components import (
     console, clear_screen, show_header, show_panel,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list
 from utils.shell import require_root
+from utils.error_handler import handle_error
 from modules.webserver.utils import get_configured_domains, is_valid_domain, get_site_config
 from modules.webserver.domains import enable_domain
 
@@ -41,12 +42,12 @@ def clone_domain():
     new_domain = new_domain.strip().lower()
     
     if not is_valid_domain(new_domain):
-        show_error(f"Invalid domain name: {new_domain}")
+        handle_error("E2002", f"Invalid domain name: {new_domain}")
         press_enter_to_continue()
         return
     
     if new_domain in domains:
-        show_error(f"Domain {new_domain} already exists.")
+        handle_error("E2002", f"Domain {new_domain} already exists.")
         press_enter_to_continue()
         return
     
@@ -66,7 +67,7 @@ def clone_domain():
         with open(source_path, "r") as f:
             config_content = f.read()
     except Exception as e:
-        show_error(f"Failed to read source config: {e}")
+        handle_error("E2002", f"Failed to read source config: {e}")
         press_enter_to_continue()
         return
     
@@ -84,7 +85,7 @@ def clone_domain():
         with open(new_path, "w") as f:
             f.write(new_config)
     except Exception as e:
-        show_error(f"Failed to write config: {e}")
+        handle_error("E2002", f"Failed to write config: {e}")
         press_enter_to_continue()
         return
     
@@ -114,6 +115,6 @@ def clone_domain():
         console.print()
         show_warning("SSL certificate not copied - run certbot for new domain.")
     else:
-        show_error("Failed to enable domain.")
+        handle_error("E2002", "Failed to enable domain.")
     
     press_enter_to_continue()
