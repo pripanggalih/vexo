@@ -213,12 +213,14 @@ def _configure_ufw():
 # Main Installation Function
 # =============================================================================
 
-def install_component(component):
+def install_component(component, step_current=1, step_total=1):
     """
     Install a single component.
     
     Args:
         component: Component dict from COMPONENTS
+        step_current: Current step number (e.g., 2)
+        step_total: Total steps (e.g., 9)
     
     Returns:
         bool: True if successful
@@ -260,7 +262,7 @@ def install_component(component):
     if "packages" in component:
         success = run_apt_with_progress(
             component["packages"],
-            step_info=f"Installing {name}"
+            step_info=f"[{step_current}/{step_total}] {name}"
         )
         if not success:
             handle_error("E1006", f"{name} installation failed")
@@ -368,7 +370,7 @@ def run_setup(selected_keys):
         
         console.print(f"\n[bold][{i}/{total}] {comp['name']}[/bold]")
         
-        if install_component(comp):
+        if install_component(comp, step_current=i, step_total=total):
             success_count += 1
         else:
             failed.append(comp["name"])
