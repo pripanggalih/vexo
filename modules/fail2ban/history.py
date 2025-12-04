@@ -12,11 +12,11 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 
 from .common import (
@@ -138,7 +138,7 @@ def show_live_activity():
     show_panel("Live Activity Monitor", title="History", style="cyan")
     
     if not os.path.exists(FAIL2BAN_LOG):
-        show_error(f"Log file not found: {FAIL2BAN_LOG}")
+        handle_error("E6003", f"Log file not found: {FAIL2BAN_LOG}")
         press_enter_to_continue()
         return
     
@@ -170,7 +170,7 @@ def show_live_activity():
         console.print()
         show_info("Stopped monitoring.")
     except Exception as e:
-        show_error(f"Error: {e}")
+        handle_error("E6003", f"Error: {e}")
     
     press_enter_to_continue()
 
@@ -306,7 +306,7 @@ def export_report():
         
         show_success(f"Exported {len(bans)} records to {path}")
     except Exception as e:
-        show_error(f"Export failed: {e}")
+        handle_error("E6003", f"Export failed: {e}")
     
     press_enter_to_continue()
 
@@ -318,7 +318,7 @@ def import_from_log():
     show_panel("Import from Log", title="History", style="cyan")
     
     if not os.path.exists(FAIL2BAN_LOG):
-        show_error(f"Log file not found: {FAIL2BAN_LOG}")
+        handle_error("E6003", f"Log file not found: {FAIL2BAN_LOG}")
         press_enter_to_continue()
         return
     
@@ -525,7 +525,7 @@ def _import_log_to_db():
         
         conn.commit()
     except Exception as e:
-        show_error(f"Import error: {e}")
+        handle_error("E6003", f"Import error: {e}")
     finally:
         conn.close()
     

@@ -10,9 +10,9 @@ from ui.components import (
     show_table,
     show_info,
     show_success,
-    show_error,
     press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import run_menu_loop, text_input, confirm_action, select_from_list
 from utils.monitor_logger import (
     load_thresholds,
@@ -133,7 +133,7 @@ def _edit_threshold(resource, thresholds):
     try:
         warning = float(warning_input)
     except ValueError:
-        show_error("Invalid number.")
+        handle_error("E1006", "Invalid number.")
         press_enter_to_continue()
         return
     
@@ -148,18 +148,18 @@ def _edit_threshold(resource, thresholds):
     try:
         critical = float(critical_input)
     except ValueError:
-        show_error("Invalid number.")
+        handle_error("E1006", "Invalid number.")
         press_enter_to_continue()
         return
     
     # Validate
     if warning >= critical:
-        show_error("Warning threshold must be less than critical threshold.")
+        handle_error("E1006", "Warning threshold must be less than critical threshold.")
         press_enter_to_continue()
         return
     
     if resource != "load_avg" and (warning < 0 or warning > 100 or critical < 0 or critical > 100):
-        show_error("Percentage must be between 0 and 100.")
+        handle_error("E1006", "Percentage must be between 0 and 100.")
         press_enter_to_continue()
         return
     
@@ -228,11 +228,11 @@ def _edit_retention(log_config):
     try:
         days = int(days_input)
         if days < 1 or days > 365:
-            show_error("Retention must be between 1 and 365 days.")
+            handle_error("E1006", "Retention must be between 1 and 365 days.")
             press_enter_to_continue()
             return
     except ValueError:
-        show_error("Invalid number.")
+        handle_error("E1006", "Invalid number.")
         press_enter_to_continue()
         return
     
@@ -254,11 +254,11 @@ def _edit_interval(log_config):
     try:
         interval = int(interval_input)
         if interval < 10 or interval > 3600:
-            show_error("Interval must be between 10 and 3600 seconds.")
+            handle_error("E1006", "Interval must be between 10 and 3600 seconds.")
             press_enter_to_continue()
             return
     except ValueError:
-        show_error("Invalid number.")
+        handle_error("E1006", "Invalid number.")
         press_enter_to_continue()
         return
     
@@ -288,7 +288,7 @@ def _clear_logs(log_config):
         
         show_success(f"Cleared {count} log file(s).")
     except Exception as e:
-        show_error(f"Failed to clear logs: {e}")
+        handle_error("E1006", f"Failed to clear logs: {e}")
     
     press_enter_to_continue()
 
@@ -321,9 +321,9 @@ def test_logging():
             except Exception:
                 pass
         else:
-            show_error("Failed to log metrics.")
+            handle_error("E1006", "Failed to log metrics.")
     
     except Exception as e:
-        show_error(f"Logging test failed: {e}")
+        handle_error("E1006", f"Logging test failed: {e}")
     
     press_enter_to_continue()

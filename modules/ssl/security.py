@@ -12,13 +12,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command
+from utils.error_handler import handle_error
 from modules.ssl.common import (
     get_certbot_status_text,
     list_all_certificates,
@@ -300,7 +300,7 @@ def full_ssl_audit():
                     _display_ssl_labs_results(data)
                     break
                 elif status == 'ERROR':
-                    show_error(f"SSL Labs error: {data.get('statusMessage', 'Unknown error')}")
+                    handle_error("E6002", f"SSL Labs error: {data.get('statusMessage', 'Unknown error')}")
                     break
                 else:
                     console.print(f"  Status: {status}... (attempt {attempt + 1}/{max_attempts})")
@@ -314,7 +314,7 @@ def full_ssl_audit():
             show_warning("Analysis timed out. Try again later.")
     
     except Exception as e:
-        show_error(f"Failed to connect to SSL Labs: {e}")
+        handle_error("E6002", f"Failed to connect to SSL Labs: {e}")
     
     press_enter_to_continue()
 
@@ -410,7 +410,7 @@ def security_headers_audit():
     )
     
     if result.returncode != 0:
-        show_error("Could not fetch headers.")
+        handle_error("E6002", "Could not fetch headers.")
         press_enter_to_continue()
         return
     

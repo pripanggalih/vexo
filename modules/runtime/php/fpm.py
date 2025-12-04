@@ -5,10 +5,11 @@ import re
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, service_control, require_root
+from utils.error_handler import handle_error
 from modules.runtime.php.utils import (
     get_installed_php_versions, get_fpm_pool_path, get_fpm_service_name,
     is_fpm_running, parse_fpm_pool_config, get_server_memory_mb,
@@ -95,7 +96,7 @@ def configure_pool():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -158,7 +159,7 @@ def configure_pool():
             service_control(get_fpm_service_name(version), "restart")
             show_success("PHP-FPM restarted!")
     else:
-        show_error("Failed to update configuration.")
+        handle_error("E3001", "Failed to update configuration.")
     
     press_enter_to_continue()
 
@@ -192,7 +193,7 @@ def _update_pool_config(config_path, key, value):
         
         return True
     except Exception as e:
-        show_error(f"Error updating config: {e}")
+        handle_error("E3001", f"Error updating config: {e}")
         return False
 
 
@@ -204,7 +205,7 @@ def fpm_service_control():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -236,7 +237,7 @@ def fpm_service_control():
     if success:
         show_success(f"PHP {version} FPM {action}ed successfully!")
     else:
-        show_error(f"Failed to {action} PHP {version} FPM.")
+        handle_error("E3001", f"Failed to {action} PHP {version} FPM.")
     
     press_enter_to_continue()
 
@@ -249,7 +250,7 @@ def create_custom_pool():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -265,7 +266,7 @@ def create_custom_pool():
     
     pool_path = get_fpm_pool_path(version, pool_name)
     if os.path.exists(pool_path):
-        show_error(f"Pool '{pool_name}' already exists.")
+        handle_error("E3001", f"Pool '{pool_name}' already exists.")
         press_enter_to_continue()
         return
     
@@ -317,7 +318,7 @@ request_slowlog_timeout = 5s
             service_control(get_fpm_service_name(version), "restart")
             show_success("PHP-FPM restarted!")
     except Exception as e:
-        show_error(f"Failed to create pool: {e}")
+        handle_error("E3001", f"Failed to create pool: {e}")
     
     press_enter_to_continue()
 

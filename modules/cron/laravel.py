@@ -8,13 +8,13 @@ from ui.components import (
     show_header,
     show_panel,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 
 from modules.cron.common import (
     get_crontab_lines,
@@ -46,7 +46,7 @@ def setup_laravel_scheduler():
     
     artisan_path = os.path.join(laravel_path, "artisan")
     if not os.path.exists(artisan_path):
-        show_error(f"Laravel artisan not found at {laravel_path}")
+        handle_error("E7003", f"Laravel artisan not found at {laravel_path}")
         press_enter_to_continue()
         return
     
@@ -98,6 +98,6 @@ def setup_laravel_scheduler():
         console.print(f"[dim]Job: {job_name}[/dim]")
         console.print(f"[dim]Schedule: Every minute[/dim]")
     else:
-        show_error("Failed to add cron job.")
+        handle_error("E7003", "Failed to add cron job.")
     
     press_enter_to_continue()

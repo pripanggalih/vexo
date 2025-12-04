@@ -2,10 +2,11 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_info, press_enter_to_continue,
+    show_success, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, is_service_running
+from utils.error_handler import handle_error
 from modules.database.postgresql.utils import (
     is_postgresql_ready, run_psql, get_databases, get_database_size,
     format_size, get_pg_version, get_pg_data_dir, get_user_databases,
@@ -41,7 +42,7 @@ def database_stats():
     show_panel("Database Statistics", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -101,7 +102,7 @@ def table_sizes():
     show_panel("Table Sizes", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -163,7 +164,7 @@ def active_connections():
     show_panel("Active Connections", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -185,7 +186,7 @@ def active_connections():
     result = run_psql(sql)
     
     if result.returncode != 0:
-        show_error("Failed to get connections.")
+        handle_error("E4001", "Failed to get connections.")
         press_enter_to_continue()
         return
     
@@ -223,7 +224,7 @@ def active_connections():
                 if result.returncode == 0:
                     show_success(f"Connection {pid} terminated.")
                 else:
-                    show_error("Failed to terminate connection.")
+                    handle_error("E4001", "Failed to terminate connection.")
     else:
         show_info("No active connections.")
     
@@ -237,7 +238,7 @@ def slow_query_log():
     show_panel("Slow Query Log", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     

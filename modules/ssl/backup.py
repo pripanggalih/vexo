@@ -13,13 +13,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.ssl.common import (
     get_certbot_status_text,
     list_all_certificates,
@@ -248,7 +248,7 @@ def _export_pem_bundle(cert, timestamp):
         key_path = os.path.join(VEXO_SSL_CERTS, name, "privkey.pem")
     
     if not os.path.exists(cert_path) or not os.path.exists(key_path):
-        show_error("Certificate files not found.")
+        handle_error("E6002", "Certificate files not found.")
         return False
     
     bundle_name = f"ssl-{name}-{timestamp}.pem"
@@ -471,7 +471,7 @@ def restore_backup():
         )
         
         if result.returncode != 0:
-            show_error("Decryption failed. Wrong password?")
+            handle_error("E6002", "Decryption failed. Wrong password?")
             press_enter_to_continue()
             return
         
@@ -614,7 +614,7 @@ def scheduled_backups():
                 save_settings(settings)
                 show_success(f"Will keep last {new_retention} backups!")
             except ValueError:
-                show_error("Invalid number.")
+                handle_error("E6002", "Invalid number.")
     
     elif action == "Run backup now":
         show_info("Creating backup...")
@@ -701,7 +701,7 @@ def manage_backups():
                 os.remove(backups[idx]['filepath'])
                 show_success("Backup deleted!")
             except Exception as e:
-                show_error(f"Failed: {e}")
+                handle_error("E6002", f"Failed: {e}")
     
     elif action == "Download/copy backup":
         options = [b['filename'] for b in backups]
@@ -719,7 +719,7 @@ def manage_backups():
                     shutil.copy2(backups[idx]['filepath'], dest)
                     show_success(f"Copied to: {dest}")
                 except Exception as e:
-                    show_error(f"Failed: {e}")
+                    handle_error("E6002", f"Failed: {e}")
     
     elif action == "Clean old backups":
         settings = load_settings()

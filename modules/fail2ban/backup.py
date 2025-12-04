@@ -14,13 +14,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, require_root, service_control
+from utils.error_handler import handle_error
 
 from .common import (
     JAIL_LOCAL,
@@ -111,7 +111,7 @@ def create_backup():
         show_success(f"Backup created: {backup_path}")
         console.print(f"[dim]Size: {size:.1f} KB[/dim]")
     else:
-        show_error("Failed to create backup.")
+        handle_error("E6003", "Failed to create backup.")
     
     press_enter_to_continue()
 
@@ -206,7 +206,7 @@ def _create_backup(name, include_config=True, include_filters=True,
         return backup_file
         
     except Exception as e:
-        show_error(f"Backup error: {e}")
+        handle_error("E6003", f"Backup error: {e}")
         if temp_dir.exists():
             shutil.rmtree(temp_dir)
         return None
@@ -244,7 +244,7 @@ def restore_backup():
     manifest = _get_backup_manifest(backup['path'])
     
     if not manifest:
-        show_error("Could not read backup manifest.")
+        handle_error("E6003", "Could not read backup manifest.")
         press_enter_to_continue()
         return
     
@@ -301,7 +301,7 @@ def restore_backup():
         service_control("fail2ban", "reload")
         show_success("Backup restored!")
     else:
-        show_error("Restore failed.")
+        handle_error("E6003", "Restore failed.")
     
     press_enter_to_continue()
 
@@ -345,7 +345,7 @@ def _restore_full(backup_path):
         return True
         
     except Exception as e:
-        show_error(f"Restore error: {e}")
+        handle_error("E6003", f"Restore error: {e}")
         if temp_dir.exists():
             shutil.rmtree(temp_dir)
         return False
@@ -382,7 +382,7 @@ def _restore_merge(backup_path):
         return True
         
     except Exception as e:
-        show_error(f"Merge error: {e}")
+        handle_error("E6003", f"Merge error: {e}")
         if temp_dir.exists():
             shutil.rmtree(temp_dir)
         return False
@@ -436,7 +436,7 @@ def _restore_selective(backup_path, contents):
         return True
         
     except Exception as e:
-        show_error(f"Selective restore error: {e}")
+        handle_error("E6003", f"Selective restore error: {e}")
         if temp_dir.exists():
             shutil.rmtree(temp_dir)
         return False
@@ -598,7 +598,7 @@ def _configure_schedule():
             json.dump(schedule, f, indent=2)
         show_success("Backup schedule configured!")
     else:
-        show_error("Failed to configure schedule.")
+        handle_error("E6003", "Failed to configure schedule.")
 
 
 def _create_backup_cron(schedule):
@@ -615,7 +615,7 @@ def _create_backup_cron(schedule):
         if not (0 <= int(hour) <= 23 and 0 <= int(minute) <= 59):
             raise ValueError("Hour or minute out of range")
     except (ValueError, IndexError) as e:
-        show_error(f"Invalid time format: {time_str}. Using default 02:00")
+        handle_error("E6003", f"Invalid time format: {time_str}. Using default 02:00")
         hour, minute = "02", "00"
     
     if schedule['frequency'] == 'daily':
@@ -648,7 +648,7 @@ _create_backup(name='scheduled_' + __import__('datetime').datetime.now().strftim
         os.chmod(BACKUP_CRON_FILE, 0o644)
         return True
     except Exception as e:
-        show_error(f"Cron error: {e}")
+        handle_error("E6003", f"Cron error: {e}")
         return False
 
 

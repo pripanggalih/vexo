@@ -4,10 +4,11 @@ import os
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.email.postfix.utils import (
     is_postfix_ready, get_postfix_mode, load_domains_config, save_domains_config,
     validate_domain, reload_postfix, POSTFIX_VIRTUAL, POSTFIX_MASTER_CF,
@@ -91,7 +92,7 @@ def add_domain_interactive():
     show_panel("Add Domain", title="Domain Management", style="cyan")
     
     if not is_postfix_ready():
-        show_error("Postfix is not running.")
+        handle_error("E5002", "Postfix is not running.")
         press_enter_to_continue()
         return
     
@@ -109,13 +110,13 @@ def add_domain_interactive():
     domain = domain.lower().strip()
     
     if not validate_domain(domain):
-        show_error("Invalid domain format.")
+        handle_error("E5002", "Invalid domain format.")
         press_enter_to_continue()
         return
     
     config = load_domains_config()
     if domain in config:
-        show_error(f"Domain '{domain}' already configured.")
+        handle_error("E5002", f"Domain '{domain}' already configured.")
         press_enter_to_continue()
         return
     
@@ -140,7 +141,7 @@ def add_domain_interactive():
             return
         
         if not _validate_laravel_path(laravel_path):
-            show_error("Invalid Laravel path (artisan not found).")
+            handle_error("E5002", "Invalid Laravel path (artisan not found).")
             press_enter_to_continue()
             return
         
@@ -156,7 +157,7 @@ def add_domain_interactive():
         
         forward_to = text_input("Forward all email to:")
         if not forward_to or "@" not in forward_to:
-            show_error("Invalid email address.")
+            handle_error("E5002", "Invalid email address.")
             press_enter_to_continue()
             return
         
@@ -188,7 +189,7 @@ def add_domain_interactive():
         reload_postfix()
         show_success(f"Domain '{domain}' added!")
     else:
-        show_error("Failed to add domain.")
+        handle_error("E5002", "Failed to add domain.")
     
     press_enter_to_continue()
 
@@ -271,7 +272,7 @@ def remove_domain_interactive():
         reload_postfix()
         show_success(f"Domain '{domain}' removed!")
     else:
-        show_error("Failed to remove domain.")
+        handle_error("E5002", "Failed to remove domain.")
     
     press_enter_to_continue()
 

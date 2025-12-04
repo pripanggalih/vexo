@@ -5,10 +5,11 @@ from datetime import datetime
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.database.postgresql.utils import (
     is_postgresql_ready, get_user_databases, get_database_size,
     format_size, PG_BACKUP_DIR,
@@ -44,7 +45,7 @@ def backup_database():
     show_panel("Backup Database", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -96,7 +97,7 @@ def backup_database():
         size = format_size(os.path.getsize(backup_path))
         show_success(f"Backup created: {backup_path} ({size})")
     else:
-        show_error("Backup failed!")
+        handle_error("E4001", "Backup failed!")
         if result.stderr:
             console.print(f"[dim]{result.stderr}[/dim]")
     
@@ -110,7 +111,7 @@ def backup_all_databases():
     show_panel("Backup All Databases", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -146,7 +147,7 @@ def backup_all_databases():
         size = format_size(os.path.getsize(backup_path))
         show_success(f"Backup created: {backup_path} ({size})")
     else:
-        show_error("Backup failed!")
+        handle_error("E4001", "Backup failed!")
     
     press_enter_to_continue()
 
@@ -158,7 +159,7 @@ def restore_database():
     show_panel("Restore Database", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -167,7 +168,7 @@ def restore_database():
         return
     
     if not os.path.exists(backup_path):
-        show_error("File not found.")
+        handle_error("E4001", "File not found.")
         press_enter_to_continue()
         return
     
@@ -215,7 +216,7 @@ def restore_database():
     if result.returncode == 0:
         show_success(f"Database '{database}' restored successfully!")
     else:
-        show_error("Restore failed!")
+        handle_error("E4001", "Restore failed!")
         if result.stderr:
             console.print(f"[dim]{result.stderr}[/dim]")
     
@@ -343,7 +344,7 @@ find "$BACKUP_DIR" -name "{prefix}_*.sql.gz" -mtime +{retention} -delete
             f.write(script_content)
         os.chmod(script_path, 0o755)
     except Exception as e:
-        show_error(f"Failed to create script: {e}")
+        handle_error("E4001", f"Failed to create script: {e}")
         press_enter_to_continue()
         return
     

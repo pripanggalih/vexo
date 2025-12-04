@@ -13,9 +13,9 @@ from ui.components import (
     show_table,
     show_info,
     show_warning,
-    show_error,
     press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import run_menu_loop, select_from_list, text_input
 from utils.monitor_logger import load_log_config
 from modules.monitor.common import format_bytes

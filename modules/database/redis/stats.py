@@ -1,9 +1,9 @@
 """Redis performance statistics functions."""
 
 from ui.components import (
-    console, clear_screen, show_header, show_panel, show_table,
-    show_error, show_info, press_enter_to_continue,
+    console, clear_screen, show_header, show_panel, show_table, show_info, press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import select_from_list, run_menu_loop
 from modules.database.redis.utils import is_redis_ready, redis_info, run_redis_cli
 
@@ -37,7 +37,7 @@ def stats_overview():
     show_panel("Stats Overview", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -89,13 +89,13 @@ def command_stats():
     show_panel("Command Stats", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
     result = run_redis_cli("INFO commandstats")
     if result.returncode != 0:
-        show_error("Failed to get command stats.")
+        handle_error("E4001", "Failed to get command stats.")
         press_enter_to_continue()
         return
     
@@ -139,7 +139,7 @@ def client_stats():
     show_panel("Client Stats", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -188,7 +188,7 @@ def replication_status():
     show_panel("Replication Status", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -227,7 +227,7 @@ def latency_check():
     show_panel("Latency Check", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     

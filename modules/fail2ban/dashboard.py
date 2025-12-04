@@ -12,7 +12,6 @@ from ui.components import (
     clear_screen,
     show_header,
     show_panel,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
@@ -34,7 +33,7 @@ def show_dashboard():
     show_header()
     
     if not is_fail2ban_installed():
-        show_error("Fail2ban is not installed.")
+        handle_error("E6003", "Fail2ban is not installed.")
         press_enter_to_continue()
         return
     
@@ -157,6 +156,7 @@ def _render_alerts():
 def _get_service_uptime():
     """Get fail2ban service uptime."""
     from utils.shell import run_command
+from utils.error_handler import handle_error
     
     result = run_command(
         "systemctl show fail2ban --property=ActiveEnterTimestamp",
@@ -320,7 +320,7 @@ def show_live_activity():
     show_panel("Live Activity Monitor", title="Fail2ban", style="cyan")
     
     if not os.path.exists(FAIL2BAN_LOG):
-        show_error(f"Log file not found: {FAIL2BAN_LOG}")
+        handle_error("E6003", f"Log file not found: {FAIL2BAN_LOG}")
         press_enter_to_continue()
         return
     

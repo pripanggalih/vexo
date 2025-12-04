@@ -8,13 +8,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, run_command_realtime, is_installed, require_root
+from utils.error_handler import handle_error
 from utils.sanitize import validate_email, validate_domain, escape_shell
 from modules.ssl.common import (
     get_certbot_status_text,
@@ -52,7 +52,7 @@ def _check_certbot():
     if is_certbot_installed():
         return True
     
-    show_error("Certbot is not installed.")
+    handle_error("E6002", "Certbot is not installed.")
     if confirm_action("Install Certbot now?"):
         try:
             require_root()
@@ -104,7 +104,7 @@ def _get_email():
     )
     
     if not email or not validate_email(email):
-        show_error("Valid email is required (e.g., user@example.com).")
+        handle_error("E6002", "Valid email is required (e.g., user@example.com).")
         return None
     
     return email
@@ -174,7 +174,7 @@ def issue_single_domain():
     
     # Validate domain format
     if not validate_domain(domain):
-        show_error(f"Invalid domain format: {domain}")
+        handle_error("E6002", f"Invalid domain format: {domain}")
         press_enter_to_continue()
         return
     
@@ -223,7 +223,7 @@ def issue_single_domain():
         console.print()
         console.print(f"[dim]Visit: https://{domain}[/dim]")
     else:
-        show_error("Failed to issue certificate.")
+        handle_error("E6002", "Failed to issue certificate.")
         console.print("[dim]Check domain DNS and firewall settings.[/dim]")
     
     press_enter_to_continue()
@@ -325,7 +325,7 @@ def issue_san_certificate():
     if _run_certbot(domains, email, ca_key):
         show_success(f"SAN Certificate issued for {len(domains)} domains!")
     else:
-        show_error("Failed to issue certificate.")
+        handle_error("E6002", "Failed to issue certificate.")
     
     press_enter_to_continue()
 
@@ -419,7 +419,7 @@ def _issue_wildcard_manual(domains, base_domain):
         show_success(f"Wildcard certificate issued for {domains[0]}!")
         log_event(base_domain, "issued", f"Wildcard, manual DNS")
     else:
-        show_error("Failed to issue wildcard certificate.")
+        handle_error("E6002", "Failed to issue wildcard certificate.")
     
     press_enter_to_continue()
 
@@ -443,7 +443,7 @@ def _issue_wildcard_auto(domains, base_domain, provider):
     credentials = provider.get("credentials_file", "")
     
     if not plugin:
-        show_error("DNS provider plugin not configured.")
+        handle_error("E6002", "DNS provider plugin not configured.")
         press_enter_to_continue()
         return
     
@@ -461,6 +461,6 @@ def _issue_wildcard_auto(domains, base_domain, provider):
         show_success(f"Wildcard certificate issued for {domains[0]}!")
         log_event(base_domain, "issued", f"Wildcard, {provider['name']} DNS")
     else:
-        show_error("Failed to issue wildcard certificate.")
+        handle_error("E6002", "Failed to issue wildcard certificate.")
     
     press_enter_to_continue()

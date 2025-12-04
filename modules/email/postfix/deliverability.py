@@ -5,10 +5,11 @@ import re
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, run_command_realtime, is_installed, require_root
+from utils.error_handler import handle_error
 from modules.email.postfix.utils import (
     is_postfix_ready, get_postfix_setting, set_postfix_settings, 
     reload_postfix, get_configured_domains,
@@ -163,7 +164,7 @@ def install_opendkim():
     )
     
     if returncode != 0:
-        show_error("Failed to install OpenDKIM.")
+        handle_error("E5002", "Failed to install OpenDKIM.")
         press_enter_to_continue()
         return
     
@@ -230,7 +231,7 @@ def add_dkim_domain():
     show_panel("Add DKIM Domain", title="DKIM", style="cyan")
     
     if not is_installed("opendkim"):
-        show_error("OpenDKIM is not installed.")
+        handle_error("E5002", "OpenDKIM is not installed.")
         press_enter_to_continue()
         return
     
@@ -279,7 +280,7 @@ def add_dkim_domain():
     )
     
     if result.returncode != 0:
-        show_error("Failed to generate DKIM keys.")
+        handle_error("E5002", "Failed to generate DKIM keys.")
         press_enter_to_continue()
         return
     
@@ -350,7 +351,7 @@ def remove_dkim_domain():
     show_panel("Remove DKIM Domain", title="DKIM", style="red")
     
     if not is_installed("opendkim"):
-        show_error("OpenDKIM is not installed.")
+        handle_error("E5002", "OpenDKIM is not installed.")
         press_enter_to_continue()
         return
     
@@ -419,7 +420,7 @@ def list_dkim_domains():
     show_panel("DKIM Domains", title="DKIM", style="cyan")
     
     if not is_installed("opendkim"):
-        show_error("OpenDKIM is not installed.")
+        handle_error("E5002", "OpenDKIM is not installed.")
         press_enter_to_continue()
         return
     
@@ -460,7 +461,7 @@ def view_dkim_keys():
     show_panel("DKIM DNS Records", title="DKIM", style="cyan")
     
     if not is_installed("opendkim"):
-        show_error("OpenDKIM is not installed.")
+        handle_error("E5002", "OpenDKIM is not installed.")
         press_enter_to_continue()
         return
     
@@ -644,7 +645,7 @@ def test_deliverability():
     show_panel("Test Deliverability", title="Deliverability", style="cyan")
     
     if not is_postfix_ready():
-        show_error("Postfix is not running.")
+        handle_error("E5002", "Postfix is not running.")
         press_enter_to_continue()
         return
     
@@ -693,7 +694,7 @@ If you received this in your inbox (not spam), deliverability is working!
             show_success("Test email sent!")
             console.print(f"[dim]Check {recipient} inbox (and spam folder).[/dim]")
         else:
-            show_error("Failed to send test email.")
+            handle_error("E5002", "Failed to send test email.")
     
     else:
         # Check DKIM

@@ -2,8 +2,9 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_info, press_enter_to_continue,
+    show_success, show_info, press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.sanitize import (
     escape_postgresql, escape_postgresql_identifier, validate_identifier,
@@ -38,7 +39,7 @@ def list_users():
     show_panel("User List", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -79,7 +80,7 @@ def create_user():
     show_panel("Create User", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -89,12 +90,12 @@ def create_user():
     
     # Validate username (PostgreSQL allows lowercase + underscore + digits)
     if not validate_identifier(username, max_length=63, allow_chars="a-z0-9_"):
-        show_error("Invalid username. Use only lowercase letters, numbers, and underscore.")
+        handle_error("E4001", "Invalid username. Use only lowercase letters, numbers, and underscore.")
         press_enter_to_continue()
         return
     
     if username in get_users():
-        show_error(f"User '{username}' already exists.")
+        handle_error("E4001", f"User '{username}' already exists.")
         press_enter_to_continue()
         return
     
@@ -121,7 +122,7 @@ def create_user():
     if result.returncode == 0:
         show_success(f"User '{username}' created!")
     else:
-        show_error("Failed to create user.")
+        handle_error("E4001", "Failed to create user.")
     
     press_enter_to_continue()
 
@@ -133,7 +134,7 @@ def delete_user():
     show_panel("Delete User", title="PostgreSQL", style="red")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -157,7 +158,7 @@ def delete_user():
     if result.returncode == 0:
         show_success(f"User '{username}' deleted!")
     else:
-        show_error("Failed to delete user. User may own objects.")
+        handle_error("E4001", "Failed to delete user. User may own objects.")
         console.print("[dim]Drop owned objects first: DROP OWNED BY username;[/dim]")
     
     press_enter_to_continue()

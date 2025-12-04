@@ -8,13 +8,13 @@ from ui.components import (
     show_header,
     show_panel,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, run_menu_loop, select_from_list
 from utils.shell import (
+from utils.error_handler import handle_error
     run_command_realtime,
     service_control,
     require_root,
@@ -119,7 +119,7 @@ def install_fail2ban():
     )
     
     if returncode != 0:
-        show_error("Failed to install Fail2ban.")
+        handle_error("E6003", "Failed to install Fail2ban.")
         press_enter_to_continue()
         return False
     
@@ -215,7 +215,7 @@ logpath = /var/log/mail.log
             f.write(config)
         return True
     except Exception as e:
-        show_error(f"Failed to create config: {e}")
+        handle_error("E6003", f"Failed to create config: {e}")
         return False
 
 
@@ -278,7 +278,7 @@ def configure_global_settings():
         service_control("fail2ban", "reload")
         show_success("Settings updated!")
     else:
-        show_error("Failed to update settings.")
+        handle_error("E6003", "Failed to update settings.")
     
     press_enter_to_continue()
 
@@ -414,5 +414,5 @@ def _update_settings(bantime, findtime, maxretry):
         
         return True
     except Exception as e:
-        show_error(f"Error: {e}")
+        handle_error("E6003", f"Error: {e}")
         return False

@@ -2,10 +2,11 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel,
-    show_success, show_error, show_info, press_enter_to_continue,
+    show_success, show_info, press_enter_to_continue,
 )
 from ui.menu import select_from_list
 from utils.shell import run_command, is_installed, require_root, service_control
+from utils.error_handler import handle_error
 from modules.database.redis.utils import (
     is_redis_ready, redis_info, get_db_keys_count,
 )
@@ -34,7 +35,7 @@ def install_redis():
     if result.returncode == 0:
         show_success("Redis installed successfully!")
     else:
-        show_error("Installation failed!")
+        handle_error("E4001", "Installation failed!")
     
     press_enter_to_continue()
 
@@ -46,7 +47,7 @@ def server_info():
     show_panel("Server Info", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     

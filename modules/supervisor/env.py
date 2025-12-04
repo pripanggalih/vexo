@@ -10,13 +10,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, select_from_list, text_input, confirm_action
 from utils.shell import run_command, is_installed, require_root
+from utils.error_handler import handle_error
 
 from modules.supervisor.common import (
     get_vexo_workers,
@@ -131,7 +131,7 @@ def _save_env_vars(worker_name, env_vars):
         return True
     
     except IOError as e:
-        show_error(f"Failed to save config: {e}")
+        handle_error("E7002", f"Failed to save config: {e}")
         return False
 
 
@@ -142,7 +142,7 @@ def view_env_vars():
     show_panel("View Environment Variables", title="Env Vars", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -188,7 +188,7 @@ def add_env_var():
     show_panel("Add Environment Variable", title="Env Vars", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -211,7 +211,7 @@ def add_env_var():
     
     # Validate name
     if not re.match(r'^[A-Z][A-Z0-9_]*$', var_name):
-        show_error("Invalid variable name. Use uppercase letters, numbers, and underscores.")
+        handle_error("E7002", "Invalid variable name. Use uppercase letters, numbers, and underscores.")
         press_enter_to_continue()
         return
     
@@ -264,7 +264,7 @@ def edit_env_var():
     show_panel("Edit Environment Variable", title="Env Vars", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -332,7 +332,7 @@ def remove_env_var():
     show_panel("Remove Environment Variable", title="Env Vars", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -384,7 +384,7 @@ def import_from_dotenv():
     show_panel("Import from .env", title="Env Vars", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -415,7 +415,7 @@ def import_from_dotenv():
         return
     
     if not os.path.exists(env_path):
-        show_error(f"File not found: {env_path}")
+        handle_error("E7002", f"File not found: {env_path}")
         press_enter_to_continue()
         return
     

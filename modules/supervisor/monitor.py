@@ -14,13 +14,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, select_from_list
 from utils.shell import run_command, is_installed, is_service_running
+from utils.error_handler import handle_error
 
 from modules.supervisor.common import (
     get_vexo_workers,
@@ -164,7 +164,7 @@ def show_worker_status():
     show_panel("Worker Status", title="Monitoring", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     

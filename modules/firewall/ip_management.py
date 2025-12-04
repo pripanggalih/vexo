@@ -8,13 +8,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.firewall.common import (
     is_ufw_installed,
     get_ufw_status_text,
@@ -62,7 +62,7 @@ def allow_ip():
     show_panel("Allow IP", title="IP Management", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -89,7 +89,7 @@ def allow_ip():
         return
     
     if not _validate_ip_or_cidr(ip):
-        show_error("Invalid IP address or CIDR notation.")
+        handle_error("E6001", "Invalid IP address or CIDR notation.")
         press_enter_to_continue()
         return
     
@@ -110,7 +110,7 @@ def deny_ip():
     show_panel("Deny/Block IP", title="IP Management", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -137,7 +137,7 @@ def deny_ip():
         return
     
     if not _validate_ip_or_cidr(ip):
-        show_error("Invalid IP address or CIDR notation.")
+        handle_error("E6001", "Invalid IP address or CIDR notation.")
         press_enter_to_continue()
         return
     
@@ -179,7 +179,7 @@ def _apply_ip_rule(ip, action):
     if result.returncode == 0:
         show_success(f"Rule added: {action} from {ip}")
     else:
-        show_error(f"Failed to add rule: {result.stderr}")
+        handle_error("E6001", f"Failed to add rule: {result.stderr}")
 
 
 def _apply_advanced_ip_rule(ip, action):
@@ -205,7 +205,7 @@ def _apply_advanced_ip_rule(ip, action):
     )
     
     if port and not _validate_port(port):
-        show_error("Invalid port number.")
+        handle_error("E6001", "Invalid port number.")
         return
     
     # Protocol
@@ -294,7 +294,7 @@ def _add_to_whitelist():
         return
     
     if not _validate_ip_or_cidr(ip):
-        show_error("Invalid IP address or CIDR.")
+        handle_error("E6001", "Invalid IP address or CIDR.")
         press_enter_to_continue()
         return
     
@@ -446,13 +446,13 @@ def _create_group():
         return
     
     if name.startswith('_'):
-        show_error("Group name cannot start with underscore.")
+        handle_error("E6001", "Group name cannot start with underscore.")
         press_enter_to_continue()
         return
     
     groups = load_ip_groups()
     if name in groups:
-        show_error(f"Group '{name}' already exists.")
+        handle_error("E6001", f"Group '{name}' already exists.")
         press_enter_to_continue()
         return
     
@@ -526,7 +526,7 @@ def _edit_group():
             add_ip_to_group(name, ip)
             show_success(f"Added {ip} to group '{name}'.")
         else:
-            show_error("Invalid IP.")
+            handle_error("E6001", "Invalid IP.")
     
     elif action == "Remove IP":
         if not group["ips"]:
@@ -650,7 +650,7 @@ def _apply_group_rules():
         return
     
     if not group["rules"]:
-        show_error("Group has no rules configured.")
+        handle_error("E6001", "Group has no rules configured.")
         press_enter_to_continue()
         return
     
@@ -684,7 +684,7 @@ def list_ip_rules():
     show_panel("IP Rules", title="IP Management", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     

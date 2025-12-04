@@ -4,10 +4,11 @@ import os
 
 from ui.components import (
     console, clear_screen, show_header, show_panel,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, is_installed, is_service_running, service_control, require_root
+from utils.error_handler import handle_error
 
 
 # Paths
@@ -62,7 +63,7 @@ def view_ssl_status():
     show_panel("SSL Status", title="SSL/TLS", style="cyan")
     
     if not is_installed("dovecot-core"):
-        show_error("Dovecot is not installed.")
+        handle_error("E5002", "Dovecot is not installed.")
         press_enter_to_continue()
         return
     
@@ -123,7 +124,7 @@ def use_letsencrypt():
     show_panel("Let's Encrypt", title="SSL/TLS", style="cyan")
     
     if not is_installed("dovecot-core"):
-        show_error("Dovecot is not installed.")
+        handle_error("E5002", "Dovecot is not installed.")
         press_enter_to_continue()
         return
     
@@ -141,7 +142,7 @@ def use_letsencrypt():
     key_path = f"/etc/letsencrypt/live/{domain}/privkey.pem"
     
     if not os.path.exists(cert_path):
-        show_error(f"Certificate not found at {cert_path}")
+        handle_error("E5002", f"Certificate not found at {cert_path}")
         console.print()
         console.print("[dim]Run certbot first to obtain a certificate:[/dim]")
         console.print(f"  certbot certonly --standalone -d {domain}")
@@ -171,7 +172,7 @@ def generate_self_signed():
     show_panel("Self-Signed Certificate", title="SSL/TLS", style="cyan")
     
     if not is_installed("dovecot-core"):
-        show_error("Dovecot is not installed.")
+        handle_error("E5002", "Dovecot is not installed.")
         press_enter_to_continue()
         return
     
@@ -211,7 +212,7 @@ def generate_self_signed():
     )
     
     if result.returncode != 0:
-        show_error("Failed to generate certificate.")
+        handle_error("E5002", "Failed to generate certificate.")
         press_enter_to_continue()
         return
     
@@ -239,7 +240,7 @@ def use_custom_cert():
     show_panel("Custom Certificate", title="SSL/TLS", style="cyan")
     
     if not is_installed("dovecot-core"):
-        show_error("Dovecot is not installed.")
+        handle_error("E5002", "Dovecot is not installed.")
         press_enter_to_continue()
         return
     
@@ -248,13 +249,13 @@ def use_custom_cert():
     
     cert_path = text_input("Certificate file path:")
     if not cert_path or not os.path.exists(cert_path):
-        show_error("Certificate file not found.")
+        handle_error("E5002", "Certificate file not found.")
         press_enter_to_continue()
         return
     
     key_path = text_input("Private key file path:")
     if not key_path or not os.path.exists(key_path):
-        show_error("Key file not found.")
+        handle_error("E5002", "Key file not found.")
         press_enter_to_continue()
         return
     

@@ -6,10 +6,11 @@ import re
 from config import NGINX_SITES_AVAILABLE, NGINX_SITES_ENABLED, DEFAULT_WEB_ROOT
 from ui.components import (
     console, clear_screen, show_header, show_panel,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, service_control, require_root
+from utils.error_handler import handle_error
 from modules.runtime.nodejs.utils import run_with_nvm, run_with_nvm_realtime, is_pm2_installed
 
 
@@ -50,7 +51,7 @@ def deploy_new_app():
     app_dir = app_dir.strip()
     
     if not os.path.exists(app_dir):
-        show_error(f"Directory not found: {app_dir}")
+        handle_error("E3003", f"Directory not found: {app_dir}")
         press_enter_to_continue()
         return
     
@@ -82,7 +83,7 @@ def deploy_new_app():
     try:
         port = int(port)
     except ValueError:
-        show_error("Invalid port number.")
+        handle_error("E3003", "Invalid port number.")
         press_enter_to_continue()
         return
     
@@ -204,11 +205,11 @@ def _create_nginx_proxy(domain, port, websocket=False):
             show_success(f"Nginx configured for {domain}")
             return True
         else:
-            show_error("Nginx config test failed!")
+            handle_error("E3003", "Nginx config test failed!")
             console.print(f"[dim]{result.stderr}[/dim]")
             return False
     except Exception as e:
-        show_error(f"Failed to create nginx config: {e}")
+        handle_error("E3003", f"Failed to create nginx config: {e}")
         return False
 
 
@@ -247,7 +248,7 @@ WantedBy=multi-user.target
         show_success(f"Systemd service created: {name}")
         return True
     except Exception as e:
-        show_error(f"Failed to create service: {e}")
+        handle_error("E3003", f"Failed to create service: {e}")
         return False
 
 
@@ -269,7 +270,7 @@ def configure_nginx_proxy():
     try:
         port = int(port)
     except ValueError:
-        show_error("Invalid port.")
+        handle_error("E3003", "Invalid port.")
         press_enter_to_continue()
         return
     
@@ -371,7 +372,7 @@ def manage_env_vars():
         
         template_full = os.path.join(app_dir, template_path)
         if not os.path.exists(template_full):
-            show_error("Template file not found.")
+            handle_error("E3003", "Template file not found.")
             press_enter_to_continue()
             return
         
@@ -389,7 +390,7 @@ def manage_env_vars():
                 _save_env_file(env_path, env_vars)
                 show_success("Template copied!")
             except Exception as e:
-                show_error(f"Failed: {e}")
+                handle_error("E3003", f"Failed: {e}")
     
     press_enter_to_continue()
 
@@ -402,7 +403,7 @@ def _save_env_file(path, env_vars):
                 f.write(f"{key}={value}\n")
         return True
     except Exception as e:
-        show_error(f"Failed to save .env: {e}")
+        handle_error("E3003", f"Failed to save .env: {e}")
         return False
 
 
@@ -424,7 +425,7 @@ def setup_systemd_service():
     app_dir = app_dir.strip()
     
     if not os.path.exists(app_dir):
-        show_error("Directory not found.")
+        handle_error("E3003", "Directory not found.")
         press_enter_to_continue()
         return
     
@@ -451,7 +452,7 @@ def setup_systemd_service():
     try:
         port = int(port)
     except ValueError:
-        show_error("Invalid port.")
+        handle_error("E3003", "Invalid port.")
         press_enter_to_continue()
         return
     

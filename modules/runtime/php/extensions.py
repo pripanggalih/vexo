@@ -5,10 +5,11 @@ import re
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, run_command_realtime, is_installed, service_control, require_root
+from utils.error_handler import handle_error
 from modules.runtime.php.utils import (
     get_installed_php_versions, get_fpm_service_name, PHP_EXTENSIONS,
 )
@@ -61,7 +62,7 @@ def list_extensions():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -118,7 +119,7 @@ def install_extension():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -178,7 +179,7 @@ def install_extension():
             service_control(get_fpm_service_name(version), "restart")
             show_success("PHP-FPM restarted!")
     else:
-        show_error(f"Failed to install {ext}.")
+        handle_error("E3001", f"Failed to install {ext}.")
     
     press_enter_to_continue()
 
@@ -191,7 +192,7 @@ def remove_extension():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -237,7 +238,7 @@ def remove_extension():
         if confirm_action("Restart PHP-FPM?"):
             service_control(get_fpm_service_name(version), "restart")
     else:
-        show_error(f"Failed to remove {ext}.")
+        handle_error("E3001", f"Failed to remove {ext}.")
     
     press_enter_to_continue()
 
@@ -250,7 +251,7 @@ def toggle_extension():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -301,14 +302,14 @@ def toggle_extension():
         if result.returncode == 0:
             show_success(f"Extension {ext} disabled!")
         else:
-            show_error(f"Failed to disable {ext}.")
+            handle_error("E3001", f"Failed to disable {ext}.")
     else:
         # Enable extension
         result = run_command(f"phpenmod -v {version} {ext}", check=False, silent=True)
         if result.returncode == 0:
             show_success(f"Extension {ext} enabled!")
         else:
-            show_error(f"Failed to enable {ext}.")
+            handle_error("E3001", f"Failed to enable {ext}.")
     
     console.print()
     if confirm_action("Restart PHP-FPM to apply changes?"):
@@ -326,7 +327,7 @@ def pecl_extensions_menu():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -401,7 +402,7 @@ def pecl_extensions_menu():
         if confirm_action("Restart PHP-FPM?"):
             service_control(get_fpm_service_name(version), "restart")
     else:
-        show_error(f"Failed to install {ext}.")
+        handle_error("E3001", f"Failed to install {ext}.")
         console.print("[dim]Check if extension is compatible with PHP {version}[/dim]")
     
     press_enter_to_continue()
@@ -415,7 +416,7 @@ def show_extension_info():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     

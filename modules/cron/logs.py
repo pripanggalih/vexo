@@ -11,13 +11,13 @@ from ui.components import (
     show_header,
     show_panel,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import show_submenu, select_from_list, text_input, confirm_action
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 
 from modules.cron.common import (
     CRON_LOG_DIR,
@@ -201,7 +201,7 @@ def tail_logs():
         console.print("\n[dim]Tail stopped.[/dim]")
         time.sleep(1)
     except Exception as e:
-        show_error(f"Failed to tail log: {e}")
+        handle_error("E7003", f"Failed to tail log: {e}")
         press_enter_to_continue()
 
 
@@ -295,6 +295,6 @@ def clear_logs():
             f.write('')
         show_success("Logs cleared!")
     except IOError as e:
-        show_error(f"Failed to clear logs: {e}")
+        handle_error("E7003", f"Failed to clear logs: {e}")
     
     press_enter_to_continue()

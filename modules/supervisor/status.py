@@ -5,10 +5,10 @@ from ui.components import (
     clear_screen,
     show_header,
     show_panel,
-    show_error,
     press_enter_to_continue,
 )
 from utils.shell import run_command, is_installed, is_service_running
+from utils.error_handler import handle_error
 
 
 def show_status():
@@ -18,7 +18,7 @@ def show_status():
     show_panel("Supervisor Status", title="Queue Workers", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     

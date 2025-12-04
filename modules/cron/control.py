@@ -13,13 +13,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import show_submenu, confirm_action, select_from_list
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 
 from modules.cron.common import (
     get_vexo_jobs,
@@ -111,7 +111,7 @@ def toggle_job():
     
     job = next((j for j in jobs if j["name"] == job_name), None)
     if not job:
-        show_error("Job not found.")
+        handle_error("E7003", "Job not found.")
         press_enter_to_continue()
         return
     
@@ -132,7 +132,7 @@ def toggle_job():
     if success:
         show_success(f"Job '{job_name}' {action}d!")
     else:
-        show_error(f"Failed to {action} job.")
+        handle_error("E7003", f"Failed to {action} job.")
     
     press_enter_to_continue()
 
@@ -165,14 +165,14 @@ def run_job_now():
     
     job = next((j for j in jobs if j["name"] == selection), None)
     if not job:
-        show_error("Job not found.")
+        handle_error("E7003", "Job not found.")
         press_enter_to_continue()
         return
     
     schedule, command = parse_cron_line(job["line"])
     
     if not command:
-        show_error("Could not parse job command.")
+        handle_error("E7003", "Could not parse job command.")
         press_enter_to_continue()
         return
     
@@ -282,14 +282,14 @@ def test_job():
     
     job = next((j for j in jobs if j["name"] == selection), None)
     if not job:
-        show_error("Job not found.")
+        handle_error("E7003", "Job not found.")
         press_enter_to_continue()
         return
     
     schedule, command = parse_cron_line(job["line"])
     
     if not command:
-        show_error("Could not parse job command.")
+        handle_error("E7003", "Could not parse job command.")
         press_enter_to_continue()
         return
     

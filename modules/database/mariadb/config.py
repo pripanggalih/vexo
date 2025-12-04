@@ -4,10 +4,11 @@ import os
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, press_enter_to_continue,
+    show_success, show_warning, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, service_control, require_root
+from utils.error_handler import handle_error
 from modules.database.mariadb.utils import (
     is_mariadb_ready, run_mysql, format_size,
 )
@@ -44,7 +45,7 @@ def view_current_config():
     show_panel("Current Configuration", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -85,7 +86,7 @@ def quick_settings():
     show_panel("Quick Settings", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -119,7 +120,7 @@ def quick_settings():
         console.print()
         show_warning("This change is temporary. Add to my.cnf for persistence.")
     else:
-        show_error("Failed to update setting.")
+        handle_error("E4001", "Failed to update setting.")
         console.print(f"[dim]{result.stderr}[/dim]")
     
     press_enter_to_continue()
@@ -135,7 +136,7 @@ def memory_tuning():
     total_ram = int(result.stdout.strip()) if result.returncode == 0 else 0
     
     if total_ram == 0:
-        show_error("Could not detect server memory.")
+        handle_error("E4001", "Could not detect server memory.")
         press_enter_to_continue()
         return
     
@@ -180,7 +181,7 @@ def log_configuration():
     show_panel("Log Configuration", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -248,7 +249,7 @@ def view_config_file():
             break
     
     if not config_file:
-        show_error("Could not find config file.")
+        handle_error("E4001", "Could not find config file.")
         press_enter_to_continue()
         return
     

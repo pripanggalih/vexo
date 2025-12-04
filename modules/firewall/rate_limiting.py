@@ -7,13 +7,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.firewall.common import (
     is_ufw_installed,
     get_ufw_status_text,
@@ -89,7 +89,7 @@ def enable_rate_limit():
     show_panel("Enable Rate Limit", title="Rate Limiting", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -105,7 +105,7 @@ def enable_rate_limit():
         return
     
     if not _validate_port(port):
-        show_error("Invalid port number (1-65535).")
+        handle_error("E6001", "Invalid port number (1-65535).")
         press_enter_to_continue()
         return
     
@@ -174,7 +174,7 @@ def enable_rate_limit():
         add_rate_limit_config(port, protocol, preset_key, threshold)
         show_success(f"Rate limit enabled for {port}/{protocol}!")
     else:
-        show_error("Failed to apply rate limit.")
+        handle_error("E6001", "Failed to apply rate limit.")
     
     press_enter_to_continue()
 
@@ -186,7 +186,7 @@ def quick_ssh_protection():
     show_panel("Quick SSH Protection", title="Rate Limiting", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -229,7 +229,7 @@ def quick_ssh_protection():
         console.print()
         console.print("[dim]SSH is now protected against brute-force attacks.[/dim]")
     else:
-        show_error("Failed to enable SSH rate limiting.")
+        handle_error("E6001", "Failed to enable SSH rate limiting.")
     
     press_enter_to_continue()
 
@@ -265,7 +265,7 @@ def configure_limits():
     limit_config = limits.get(port_proto)
     
     if not limit_config:
-        show_error("Rate limit not found.")
+        handle_error("E6001", "Rate limit not found.")
         press_enter_to_continue()
         return
     
@@ -385,7 +385,7 @@ def remove_rate_limit():
     show_panel("Remove Rate Limit", title="Rate Limiting", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -423,11 +423,11 @@ def remove_rate_limit():
                 break
         
         if not selected:
-            show_error("Invalid rule number.")
+            handle_error("E6001", "Invalid rule number.")
             press_enter_to_continue()
             return
     except ValueError:
-        show_error("Invalid input.")
+        handle_error("E6001", "Invalid input.")
         press_enter_to_continue()
         return
     
@@ -458,7 +458,7 @@ def remove_rate_limit():
             run_command(f"ufw allow {port_match}", check=False, silent=True)
             show_success(f"Added allow rule for {port_match}.")
     else:
-        show_error("Failed to remove rate limit.")
+        handle_error("E6001", "Failed to remove rate limit.")
     
     press_enter_to_continue()
 

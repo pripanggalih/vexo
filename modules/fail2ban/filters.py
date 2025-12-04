@@ -13,13 +13,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 
 from .common import (
     FILTER_D_DIR,
@@ -140,7 +140,7 @@ def view_filter():
     filter_path = os.path.join(FILTER_D_DIR, f"{name}.conf")
     
     if not os.path.exists(filter_path):
-        show_error(f"Filter file not found: {filter_path}")
+        handle_error("E6003", f"Filter file not found: {filter_path}")
         press_enter_to_continue()
         return
     
@@ -156,7 +156,7 @@ def view_filter():
         console.print(Panel(syntax, title=f"{name}.conf", border_style="cyan"))
         
     except Exception as e:
-        show_error(f"Error reading filter: {e}")
+        handle_error("E6003", f"Error reading filter: {e}")
     
     press_enter_to_continue()
 
@@ -184,7 +184,7 @@ def create_filter():
     name = name.lower().replace(" ", "-")
     
     if _filter_exists(name):
-        show_error(f"Filter '{name}' already exists.")
+        handle_error("E6003", f"Filter '{name}' already exists.")
         press_enter_to_continue()
         return
     
@@ -273,7 +273,7 @@ def create_filter():
         if confirm_action("Test filter against a log file?"):
             _test_filter_interactive(name)
     except Exception as e:
-        show_error(f"Failed to create filter: {e}")
+        handle_error("E6003", f"Failed to create filter: {e}")
     
     press_enter_to_continue()
 
@@ -308,7 +308,7 @@ def edit_filter():
         with open(filter_path, 'r') as f:
             current_content = f.read()
     except Exception as e:
-        show_error(f"Error reading filter: {e}")
+        handle_error("E6003", f"Error reading filter: {e}")
         press_enter_to_continue()
         return
     
@@ -405,7 +405,7 @@ def _test_filter_interactive(filter_name):
         return
     
     if not os.path.exists(log_path):
-        show_error(f"Log file not found: {log_path}")
+        handle_error("E6003", f"Log file not found: {log_path}")
         return
     
     lines = text_input(
@@ -432,7 +432,7 @@ def _test_filter_interactive(filter_name):
     )
     
     if result.returncode != 0 and not result.stdout:
-        show_error("Failed to run filter test.")
+        handle_error("E6003", "Failed to run filter test.")
         console.print(f"[red]{result.stderr}[/red]")
         return
     
@@ -590,7 +590,7 @@ def delete_filter():
         os.remove(filter_path)
         show_success(f"Filter '{name}' deleted!")
     except Exception as e:
-        show_error(f"Failed to delete: {e}")
+        handle_error("E6003", f"Failed to delete: {e}")
     
     press_enter_to_continue()
 

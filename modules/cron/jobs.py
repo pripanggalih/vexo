@@ -7,13 +7,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list
 from utils.shell import require_root
+from utils.error_handler import handle_error
 
 from modules.cron.common import (
     CRON_PRESETS,
@@ -47,7 +47,7 @@ def add_cron_job_interactive():
     job_name = job_name.lower().strip().replace(" ", "-")
     
     if job_exists(job_name):
-        show_error(f"Job '{job_name}' already exists.")
+        handle_error("E7003", f"Job '{job_name}' already exists.")
         press_enter_to_continue()
         return
     
@@ -117,7 +117,7 @@ def add_cron_job_interactive():
     if success:
         show_success(f"Cron job '{job_name}' created!")
     else:
-        show_error("Failed to add cron job.")
+        handle_error("E7003", "Failed to add cron job.")
     
     press_enter_to_continue()
 
@@ -168,7 +168,7 @@ def remove_cron_job_interactive():
     if success:
         show_success(f"Cron job '{selection}' removed!")
     else:
-        show_error("Failed to remove cron job.")
+        handle_error("E7003", "Failed to remove cron job.")
     
     press_enter_to_continue()
 
@@ -257,7 +257,7 @@ def toggle_cron_job():
     
     job = next((j for j in jobs if j["name"] == job_name), None)
     if not job:
-        show_error("Job not found.")
+        handle_error("E7003", "Job not found.")
         press_enter_to_continue()
         return
     
@@ -279,6 +279,6 @@ def toggle_cron_job():
     if success:
         show_success(f"Job '{job_name}' {action}d!")
     else:
-        show_error(f"Failed to {action} job.")
+        handle_error("E7003", f"Failed to {action} job.")
     
     press_enter_to_continue()

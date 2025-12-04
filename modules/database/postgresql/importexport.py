@@ -4,10 +4,11 @@ import os
 
 from ui.components import (
     console, clear_screen, show_header, show_panel,
-    show_success, show_error, show_info, press_enter_to_continue,
+    show_success, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.database.postgresql.utils import (
     is_postgresql_ready, get_user_databases, run_psql, format_size,
 )
@@ -42,7 +43,7 @@ def import_sql_file():
     show_panel("Import SQL File", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -51,7 +52,7 @@ def import_sql_file():
         return
     
     if not os.path.exists(sql_file):
-        show_error("File not found.")
+        handle_error("E4001", "File not found.")
         press_enter_to_continue()
         return
     
@@ -72,7 +73,7 @@ def import_sql_file():
         
         result = run_psql(f"CREATE DATABASE {db_name};")
         if result.returncode != 0:
-            show_error(f"Failed to create database: {result.stderr}")
+            handle_error("E4001", f"Failed to create database: {result.stderr}")
             press_enter_to_continue()
             return
         target = db_name
@@ -97,7 +98,7 @@ def import_sql_file():
             extracted = os.path.join(temp_dir, sql_files[0])
             cmd = f"sudo -u postgres psql {target} < {extracted}"
         else:
-            show_error("No SQL file found in archive.")
+            handle_error("E4001", "No SQL file found in archive.")
             press_enter_to_continue()
             return
     else:
@@ -108,7 +109,7 @@ def import_sql_file():
     if result.returncode == 0:
         show_success(f"Import completed to '{target}'!")
     else:
-        show_error("Import failed!")
+        handle_error("E4001", "Import failed!")
     
     press_enter_to_continue()
 
@@ -120,7 +121,7 @@ def export_database():
     show_panel("Export Database", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -175,7 +176,7 @@ def export_database():
         size = format_size(os.path.getsize(output_path))
         show_success(f"Exported to: {output_path} ({size})")
     else:
-        show_error("Export failed!")
+        handle_error("E4001", "Export failed!")
     
     press_enter_to_continue()
 
@@ -187,7 +188,7 @@ def export_table():
     show_panel("Export Table", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -242,7 +243,7 @@ def export_table():
         size = format_size(os.path.getsize(output_path))
         show_success(f"Table exported: {output_path} ({size})")
     else:
-        show_error("Export failed!")
+        handle_error("E4001", "Export failed!")
     
     press_enter_to_continue()
 
@@ -254,7 +255,7 @@ def clone_database():
     show_panel("Clone Database", title="PostgreSQL", style="cyan")
     
     if not is_postgresql_ready():
-        show_error("PostgreSQL is not running.")
+        handle_error("E4001", "PostgreSQL is not running.")
         press_enter_to_continue()
         return
     
@@ -273,7 +274,7 @@ def clone_database():
         return
     
     if new_name in databases:
-        show_error(f"Database '{new_name}' already exists.")
+        handle_error("E4001", f"Database '{new_name}' already exists.")
         press_enter_to_continue()
         return
     
@@ -285,7 +286,7 @@ def clone_database():
     if result.returncode == 0:
         show_success(f"Database cloned: {source} → {new_name}")
     else:
-        show_error("Clone failed!")
+        handle_error("E4001", "Clone failed!")
         console.print(f"[dim]{result.stderr}[/dim]")
     
     press_enter_to_continue()

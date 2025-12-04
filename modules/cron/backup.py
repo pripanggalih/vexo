@@ -9,13 +9,13 @@ from ui.components import (
     show_header,
     show_panel,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import confirm_action, select_from_list
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 
 from modules.cron.common import (
     CRON_BACKUP_DIR,
@@ -69,7 +69,7 @@ def backup_crontab():
         console.print()
         console.print(f"[dim]File: {backup_file}[/dim]")
     except IOError as e:
-        show_error(f"Failed to create backup: {e}")
+        handle_error("E7003", f"Failed to create backup: {e}")
     
     press_enter_to_continue()
 
@@ -141,6 +141,6 @@ def restore_crontab():
     if result.returncode == 0:
         show_success("Crontab restored!")
     else:
-        show_error("Failed to restore crontab.")
+        handle_error("E7003", "Failed to restore crontab.")
     
     press_enter_to_continue()

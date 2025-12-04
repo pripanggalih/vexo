@@ -4,10 +4,11 @@ import os
 
 from ui.components import (
     console, clear_screen, show_header, show_panel,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list
 from utils.shell import (
+from utils.error_handler import handle_error
     run_command, run_command_realtime, is_installed, is_service_running,
     service_control, require_root,
 )
@@ -64,7 +65,7 @@ def install_dovecot():
     )
     
     if returncode != 0:
-        show_error("Failed to install Dovecot.")
+        handle_error("E5002", "Failed to install Dovecot.")
         press_enter_to_continue()
         return
     
@@ -189,7 +190,7 @@ def service_control_menu():
     show_panel("Service Control", title="Dovecot", style="cyan")
     
     if not is_installed("dovecot-core"):
-        show_error("Dovecot is not installed.")
+        handle_error("E5002", "Dovecot is not installed.")
         press_enter_to_continue()
         return
     

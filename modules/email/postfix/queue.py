@@ -2,10 +2,11 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.email.postfix.utils import is_postfix_ready
 
 
@@ -46,7 +47,7 @@ def view_queue():
     show_panel("Mail Queue", title="Queue Management", style="cyan")
     
     if not is_postfix_ready():
-        show_error("Postfix is not running.")
+        handle_error("E5002", "Postfix is not running.")
         press_enter_to_continue()
         return
     
@@ -61,7 +62,7 @@ def view_queue():
             console.print()
             console.print(output)
     else:
-        show_error("Failed to get queue status.")
+        handle_error("E5002", "Failed to get queue status.")
     
     press_enter_to_continue()
 
@@ -73,7 +74,7 @@ def flush_queue():
     show_panel("Flush Queue", title="Queue Management", style="cyan")
     
     if not is_postfix_ready():
-        show_error("Postfix is not running.")
+        handle_error("E5002", "Postfix is not running.")
         press_enter_to_continue()
         return
     
@@ -95,7 +96,7 @@ def flush_queue():
         show_success("Queue flush initiated!")
         console.print("[dim]Messages will be delivered in the background.[/dim]")
     else:
-        show_error("Failed to flush queue.")
+        handle_error("E5002", "Failed to flush queue.")
     
     press_enter_to_continue()
 
@@ -128,13 +129,13 @@ def hold_release_menu():
         if result.returncode == 0:
             show_success("All messages held!")
         else:
-            show_error("Failed to hold messages.")
+            handle_error("E5002", "Failed to hold messages.")
     elif "Release all" in choice:
         result = run_command("postsuper -H ALL", check=False, silent=True)
         if result.returncode == 0:
             show_success("All messages released!")
         else:
-            show_error("Failed to release messages.")
+            handle_error("E5002", "Failed to release messages.")
     elif "Hold specific" in choice:
         queue_id = text_input("Queue ID:")
         if queue_id:
@@ -142,7 +143,7 @@ def hold_release_menu():
             if result.returncode == 0:
                 show_success(f"Message {queue_id} held!")
             else:
-                show_error("Failed to hold message.")
+                handle_error("E5002", "Failed to hold message.")
     else:
         queue_id = text_input("Queue ID:")
         if queue_id:
@@ -150,7 +151,7 @@ def hold_release_menu():
             if result.returncode == 0:
                 show_success(f"Message {queue_id} released!")
             else:
-                show_error("Failed to release message.")
+                handle_error("E5002", "Failed to release message.")
     
     press_enter_to_continue()
 
@@ -162,7 +163,7 @@ def delete_messages():
     show_panel("Delete Messages", title="Queue Management", style="red")
     
     if not is_postfix_ready():
-        show_error("Postfix is not running.")
+        handle_error("E5002", "Postfix is not running.")
         press_enter_to_continue()
         return
     
@@ -191,7 +192,7 @@ def delete_messages():
         if result.returncode == 0:
             show_success("All queued messages deleted!")
         else:
-            show_error("Failed to delete messages.")
+            handle_error("E5002", "Failed to delete messages.")
     
     elif "specific" in choice:
         queue_id = text_input("Queue ID:")
@@ -200,7 +201,7 @@ def delete_messages():
             if result.returncode == 0:
                 show_success(f"Message {queue_id} deleted!")
             else:
-                show_error("Failed to delete message.")
+                handle_error("E5002", "Failed to delete message.")
     
     else:
         recipient = text_input("Recipient email:")
@@ -249,6 +250,6 @@ def requeue_all():
     if result.returncode == 0:
         show_success("All messages requeued!")
     else:
-        show_error("Failed to requeue messages.")
+        handle_error("E5002", "Failed to requeue messages.")
     
     press_enter_to_continue()

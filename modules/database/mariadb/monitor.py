@@ -2,10 +2,11 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_info, press_enter_to_continue,
+    show_success, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, is_service_running
+from utils.error_handler import handle_error
 from modules.database.mariadb.utils import (
     is_mariadb_ready, run_mysql, get_databases, get_database_size,
     format_size, get_mariadb_version, get_mariadb_datadir, get_user_databases,
@@ -41,7 +42,7 @@ def database_stats():
     show_panel("Database Statistics", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -103,7 +104,7 @@ def table_sizes():
     show_panel("Table Sizes", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -167,14 +168,14 @@ def active_connections():
     show_panel("Active Connections", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
     result = run_mysql("SHOW FULL PROCESSLIST;")
     
     if result.returncode != 0:
-        show_error("Failed to get connections.")
+        handle_error("E4001", "Failed to get connections.")
         press_enter_to_continue()
         return
     
@@ -206,7 +207,7 @@ def active_connections():
                 if result.returncode == 0:
                     show_success(f"Connection {pid} terminated.")
                 else:
-                    show_error("Failed to terminate connection.")
+                    handle_error("E4001", "Failed to terminate connection.")
     else:
         show_info("No active connections.")
     
@@ -220,7 +221,7 @@ def slow_query_log():
     show_panel("Slow Query Log", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     

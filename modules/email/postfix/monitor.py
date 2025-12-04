@@ -7,10 +7,11 @@ from collections import defaultdict
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, is_installed, is_service_running
+from utils.error_handler import handle_error
 from modules.email.postfix.utils import (
     is_postfix_ready, get_postfix_setting, get_configured_domains,
 )
@@ -94,7 +95,7 @@ def show_statistics():
         return
     
     if not os.path.exists(MAIL_LOG):
-        show_error("Mail log not found.")
+        handle_error("E5002", "Mail log not found.")
         press_enter_to_continue()
         return
     

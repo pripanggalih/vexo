@@ -11,13 +11,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, require_root, service_control
+from utils.error_handler import handle_error
 
 from .common import (
     is_valid_ip,
@@ -161,7 +161,7 @@ def _add_global_ip():
         return
     
     if not is_valid_ip(ip):
-        show_error("Invalid IP address format.")
+        handle_error("E6003", "Invalid IP address format.")
         press_enter_to_continue()
         return
     
@@ -216,7 +216,7 @@ def _add_global_range():
         return
     
     if not is_valid_cidr(cidr):
-        show_error("Invalid CIDR format. Use format like 192.168.0.0/24")
+        handle_error("E6003", "Invalid CIDR format. Use format like 192.168.0.0/24")
         press_enter_to_continue()
         return
     
@@ -377,7 +377,7 @@ def _manage_jail_whitelist(jail):
             return
         
         if not is_valid_ip(value) and not is_valid_cidr(value):
-            show_error("Invalid IP or CIDR format.")
+            handle_error("E6003", "Invalid IP or CIDR format.")
             press_enter_to_continue()
             return
         
@@ -757,13 +757,13 @@ def _export_whitelist(path):
         
         show_success(f"Exported to {path}")
     except Exception as e:
-        show_error(f"Export failed: {e}")
+        handle_error("E6003", f"Export failed: {e}")
 
 
 def _import_whitelist(path):
     """Import whitelist from file."""
     if not os.path.exists(path):
-        show_error(f"File not found: {path}")
+        handle_error("E6003", f"File not found: {path}")
         return
     
     whitelist = _load_whitelist()
@@ -796,7 +796,7 @@ def _import_whitelist(path):
         _save_whitelist(whitelist)
         show_success(f"Imported {imported} entries!")
     except Exception as e:
-        show_error(f"Import failed: {e}")
+        handle_error("E6003", f"Import failed: {e}")
 
 
 def apply_whitelist():
@@ -825,7 +825,7 @@ def apply_whitelist():
         service_control("fail2ban", "reload")
         show_success("Whitelist applied to fail2ban!")
     else:
-        show_error("Failed to apply whitelist.")
+        handle_error("E6003", "Failed to apply whitelist.")
     
     press_enter_to_continue()
 
@@ -894,7 +894,7 @@ def _apply_whitelist_to_fail2ban():
         
         return True
     except Exception as e:
-        show_error(f"Error: {e}")
+        handle_error("E6003", f"Error: {e}")
         return False
 
 

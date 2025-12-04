@@ -10,13 +10,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, run_command_realtime, require_root
+from utils.error_handler import handle_error
 from modules.ssl.common import (
     get_certbot_status_text,
     list_all_certificates,
@@ -266,7 +266,7 @@ def renew_certificate():
         show_success(f"Certificate {cert['name']} renewed!")
         log_event(cert['name'], "renewed", "Manual renewal")
     else:
-        show_error("Renewal failed. Check certbot output above.")
+        handle_error("E6002", "Renewal failed. Check certbot output above.")
     
     press_enter_to_continue()
 
@@ -339,7 +339,7 @@ def revoke_certificate():
             )
             show_info("Certificate files deleted.")
     else:
-        show_error("Revocation failed.")
+        handle_error("E6002", "Revocation failed.")
         console.print(f"[dim]{result.stderr}[/dim]")
     
     press_enter_to_continue()
@@ -392,7 +392,7 @@ def delete_certificate():
             show_success(f"Certificate {cert['name']} deleted!")
             log_event(cert['name'], "deleted", "Certbot certificate")
         else:
-            show_error("Failed to delete certificate.")
+            handle_error("E6002", "Failed to delete certificate.")
             console.print(f"[dim]{result.stderr}[/dim]")
     else:
         cert_dir = os.path.join(VEXO_SSL_CERTS, cert['name'])
@@ -402,6 +402,6 @@ def delete_certificate():
             show_success(f"Certificate {cert['name']} deleted!")
             log_event(cert['name'], "deleted", "Custom certificate")
         else:
-            show_error("Certificate directory not found.")
+            handle_error("E6002", "Certificate directory not found.")
     
     press_enter_to_continue()

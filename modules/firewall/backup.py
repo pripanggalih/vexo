@@ -11,13 +11,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.firewall.common import (
     is_ufw_installed,
     get_ufw_status_text,
@@ -104,7 +104,7 @@ def create_backup():
     show_panel("Create Backup", title="Backup & Restore", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -178,7 +178,7 @@ def create_backup():
         console.print(f"[dim]Location: {filepath}[/dim]")
         console.print(f"[dim]Rules: {len(backup_data.get('ufw_rules', []))}[/dim]")
     except IOError as e:
-        show_error(f"Failed to create backup: {e}")
+        handle_error("E6001", f"Failed to create backup: {e}")
     
     press_enter_to_continue()
 
@@ -218,7 +218,7 @@ def restore_backup():
         with open(backup["filepath"], 'r') as f:
             backup_data = json.load(f)
     except (json.JSONDecodeError, IOError) as e:
-        show_error(f"Failed to load backup: {e}")
+        handle_error("E6001", f"Failed to load backup: {e}")
         press_enter_to_continue()
         return
     
@@ -423,7 +423,7 @@ def compare_configs():
         config1, name1 = load_config(choice1)
         config2, name2 = load_config(choice2)
     except Exception as e:
-        show_error(f"Failed to load configs: {e}")
+        handle_error("E6001", f"Failed to load configs: {e}")
         press_enter_to_continue()
         return
     
@@ -526,7 +526,7 @@ def auto_backup_settings():
                 _save_settings(settings)
                 show_success(f"Will keep last {new_value} backups.")
             except ValueError:
-                show_error("Invalid number.")
+                handle_error("E6001", "Invalid number.")
     
     elif action == "Toggle backup before changes":
         settings["backup_before_changes"] = not settings.get("backup_before_changes", True)
@@ -675,7 +675,7 @@ def _view_backup_details(backup):
         with open(backup["filepath"], 'r') as f:
             data = json.load(f)
     except Exception as e:
-        show_error(f"Failed to load backup: {e}")
+        handle_error("E6001", f"Failed to load backup: {e}")
         return
     
     console.print()
@@ -715,7 +715,7 @@ def _rename_backup(backup, new_name):
         
         show_success(f"Backup renamed to '{new_name}'.")
     except Exception as e:
-        show_error(f"Failed to rename: {e}")
+        handle_error("E6001", f"Failed to rename: {e}")
 
 
 def _delete_backup(backup):
@@ -724,7 +724,7 @@ def _delete_backup(backup):
         os.remove(backup["filepath"])
         show_success(f"Backup '{backup['name']}' deleted.")
     except IOError as e:
-        show_error(f"Failed to delete: {e}")
+        handle_error("E6001", f"Failed to delete: {e}")
 
 
 def _export_backup(backup):
@@ -743,4 +743,4 @@ def _export_backup(backup):
         shutil.copy2(backup["filepath"], dest)
         show_success(f"Exported to: {dest}")
     except Exception as e:
-        show_error(f"Failed to export: {e}")
+        handle_error("E6001", f"Failed to export: {e}")

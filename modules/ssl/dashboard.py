@@ -7,7 +7,6 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
@@ -21,6 +20,7 @@ from modules.ssl.common import (
     ALERT_CRITICAL,
 )
 from utils.shell import run_command
+from utils.error_handler import handle_error
 
 
 def show_dashboard():

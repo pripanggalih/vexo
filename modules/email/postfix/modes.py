@@ -2,10 +2,11 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, run_menu_loop
 from utils.shell import is_installed, is_service_running, require_root
+from utils.error_handler import handle_error
 from modules.email.postfix.utils import (
     get_postfix_mode, set_postfix_settings, restart_postfix,
 )
@@ -42,7 +43,7 @@ def setup_send_only():
     show_panel("Send-Only Mode", title="Postfix", style="cyan")
     
     if not is_installed("postfix"):
-        show_error("Postfix is not installed.")
+        handle_error("E5002", "Postfix is not installed.")
         press_enter_to_continue()
         return
     
@@ -89,7 +90,7 @@ def setup_send_only():
         else:
             show_warning("Configuration applied but Postfix may not be running.")
     else:
-        show_error("Failed to configure send-only mode.")
+        handle_error("E5002", "Failed to configure send-only mode.")
     
     press_enter_to_continue()
 
@@ -101,7 +102,7 @@ def setup_receive_mode():
     show_panel("Receive Mode", title="Postfix", style="cyan")
     
     if not is_installed("postfix"):
-        show_error("Postfix is not installed.")
+        handle_error("E5002", "Postfix is not installed.")
         press_enter_to_continue()
         return
     
@@ -155,6 +156,6 @@ def setup_receive_mode():
         else:
             show_warning("Configuration applied but Postfix may not be running.")
     else:
-        show_error("Failed to configure receive mode.")
+        handle_error("E5002", "Failed to configure receive mode.")
     
     press_enter_to_continue()

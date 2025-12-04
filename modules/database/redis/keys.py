@@ -2,8 +2,9 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from modules.database.redis.utils import is_redis_ready, run_redis_cli
 
@@ -37,7 +38,7 @@ def browse_keys():
     show_panel("Browse Keys", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -48,7 +49,7 @@ def browse_keys():
     result = run_redis_cli(f'SCAN 0 MATCH "{pattern}" COUNT 100')
     
     if result.returncode != 0:
-        show_error("Failed to scan keys.")
+        handle_error("E4001", "Failed to scan keys.")
         press_enter_to_continue()
         return
     
@@ -102,7 +103,7 @@ def search_keys():
     show_panel("Search Keys", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -119,7 +120,7 @@ def search_keys():
     result = run_redis_cli(f'KEYS "{pattern}"')
     
     if result.returncode != 0:
-        show_error("Search failed.")
+        handle_error("E4001", "Search failed.")
         press_enter_to_continue()
         return
     
@@ -144,7 +145,7 @@ def view_key_value():
     show_panel("View Key Value", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -154,7 +155,7 @@ def view_key_value():
     
     result = run_redis_cli(f'EXISTS "{key}"')
     if result.returncode != 0 or result.stdout.strip() == "0":
-        show_error(f"Key '{key}' does not exist.")
+        handle_error("E4001", f"Key '{key}' does not exist.")
         press_enter_to_continue()
         return
     
@@ -214,7 +215,7 @@ def delete_key():
     show_panel("Delete Key", title="Redis", style="red")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -252,7 +253,7 @@ def delete_key():
     else:
         result = run_redis_cli(f'EXISTS "{key}"')
         if result.stdout.strip() == "0":
-            show_error(f"Key '{key}' does not exist.")
+            handle_error("E4001", f"Key '{key}' does not exist.")
             press_enter_to_continue()
             return
         
@@ -263,7 +264,7 @@ def delete_key():
         if result.returncode == 0:
             show_success(f"Key '{key}' deleted!")
         else:
-            show_error("Failed to delete key.")
+            handle_error("E4001", "Failed to delete key.")
     
     press_enter_to_continue()
 
@@ -275,7 +276,7 @@ def set_key_ttl():
     show_panel("Set TTL", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -285,7 +286,7 @@ def set_key_ttl():
     
     result = run_redis_cli(f'EXISTS "{key}"')
     if result.stdout.strip() == "0":
-        show_error(f"Key '{key}' does not exist.")
+        handle_error("E4001", f"Key '{key}' does not exist.")
         press_enter_to_continue()
         return
     
@@ -329,6 +330,6 @@ def set_key_ttl():
     if result.returncode == 0:
         show_success(f"TTL set to {seconds} seconds!")
     else:
-        show_error("Failed to set TTL.")
+        handle_error("E4001", "Failed to set TTL.")
     
     press_enter_to_continue()

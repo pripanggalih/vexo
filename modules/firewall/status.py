@@ -6,7 +6,6 @@ from ui.components import (
     show_header,
     show_panel,
     show_table,
-    show_error,
     press_enter_to_continue,
 )
 from modules.firewall.common import (
@@ -17,6 +16,7 @@ from modules.firewall.common import (
     get_rule_count,
 )
 from utils.shell import run_command
+from utils.error_handler import handle_error
 
 
 def show_status_dashboard():
@@ -25,7 +25,7 @@ def show_status_dashboard():
     show_header()
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         console.print()
         console.print("[dim]Use 'Enable Firewall' to install and configure UFW.[/dim]")
         press_enter_to_continue()

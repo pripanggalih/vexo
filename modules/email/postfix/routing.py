@@ -5,10 +5,11 @@ import json
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import (
+from utils.error_handler import handle_error
     run_command, run_command_realtime, is_installed, is_service_running,
     service_control, require_root,
 )
@@ -120,13 +121,13 @@ def add_alias():
     
     alias = text_input("Alias address (e.g., info@example.com):")
     if not alias or "@" not in alias:
-        show_error("Invalid email address.")
+        handle_error("E5002", "Invalid email address.")
         press_enter_to_continue()
         return
     
     destination = text_input("Destination address:")
     if not destination or "@" not in destination:
-        show_error("Invalid email address.")
+        handle_error("E5002", "Invalid email address.")
         press_enter_to_continue()
         return
     
@@ -275,13 +276,13 @@ def add_forward():
     
     address = text_input("Local address (e.g., alerts@example.com):")
     if not address or "@" not in address:
-        show_error("Invalid email address.")
+        handle_error("E5002", "Invalid email address.")
         press_enter_to_continue()
         return
     
     forward_to = text_input("Forward to (external email):")
     if not forward_to or "@" not in forward_to:
-        show_error("Invalid email address.")
+        handle_error("E5002", "Invalid email address.")
         press_enter_to_continue()
         return
     
@@ -463,7 +464,7 @@ def install_spamassassin():
     )
     
     if returncode != 0:
-        show_error("Failed to install SpamAssassin.")
+        handle_error("E5002", "Failed to install SpamAssassin.")
         press_enter_to_continue()
         return
     
@@ -531,7 +532,7 @@ def configure_spamassassin():
     show_panel("Configure SpamAssassin", title="Spam Filter", style="cyan")
     
     if not is_installed("spamassassin"):
-        show_error("SpamAssassin is not installed.")
+        handle_error("E5002", "SpamAssassin is not installed.")
         press_enter_to_continue()
         return
     
@@ -616,7 +617,7 @@ def test_spam_check():
     show_panel("Test Spam Check", title="Spam Filter", style="cyan")
     
     if not is_installed("spamassassin"):
-        show_error("SpamAssassin is not installed.")
+        handle_error("E5002", "SpamAssassin is not installed.")
         press_enter_to_continue()
         return
     
@@ -662,7 +663,7 @@ def spam_service_control():
     show_panel("Service Control", title="SpamAssassin", style="cyan")
     
     if not is_installed("spamassassin"):
-        show_error("SpamAssassin is not installed.")
+        handle_error("E5002", "SpamAssassin is not installed.")
         press_enter_to_continue()
         return
     

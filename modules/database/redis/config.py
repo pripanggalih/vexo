@@ -4,10 +4,11 @@ import os
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.database.redis.utils import (
     is_redis_ready, run_redis_cli, get_redis_config, set_redis_config,
 )
@@ -44,7 +45,7 @@ def view_configuration():
     show_panel("Current Configuration", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -91,7 +92,7 @@ def edit_setting():
     show_panel("Edit Setting", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -131,7 +132,7 @@ def edit_setting():
         show_success(f"Set {setting_name} = {new_value}")
         console.print("[dim]Use 'Save to Config File' to persist across restarts[/dim]")
     else:
-        show_error("Failed to set configuration.")
+        handle_error("E4001", "Failed to set configuration.")
     
     press_enter_to_continue()
 
@@ -143,7 +144,7 @@ def set_password():
     show_panel("Set Password", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -175,7 +176,7 @@ def set_password():
             return
         
         if password != confirm:
-            show_error("Passwords do not match.")
+            handle_error("E4001", "Passwords do not match.")
             press_enter_to_continue()
             return
         
@@ -191,7 +192,7 @@ def set_password():
             console.print("[dim]Clients must now use AUTH command[/dim]")
             console.print("[dim]Use 'Save to Config File' to persist[/dim]")
         else:
-            show_error("Failed to set password.")
+            handle_error("E4001", "Failed to set password.")
     
     else:
         if not confirm_action("Remove password protection?"):
@@ -202,7 +203,7 @@ def set_password():
         if result.returncode == 0:
             show_success("Password removed!")
         else:
-            show_error("Failed to remove password.")
+            handle_error("E4001", "Failed to remove password.")
     
     press_enter_to_continue()
 
@@ -214,7 +215,7 @@ def bind_address():
     show_panel("Bind Address", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -256,7 +257,7 @@ def bind_address():
         show_success(f"Bind address set to {new_bind}!")
         show_warning("Restart Redis for this change to take effect.")
     else:
-        show_error("Failed to set bind address.")
+        handle_error("E4001", "Failed to set bind address.")
     
     press_enter_to_continue()
 
@@ -279,7 +280,7 @@ def view_config_file():
             break
     
     if not config_file:
-        show_error("Could not find Redis config file.")
+        handle_error("E4001", "Could not find Redis config file.")
         press_enter_to_continue()
         return
     
@@ -301,7 +302,7 @@ def save_config():
     show_panel("Save Configuration", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -317,7 +318,7 @@ def save_config():
     if result.returncode == 0:
         show_success("Configuration saved to redis.conf!")
     else:
-        show_error("Failed to save configuration.")
+        handle_error("E4001", "Failed to save configuration.")
         console.print("[dim]Make sure Redis has write access to config file[/dim]")
     
     press_enter_to_continue()

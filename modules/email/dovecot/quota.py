@@ -2,10 +2,11 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import is_installed, require_root
+from utils.error_handler import handle_error
 from modules.email.utils import load_email_config, save_email_config
 
 
@@ -118,7 +119,7 @@ def set_user_quota():
     show_panel("User Quota", title="Quota Settings", style="cyan")
     
     if not is_installed("dovecot-core"):
-        show_error("Dovecot is not installed.")
+        handle_error("E5002", "Dovecot is not installed.")
         press_enter_to_continue()
         return
     

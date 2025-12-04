@@ -8,12 +8,12 @@ from ui.components import (
     show_header,
     show_panel,
     show_success,
-    show_error,
     show_warning,
     press_enter_to_continue,
 )
 from ui.menu import show_submenu, confirm_action, text_input, select_from_list
 from utils.shell import require_root
+from utils.error_handler import handle_error
 
 from modules.cron.common import (
     CRON_PRESETS,
@@ -83,7 +83,7 @@ def _get_job_name(default_prefix):
     job_name = job_name.lower().strip().replace(" ", "-")
     
     if job_exists(job_name):
-        show_error(f"Job '{job_name}' already exists.")
+        handle_error("E7003", f"Job '{job_name}' already exists.")
         press_enter_to_continue()
         return None
     
@@ -136,7 +136,7 @@ def _save_job(job_name, cron_line):
         console.print(f"[dim]Log: {CRON_LOG_DIR}/{job_name}.log[/dim]")
         return True
     else:
-        show_error("Failed to add cron job.")
+        handle_error("E7003", "Failed to add cron job.")
         return False
 
 
@@ -166,7 +166,7 @@ def add_laravel_scheduler():
         return
     
     if not os.path.exists(os.path.join(laravel_path, "artisan")):
-        show_error(f"Laravel artisan not found at {laravel_path}")
+        handle_error("E7003", f"Laravel artisan not found at {laravel_path}")
         press_enter_to_continue()
         return
     
@@ -347,7 +347,7 @@ def add_backup_cleanup():
     try:
         days = int(days)
     except ValueError:
-        show_error("Invalid number of days.")
+        handle_error("E7003", "Invalid number of days.")
         press_enter_to_continue()
         return
     
@@ -421,7 +421,7 @@ def add_laravel_cache_clear():
         return
     
     if not os.path.exists(os.path.join(laravel_path, "artisan")):
-        show_error(f"Laravel artisan not found at {laravel_path}")
+        handle_error("E7003", f"Laravel artisan not found at {laravel_path}")
         press_enter_to_continue()
         return
     
@@ -469,7 +469,7 @@ def add_temp_cleanup():
     try:
         days = int(days)
     except ValueError:
-        show_error("Invalid number of days.")
+        handle_error("E7003", "Invalid number of days.")
         press_enter_to_continue()
         return
     
@@ -517,7 +517,7 @@ def add_log_rotation():
     try:
         max_size = int(max_size)
     except ValueError:
-        show_error("Invalid size.")
+        handle_error("E7003", "Invalid size.")
         press_enter_to_continue()
         return
     

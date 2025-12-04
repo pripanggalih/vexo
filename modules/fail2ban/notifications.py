@@ -15,7 +15,6 @@ from ui.components import (
     show_header,
     show_panel,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
@@ -576,7 +575,7 @@ def test_notification():
         if result:
             show_success(f"Test notification sent to {channel}!")
         else:
-            show_error(f"Failed to send to {channel}")
+            handle_error("E6003", f"Failed to send to {channel}")
     
     press_enter_to_continue()
 
@@ -602,6 +601,7 @@ def install_action_script():
     
     try:
         from utils.shell import require_root
+from utils.error_handler import handle_error
         require_root()
     except PermissionError:
         press_enter_to_continue()
@@ -682,7 +682,7 @@ actionunban = {NOTIFY_SCRIPT_PATH} unban <ip> <name>
         console.print("[cyan]         vexo-notify[/cyan]")
         
     except Exception as e:
-        show_error(f"Installation failed: {e}")
+        handle_error("E6003", f"Installation failed: {e}")
     
     press_enter_to_continue()
 

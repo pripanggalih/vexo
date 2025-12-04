@@ -5,10 +5,11 @@ import re
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, service_control, require_root
+from utils.error_handler import handle_error
 from modules.runtime.php.utils import (
     get_installed_php_versions, get_fpm_service_name,
     PHP_INI_FPM, PHP_INI_CLI,
@@ -74,7 +75,7 @@ def disable_dangerous_functions():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -155,7 +156,7 @@ def disable_dangerous_functions():
             service_control(get_fpm_service_name(version), "restart")
             show_success("PHP-FPM restarted!")
     else:
-        show_error("Failed to update configuration.")
+        handle_error("E3001", "Failed to update configuration.")
     
     press_enter_to_continue()
 
@@ -168,7 +169,7 @@ def configure_open_basedir():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -215,7 +216,7 @@ def configure_open_basedir():
         from modules.webserver.utils import get_configured_domains
         domains = get_configured_domains()
         if not domains:
-            show_error("No domains configured.")
+            handle_error("E3001", "No domains configured.")
             press_enter_to_continue()
             return
         
@@ -255,7 +256,7 @@ def configure_open_basedir():
             service_control(get_fpm_service_name(version), "restart")
             show_success("PHP-FPM restarted!")
     else:
-        show_error("Failed to update configuration.")
+        handle_error("E3001", "Failed to update configuration.")
     
     press_enter_to_continue()
 
@@ -268,7 +269,7 @@ def configure_session_security():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -326,7 +327,7 @@ def configure_session_security():
         if success:
             show_success("Session security settings applied!")
         else:
-            show_error("Some settings may have failed.")
+            handle_error("E3001", "Some settings may have failed.")
     else:
         # Individual setting
         setting_options = [f"{k} ({v[1]})" for k, v in SESSION_SECURITY.items()]
@@ -345,7 +346,7 @@ def configure_session_security():
         if _update_php_ini(ini_path, key, new_value):
             show_success(f"Updated {key} = {new_value}")
         else:
-            show_error("Failed to update setting.")
+            handle_error("E3001", "Failed to update setting.")
     
     console.print()
     if confirm_action("Restart PHP-FPM to apply changes?"):
@@ -363,7 +364,7 @@ def toggle_expose_php():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -410,7 +411,7 @@ def toggle_expose_php():
             service_control(get_fpm_service_name(version), "restart")
             show_success("PHP-FPM restarted!")
     else:
-        show_error("Failed to update configuration.")
+        handle_error("E3001", "Failed to update configuration.")
     
     press_enter_to_continue()
 
@@ -423,7 +424,7 @@ def security_audit():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -556,7 +557,7 @@ def _update_php_ini(ini_path, key, value):
         
         return True
     except Exception as e:
-        show_error(f"Error updating {ini_path}: {e}")
+        handle_error("E3001", f"Error updating {ini_path}: {e}")
         return False
 
 
@@ -576,5 +577,5 @@ def _comment_php_ini(ini_path, key):
         
         return True
     except Exception as e:
-        show_error(f"Error updating {ini_path}: {e}")
+        handle_error("E3001", f"Error updating {ini_path}: {e}")
         return False

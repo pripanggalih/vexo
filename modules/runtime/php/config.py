@@ -7,10 +7,11 @@ from datetime import datetime
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, service_control, require_root
+from utils.error_handler import handle_error
 from modules.runtime.php.utils import (
     get_installed_php_versions, get_fpm_service_name, is_fpm_running,
     PHP_INI_FPM, PHP_INI_CLI,
@@ -127,7 +128,7 @@ def quick_settings():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -200,7 +201,7 @@ def quick_settings():
             service_control(get_fpm_service_name(version), "restart")
             show_success("PHP-FPM restarted!")
     else:
-        show_error("Failed to update configuration.")
+        handle_error("E3001", "Failed to update configuration.")
     
     press_enter_to_continue()
 
@@ -213,7 +214,7 @@ def opcache_tuning():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -333,7 +334,7 @@ def view_current_settings():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -376,7 +377,7 @@ def restore_defaults():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -432,7 +433,7 @@ def restore_defaults():
         if confirm_action("Restart PHP-FPM?"):
             service_control(get_fpm_service_name(version), "restart")
     else:
-        show_error("Failed to restore defaults.")
+        handle_error("E3001", "Failed to restore defaults.")
     
     press_enter_to_continue()
 
@@ -482,7 +483,7 @@ def _update_ini_setting(ini_path, key, value):
         
         return True
     except Exception as e:
-        show_error(f"Error updating {ini_path}: {e}")
+        handle_error("E3001", f"Error updating {ini_path}: {e}")
         return False
 
 

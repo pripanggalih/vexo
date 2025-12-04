@@ -9,13 +9,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.firewall.common import is_ufw_installed, get_ufw_status_text
 
 
@@ -133,7 +133,7 @@ def list_profiles():
     show_panel("Application Profiles", title="App Profiles", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -175,7 +175,7 @@ def apply_profile():
     show_panel("Apply Profile", title="App Profiles", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -232,7 +232,7 @@ def apply_profile():
     if result.returncode == 0:
         show_success(f"Profile '{profile_name}' applied!")
     else:
-        show_error(f"Failed to apply profile: {result.stderr}")
+        handle_error("E6001", f"Failed to apply profile: {result.stderr}")
     
     press_enter_to_continue()
 
@@ -260,14 +260,14 @@ def create_profile():
     
     # Validate name (alphanumeric and hyphens only)
     if not re.match(r'^[a-zA-Z][a-zA-Z0-9-]*$', name):
-        show_error("Invalid name. Use alphanumeric and hyphens, start with letter.")
+        handle_error("E6001", "Invalid name. Use alphanumeric and hyphens, start with letter.")
         press_enter_to_continue()
         return
     
     # Check if profile already exists
     existing = _get_all_profiles()
     if name in existing:
-        show_error(f"Profile '{name}' already exists.")
+        handle_error("E6001", f"Profile '{name}' already exists.")
         press_enter_to_continue()
         return
     
@@ -306,7 +306,7 @@ def create_profile():
     
     # Validate ports format
     if not _validate_ports_format(ports):
-        show_error("Invalid ports format.")
+        handle_error("E6001", "Invalid ports format.")
         press_enter_to_continue()
         return
     
@@ -343,9 +343,9 @@ def create_profile():
             if result.returncode == 0:
                 show_success(f"Profile applied!")
             else:
-                show_error("Failed to apply profile.")
+                handle_error("E6001", "Failed to apply profile.")
     else:
-        show_error("Failed to create profile.")
+        handle_error("E6001", "Failed to create profile.")
     
     press_enter_to_continue()
 
@@ -412,7 +412,7 @@ def edit_profile():
     info = _get_profile_info(profile_name)
     
     if not info:
-        show_error("Could not read profile info.")
+        handle_error("E6001", "Could not read profile info.")
         press_enter_to_continue()
         return
     
@@ -461,7 +461,7 @@ def edit_profile():
         if new_value and _validate_ports_format(new_value):
             _update_profile_field(profile_name, "ports", new_value)
         elif new_value:
-            show_error("Invalid ports format.")
+            handle_error("E6001", "Invalid ports format.")
             press_enter_to_continue()
             return
     
@@ -567,7 +567,7 @@ def delete_profile():
         run_command("ufw app update vexo-custom", check=False, silent=True)
         show_success(f"Profile '{profile_name}' deleted!")
     else:
-        show_error("Failed to delete profile.")
+        handle_error("E6001", "Failed to delete profile.")
     
     press_enter_to_continue()
 
@@ -632,7 +632,7 @@ def show_profile_info():
     custom = _get_custom_profiles()
     
     if not info:
-        show_error("Could not retrieve profile info.")
+        handle_error("E6001", "Could not retrieve profile info.")
         press_enter_to_continue()
         return
     

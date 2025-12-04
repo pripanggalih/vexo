@@ -10,13 +10,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.ssl.common import (
     get_certbot_status_text,
     ensure_config_dir,
@@ -192,7 +192,7 @@ def configure_alerts():
         
         if new_email:
             if "@" not in new_email:
-                show_error("Invalid email address.")
+                handle_error("E6002", "Invalid email address.")
             else:
                 alerts["email"] = new_email
                 settings["alerts"] = alerts
@@ -214,7 +214,7 @@ def configure_alerts():
         
         if new_webhook:
             if not new_webhook.startswith("http"):
-                show_error("Invalid webhook URL.")
+                handle_error("E6002", "Invalid webhook URL.")
             else:
                 alerts["webhook"] = new_webhook
                 settings["alerts"] = alerts
@@ -326,7 +326,7 @@ def configure_auto_renewal():
         if result.returncode == 0:
             show_success("Certbot timer enabled!")
         else:
-            show_error("Failed to enable timer.")
+            handle_error("E6002", "Failed to enable timer.")
     
     elif action == "Disable certbot timer":
         if not confirm_action("Disable auto-renewal? Certificates will NOT renew automatically!"):
@@ -457,7 +457,7 @@ def configure_thresholds():
             _save_settings(settings)
             show_success(f"{level} threshold set to {new_value} days!")
         except ValueError:
-            show_error("Invalid number.")
+            handle_error("E6002", "Invalid number.")
     
     press_enter_to_continue()
 

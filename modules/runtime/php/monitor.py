@@ -6,10 +6,11 @@ from datetime import datetime
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, service_control, require_root
+from utils.error_handler import handle_error
 from modules.runtime.php.utils import (
     get_installed_php_versions, get_fpm_service_name, is_fpm_running,
     get_fpm_pool_path, parse_fpm_pool_config,
@@ -52,7 +53,7 @@ def fpm_status_page():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -61,7 +62,7 @@ def fpm_status_page():
         return
     
     if not is_fpm_running(version):
-        show_error(f"PHP {version} FPM is not running.")
+        handle_error("E3001", f"PHP {version} FPM is not running.")
         press_enter_to_continue()
         return
     
@@ -167,7 +168,7 @@ def _enable_fpm_status(version):
         show_success("FPM status page enabled!")
         console.print(f"[dim]Status path: /fpm-status[/dim]")
     except Exception as e:
-        show_error(f"Failed to enable status page: {e}")
+        handle_error("E3001", f"Failed to enable status page: {e}")
 
 
 def error_log_viewer():
@@ -178,7 +179,7 @@ def error_log_viewer():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -200,7 +201,7 @@ def error_log_viewer():
             break
     
     if not log_path:
-        show_error("Log file not found.")
+        handle_error("E3001", "Log file not found.")
         console.print(f"[dim]Checked: {', '.join(log_paths)}[/dim]")
         press_enter_to_continue()
         return
@@ -254,7 +255,7 @@ def slow_log_viewer():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -376,7 +377,7 @@ def _enable_slow_log(version):
         service_control(get_fpm_service_name(version), "restart")
         show_success("Slow logging enabled (5s threshold)!")
     except Exception as e:
-        show_error(f"Failed to enable slow logging: {e}")
+        handle_error("E3001", f"Failed to enable slow logging: {e}")
 
 
 def process_monitor():
@@ -387,7 +388,7 @@ def process_monitor():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -396,7 +397,7 @@ def process_monitor():
         return
     
     if not is_fpm_running(version):
-        show_error(f"PHP {version} FPM is not running.")
+        handle_error("E3001", f"PHP {version} FPM is not running.")
         press_enter_to_continue()
         return
     
@@ -464,7 +465,7 @@ def process_monitor():
                 if result.returncode == 0:
                     show_success(f"Process {pid} killed.")
                 else:
-                    show_error(f"Failed to kill process {pid}.")
+                    handle_error("E3001", f"Failed to kill process {pid}.")
             except PermissionError:
                 pass
     
@@ -479,7 +480,7 @@ def health_check():
     
     versions = get_installed_php_versions()
     if not versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     

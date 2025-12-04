@@ -2,8 +2,9 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from modules.runtime.nodejs.utils import run_with_nvm, run_with_nvm_realtime
 
@@ -67,7 +68,7 @@ def list_global_packages():
     result = run_with_nvm("npm -g ls --depth=0 --json")
     
     if result is None or result.returncode != 0:
-        show_error("Failed to list packages.")
+        handle_error("E3003", "Failed to list packages.")
         press_enter_to_continue()
         return
     
@@ -76,7 +77,7 @@ def list_global_packages():
         data = json.loads(result.stdout)
         dependencies = data.get("dependencies", {})
     except Exception:
-        show_error("Failed to parse package list.")
+        handle_error("E3003", "Failed to parse package list.")
         press_enter_to_continue()
         return
     
@@ -147,7 +148,7 @@ def install_global_package():
     if returncode == 0:
         show_success(f"{package} installed successfully!")
     else:
-        show_error(f"Failed to install {package}.")
+        handle_error("E3003", f"Failed to install {package}.")
     
     press_enter_to_continue()
 
@@ -179,7 +180,7 @@ def update_global_packages():
         if returncode == 0:
             show_success("All packages updated!")
         else:
-            show_error("Some packages may have failed to update.")
+            handle_error("E3003", "Some packages may have failed to update.")
     else:
         # Get installed packages
         packages = _get_global_packages()
@@ -198,7 +199,7 @@ def update_global_packages():
         if returncode == 0:
             show_success(f"{package} updated!")
         else:
-            show_error(f"Failed to update {package}.")
+            handle_error("E3003", f"Failed to update {package}.")
     
     press_enter_to_continue()
 
@@ -230,7 +231,7 @@ def remove_global_package():
     if returncode == 0:
         show_success(f"{package} removed!")
     else:
-        show_error(f"Failed to remove {package}.")
+        handle_error("E3003", f"Failed to remove {package}.")
     
     press_enter_to_continue()
 
@@ -247,7 +248,7 @@ def check_outdated():
     result = run_with_nvm("npm -g outdated --json")
     
     if result is None:
-        show_error("Failed to check outdated packages.")
+        handle_error("E3003", "Failed to check outdated packages.")
         press_enter_to_continue()
         return
     
@@ -261,7 +262,7 @@ def check_outdated():
         import json
         outdated = json.loads(result.stdout)
     except Exception:
-        show_error("Failed to parse response.")
+        handle_error("E3003", "Failed to parse response.")
         press_enter_to_continue()
         return
     
@@ -338,7 +339,7 @@ def clean_npm_cache():
     if returncode == 0:
         show_success("npm cache cleaned!")
     else:
-        show_error("Failed to clean cache.")
+        handle_error("E3003", "Failed to clean cache.")
     
     press_enter_to_continue()
 

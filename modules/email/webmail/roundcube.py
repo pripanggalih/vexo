@@ -6,10 +6,11 @@ import string
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list
 from utils.shell import (
+from utils.error_handler import handle_error
     run_command, run_command_realtime, is_installed, is_service_running,
     require_root,
 )
@@ -136,7 +137,7 @@ def install_roundcube():
         run_command_realtime("apt install -y roundcube roundcube-core", "Installing Roundcube...")
         
         if not os.path.exists("/usr/share/roundcube"):
-            show_error("Failed to install Roundcube.")
+            handle_error("E5002", "Failed to install Roundcube.")
             press_enter_to_continue()
             return
         
@@ -306,7 +307,7 @@ def view_status():
     show_panel("Roundcube Status", title="Webmail", style="cyan")
     
     if not os.path.exists(ROUNDCUBE_DIR):
-        show_error("Roundcube is not installed.")
+        handle_error("E5002", "Roundcube is not installed.")
         press_enter_to_continue()
         return
     
@@ -347,7 +348,7 @@ def configure_roundcube():
     show_panel("Configure Roundcube", title="Webmail", style="cyan")
     
     if not os.path.exists(ROUNDCUBE_CONFIG):
-        show_error("Roundcube configuration not found.")
+        handle_error("E5002", "Roundcube configuration not found.")
         press_enter_to_continue()
         return
     
@@ -409,7 +410,7 @@ def manage_plugins():
     show_panel("Plugins", title="Roundcube", style="cyan")
     
     if not os.path.exists(ROUNDCUBE_DIR):
-        show_error("Roundcube is not installed.")
+        handle_error("E5002", "Roundcube is not installed.")
         press_enter_to_continue()
         return
     
@@ -461,7 +462,7 @@ def update_roundcube():
     show_panel("Update Roundcube", title="Webmail", style="yellow")
     
     if not os.path.exists(ROUNDCUBE_DIR):
-        show_error("Roundcube is not installed.")
+        handle_error("E5002", "Roundcube is not installed.")
         press_enter_to_continue()
         return
     
@@ -488,7 +489,7 @@ def update_roundcube():
     result = run_command(f"wget -O /tmp/roundcube_new.tar.gz {ROUNDCUBE_URL}", check=False, silent=True)
     
     if result.returncode != 0:
-        show_error("Download failed.")
+        handle_error("E5002", "Download failed.")
         press_enter_to_continue()
         return
     

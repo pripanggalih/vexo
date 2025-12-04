@@ -5,10 +5,11 @@ import os
 from config import NVM_DIR, NVM_INSTALL_URL
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, select_from_list, text_input, run_menu_loop
 from utils.shell import run_command_with_progress
+from utils.error_handler import handle_error
 from modules.runtime.nodejs.utils import (
     is_nvm_installed, get_nvm_version, run_with_nvm, run_with_nvm_realtime,
     get_installed_nodejs_versions, get_current_nodejs_version, get_default_nodejs_version,
@@ -37,7 +38,7 @@ def install_nvm_interactive():
         console.print("[dim]Note: You may need to restart your terminal or run:[/dim]")
         console.print("[dim]  source ~/.bashrc[/dim]")
     else:
-        show_error("Failed to install NVM.")
+        handle_error("E3003", "Failed to install NVM.")
     
     press_enter_to_continue()
 
@@ -57,7 +58,7 @@ def install_nvm():
     )
     
     if result.returncode != 0:
-        show_error("Failed to download/install NVM")
+        handle_error("E3003", "Failed to download/install NVM")
         return False
     
     if is_nvm_installed():
@@ -75,7 +76,7 @@ def install_nodejs_interactive():
     show_panel("Install Node.js", title="Node.js Runtime", style="cyan")
     
     if not is_nvm_installed():
-        show_error("NVM is not installed. Please install NVM first.")
+        handle_error("E3003", "NVM is not installed. Please install NVM first.")
         press_enter_to_continue()
         return
     
@@ -114,7 +115,7 @@ def install_nodejs_interactive():
         if node_ver:
             console.print(f"[dim]Installed: {node_ver}[/dim]")
     else:
-        show_error("Failed to install Node.js")
+        handle_error("E3003", "Failed to install Node.js")
     
     press_enter_to_continue()
 
@@ -130,7 +131,7 @@ def install_nodejs(version):
         bool: True if successful
     """
     if not is_nvm_installed():
-        show_error("NVM is not installed")
+        handle_error("E3003", "NVM is not installed")
         return False
     
     show_info(f"Installing Node.js {version}...")
@@ -150,14 +151,14 @@ def switch_nodejs_interactive():
     show_panel("Switch Node.js Version", title="Node.js Runtime", style="cyan")
     
     if not is_nvm_installed():
-        show_error("NVM is not installed.")
+        handle_error("E3003", "NVM is not installed.")
         press_enter_to_continue()
         return
     
     installed = get_installed_nodejs_versions()
     
     if not installed:
-        show_error("No Node.js versions installed.")
+        handle_error("E3003", "No Node.js versions installed.")
         press_enter_to_continue()
         return
     
@@ -190,7 +191,7 @@ def switch_nodejs_interactive():
         if new_ver:
             console.print(f"[dim]Now using: {new_ver}[/dim]")
     else:
-        show_error(f"Failed to switch to Node.js {version}")
+        handle_error("E3003", f"Failed to switch to Node.js {version}")
     
     press_enter_to_continue()
 
@@ -230,7 +231,7 @@ def list_nodejs_versions():
     show_panel("Installed Node.js Versions", title="Node.js Runtime", style="cyan")
     
     if not is_nvm_installed():
-        show_error("NVM is not installed.")
+        handle_error("E3003", "NVM is not installed.")
         console.print()
         console.print("[dim]Use 'Install/Update NVM' first.[/dim]")
         press_enter_to_continue()
@@ -286,7 +287,7 @@ def show_nodejs_info():
     show_panel("Node.js Information", title="Node.js Runtime", style="cyan")
     
     if not is_nvm_installed():
-        show_error("NVM is not installed.")
+        handle_error("E3003", "NVM is not installed.")
         press_enter_to_continue()
         return
     

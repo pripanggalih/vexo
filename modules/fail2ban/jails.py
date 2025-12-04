@@ -9,13 +9,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, require_root, service_control
+from utils.error_handler import handle_error
 
 from .common import (
     is_fail2ban_installed,
@@ -109,7 +109,7 @@ def view_jail_details(jail):
     result = run_command(f"fail2ban-client status {jail}", check=False, silent=True)
     
     if result.returncode != 0:
-        show_error(f"Failed to get details for {jail}")
+        handle_error("E6003", f"Failed to get details for {jail}")
         return
     
     console.print(f"[bold cyan]Jail: {jail}[/bold cyan]")
@@ -174,7 +174,7 @@ def toggle_jail():
         service_control("fail2ban", "reload")
         show_success(f"Jail '{jail}' {action}d!")
     else:
-        show_error(f"Failed to {action} jail.")
+        handle_error("E6003", f"Failed to {action} jail.")
     
     press_enter_to_continue()
 
@@ -201,12 +201,12 @@ def create_custom_jail():
     
     name = name.lower().replace(" ", "-")
     if not name.replace("-", "").replace("_", "").isalnum():
-        show_error("Invalid name. Use only letters, numbers, dashes, underscores.")
+        handle_error("E6003", "Invalid name. Use only letters, numbers, dashes, underscores.")
         press_enter_to_continue()
         return
     
     if _jail_exists(name):
-        show_error(f"Jail '{name}' already exists.")
+        handle_error("E6003", f"Jail '{name}' already exists.")
         press_enter_to_continue()
         return
     
@@ -305,7 +305,7 @@ def create_custom_jail():
         service_control("fail2ban", "reload")
         show_success(f"Jail '{name}' created and enabled!")
     else:
-        show_error("Failed to create jail.")
+        handle_error("E6003", "Failed to create jail.")
     
     press_enter_to_continue()
 
@@ -395,7 +395,7 @@ def install_from_template():
         service_control("fail2ban", "reload")
         show_success(f"Template '{template['display_name']}' installed!")
     else:
-        show_error("Failed to install template.")
+        handle_error("E6003", "Failed to install template.")
     
     press_enter_to_continue()
 
@@ -427,7 +427,7 @@ def edit_jail():
     current = _read_jail_config(jail)
     
     if not current:
-        show_error(f"Could not read config for {jail}")
+        handle_error("E6003", f"Could not read config for {jail}")
         press_enter_to_continue()
         return
     
@@ -473,7 +473,7 @@ def edit_jail():
         service_control("fail2ban", "reload")
         show_success(f"Jail '{jail}' updated!")
     else:
-        show_error("Failed to update jail.")
+        handle_error("E6003", "Failed to update jail.")
     
     press_enter_to_continue()
 
@@ -523,7 +523,7 @@ def delete_jail():
         service_control("fail2ban", "reload")
         show_success(f"Jail '{jail}' deleted!")
     else:
-        show_error("Failed to delete jail.")
+        handle_error("E6003", "Failed to delete jail.")
     
     press_enter_to_continue()
 
@@ -607,7 +607,7 @@ ignoreregex =
         with open(filter_file, 'w') as f:
             f.write(filter_content)
     except Exception as e:
-        show_error(f"Failed to create filter: {e}")
+        handle_error("E6003", f"Failed to create filter: {e}")
         return False
     
     jail_content = f"""[{name}]
@@ -629,7 +629,7 @@ bantime = {bantime}
         with open(jail_file, 'w') as f:
             f.write(jail_content)
     except Exception as e:
-        show_error(f"Failed to create jail: {e}")
+        handle_error("E6003", f"Failed to create jail: {e}")
         return False
     
     return True
@@ -642,7 +642,7 @@ def _install_template(name, template):
         with open(filter_file, 'w') as f:
             f.write(template['filter_content'])
     except Exception as e:
-        show_error(f"Failed to create filter: {e}")
+        handle_error("E6003", f"Failed to create filter: {e}")
         return False
     
     config = template['jail_config']
@@ -666,7 +666,7 @@ bantime = {config['bantime']}
         with open(jail_file, 'w') as f:
             f.write(jail_content)
     except Exception as e:
-        show_error(f"Failed to create jail: {e}")
+        handle_error("E6003", f"Failed to create jail: {e}")
         return False
     
     return True

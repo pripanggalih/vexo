@@ -5,10 +5,10 @@ from ui.components import (
     clear_screen,
     show_header,
     show_panel,
-    show_error,
     show_warning,
     press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import confirm_action, text_input, select_from_list
 
 
@@ -137,7 +137,7 @@ def _build_every_x_minutes():
         if m < 1 or m > 59:
             raise ValueError()
     except ValueError:
-        show_error("Invalid value. Must be 1-59.")
+        handle_error("E7003", "Invalid value. Must be 1-59.")
         press_enter_to_continue()
         return None
     
@@ -161,7 +161,7 @@ def _build_hourly():
         if m < 0 or m > 59:
             raise ValueError()
     except ValueError:
-        show_error("Invalid value. Must be 0-59.")
+        handle_error("E7003", "Invalid value. Must be 0-59.")
         press_enter_to_continue()
         return None
     
@@ -185,7 +185,7 @@ def _build_every_x_hours():
         if h < 1 or h > 23:
             raise ValueError()
     except ValueError:
-        show_error("Invalid value. Must be 1-23.")
+        handle_error("E7003", "Invalid value. Must be 1-23.")
         press_enter_to_continue()
         return None
     
@@ -203,7 +203,7 @@ def _build_every_x_hours():
         if m < 0 or m > 59:
             raise ValueError()
     except ValueError:
-        show_error("Invalid value. Must be 0-59.")
+        handle_error("E7003", "Invalid value. Must be 0-59.")
         press_enter_to_continue()
         return None
     
@@ -227,7 +227,7 @@ def _build_daily():
         if h < 0 or h > 23:
             raise ValueError()
     except ValueError:
-        show_error("Invalid value. Must be 0-23.")
+        handle_error("E7003", "Invalid value. Must be 0-23.")
         press_enter_to_continue()
         return None
     
@@ -245,7 +245,7 @@ def _build_daily():
         if m < 0 or m > 59:
             raise ValueError()
     except ValueError:
-        show_error("Invalid value. Must be 0-59.")
+        handle_error("E7003", "Invalid value. Must be 0-59.")
         press_enter_to_continue()
         return None
     
@@ -300,7 +300,7 @@ def _build_weekly():
         if h < 0 or h > 23:
             raise ValueError()
     except ValueError:
-        show_error("Invalid value. Must be 0-23.")
+        handle_error("E7003", "Invalid value. Must be 0-23.")
         press_enter_to_continue()
         return None
     
@@ -318,7 +318,7 @@ def _build_weekly():
         if m < 0 or m > 59:
             raise ValueError()
     except ValueError:
-        show_error("Invalid value. Must be 0-59.")
+        handle_error("E7003", "Invalid value. Must be 0-59.")
         press_enter_to_continue()
         return None
     
@@ -341,13 +341,13 @@ def _build_monthly():
     try:
         d = int(day)
         if d < 1 or d > 31:
-            show_error("Invalid day. Must be 1-31.")
+            handle_error("E7003", "Invalid day. Must be 1-31.")
             press_enter_to_continue()
             return None
         if d > 28:
             show_warning("Days 29-31 may not exist in all months. Using anyway.")
     except ValueError:
-        show_error("Invalid day.")
+        handle_error("E7003", "Invalid day.")
         press_enter_to_continue()
         return None
     
@@ -365,7 +365,7 @@ def _build_monthly():
         if h < 0 or h > 23:
             raise ValueError()
     except ValueError:
-        show_error("Invalid value. Must be 0-23.")
+        handle_error("E7003", "Invalid value. Must be 0-23.")
         press_enter_to_continue()
         return None
     
@@ -383,7 +383,7 @@ def _build_monthly():
         if m < 0 or m > 59:
             raise ValueError()
     except ValueError:
-        show_error("Invalid value. Must be 0-59.")
+        handle_error("E7003", "Invalid value. Must be 0-59.")
         press_enter_to_continue()
         return None
     

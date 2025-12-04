@@ -9,13 +9,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list
 from utils.shell import run_command, is_installed, require_root
+from utils.error_handler import handle_error
 
 from modules.supervisor.common import (
     SUPERVISOR_CONF_DIR,
@@ -36,7 +36,7 @@ def add_worker_interactive():
     show_panel("Add Worker", title="Queue Workers", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -54,12 +54,12 @@ def add_worker_interactive():
     worker_name = worker_name.lower().strip().replace(" ", "-")
     
     if not validate_worker_name(worker_name):
-        show_error("Invalid worker name. Use only letters, numbers, and hyphens.")
+        handle_error("E7002", "Invalid worker name. Use only letters, numbers, and hyphens.")
         press_enter_to_continue()
         return
     
     if worker_exists(worker_name):
-        show_error(f"Worker '{worker_name}' already exists.")
+        handle_error("E7002", f"Worker '{worker_name}' already exists.")
         press_enter_to_continue()
         return
     
@@ -77,7 +77,7 @@ def add_worker_interactive():
     
     artisan_path = os.path.join(laravel_path, "artisan")
     if not os.path.exists(artisan_path):
-        show_error(f"Laravel artisan not found at {laravel_path}")
+        handle_error("E7002", f"Laravel artisan not found at {laravel_path}")
         press_enter_to_continue()
         return
     
@@ -122,7 +122,7 @@ def add_worker_interactive():
         if numprocs < 1:
             raise ValueError()
     except ValueError:
-        show_error("Invalid number of processes.")
+        handle_error("E7002", "Invalid number of processes.")
         press_enter_to_continue()
         return
     
@@ -155,7 +155,7 @@ def add_worker_interactive():
         console.print(f"[dim]Config: {get_config_path(worker_name)}[/dim]")
         console.print(f"[dim]Log: {get_log_path(worker_name)}[/dim]")
     else:
-        show_error("Failed to create worker.")
+        handle_error("E7002", "Failed to create worker.")
     
     press_enter_to_continue()
 
@@ -203,7 +203,7 @@ stopwaitsecs=3600
         with open(config_path, 'w') as f:
             f.write(config_content)
     except IOError as e:
-        show_error(f"Failed to write config: {e}")
+        handle_error("E7002", f"Failed to write config: {e}")
         return False
     
     return _reload_supervisor()
@@ -216,7 +216,7 @@ def remove_worker_interactive():
     show_panel("Remove Worker", title="Queue Workers", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -258,7 +258,7 @@ def remove_worker_interactive():
     if success:
         show_success(f"Worker '{worker}' removed!")
     else:
-        show_error("Failed to remove worker.")
+        handle_error("E7002", "Failed to remove worker.")
     
     press_enter_to_continue()
 
@@ -281,7 +281,7 @@ def remove_worker(name):
         if os.path.exists(config_path):
             os.remove(config_path)
     except IOError as e:
-        show_error(f"Failed to remove config: {e}")
+        handle_error("E7002", f"Failed to remove config: {e}")
         return False
     
     return _reload_supervisor()
@@ -294,7 +294,7 @@ def list_workers():
     show_panel("Queue Workers", title="Supervisor", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     

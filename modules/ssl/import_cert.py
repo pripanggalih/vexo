@@ -13,13 +13,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.ssl.common import (
     get_certbot_status_text,
     parse_certificate,
@@ -67,13 +67,13 @@ def import_pem_files():
     )
     
     if not cert_path or not os.path.exists(cert_path):
-        show_error("Certificate file not found.")
+        handle_error("E6002", "Certificate file not found.")
         press_enter_to_continue()
         return
     
     cert_info = parse_certificate(cert_path)
     if not cert_info:
-        show_error("Invalid certificate file.")
+        handle_error("E6002", "Invalid certificate file.")
         press_enter_to_continue()
         return
     
@@ -86,19 +86,19 @@ def import_pem_files():
     )
     
     if not key_path or not os.path.exists(key_path):
-        show_error("Private key file not found.")
+        handle_error("E6002", "Private key file not found.")
         press_enter_to_continue()
         return
     
     if not _validate_private_key(key_path):
-        show_error("Invalid private key file.")
+        handle_error("E6002", "Invalid private key file.")
         press_enter_to_continue()
         return
     
     console.print(f"  [green]✓[/green] Valid private key")
     
     if not _verify_cert_key_match(cert_path, key_path):
-        show_error("Certificate and private key do not match!")
+        handle_error("E6002", "Certificate and private key do not match!")
         press_enter_to_continue()
         return
     
@@ -127,7 +127,7 @@ def import_pem_files():
         )
     
     if not domain:
-        show_error("Domain name required.")
+        handle_error("E6002", "Domain name required.")
         press_enter_to_continue()
         return
     
@@ -153,7 +153,7 @@ def import_pem_files():
         
         log_event(domain, "imported", "PEM files")
     else:
-        show_error("Failed to import certificate.")
+        handle_error("E6002", "Failed to import certificate.")
     
     press_enter_to_continue()
 
@@ -174,7 +174,7 @@ def import_pfx_file():
     )
     
     if not pfx_path or not os.path.exists(pfx_path):
-        show_error("PFX file not found.")
+        handle_error("E6002", "PFX file not found.")
         press_enter_to_continue()
         return
     
@@ -202,7 +202,7 @@ def import_pfx_file():
     )
     
     if result.returncode != 0:
-        show_error("Failed to extract certificate. Check password.")
+        handle_error("E6002", "Failed to extract certificate. Check password.")
         shutil.rmtree(temp_dir, ignore_errors=True)
         press_enter_to_continue()
         return
@@ -216,7 +216,7 @@ def import_pfx_file():
     )
     
     if result.returncode != 0:
-        show_error("Failed to extract private key.")
+        handle_error("E6002", "Failed to extract private key.")
         shutil.rmtree(temp_dir, ignore_errors=True)
         press_enter_to_continue()
         return
@@ -237,7 +237,7 @@ def import_pfx_file():
     
     cert_info = parse_certificate(cert_path)
     if not cert_info:
-        show_error("Failed to parse extracted certificate.")
+        handle_error("E6002", "Failed to parse extracted certificate.")
         shutil.rmtree(temp_dir, ignore_errors=True)
         press_enter_to_continue()
         return
@@ -283,7 +283,7 @@ def import_pfx_file():
         
         log_event(domain, "imported", "PFX/PKCS12")
     else:
-        show_error("Failed to import certificate.")
+        handle_error("E6002", "Failed to import certificate.")
     
     press_enter_to_continue()
 
@@ -315,7 +315,7 @@ def paste_certificate():
     cert_content = "\n".join(cert_lines)
     
     if "-----BEGIN CERTIFICATE-----" not in cert_content:
-        show_error("Invalid certificate format.")
+        handle_error("E6002", "Invalid certificate format.")
         press_enter_to_continue()
         return
     
@@ -326,7 +326,7 @@ def paste_certificate():
     cert_info = parse_certificate(temp_cert)
     if not cert_info:
         os.remove(temp_cert)
-        show_error("Invalid certificate.")
+        handle_error("E6002", "Invalid certificate.")
         press_enter_to_continue()
         return
     
@@ -349,7 +349,7 @@ def paste_certificate():
     key_content = "\n".join(key_lines)
     
     if "-----BEGIN" not in key_content or "KEY-----" not in key_content:
-        show_error("Invalid key format.")
+        handle_error("E6002", "Invalid key format.")
         os.remove(temp_cert)
         press_enter_to_continue()
         return
@@ -359,7 +359,7 @@ def paste_certificate():
         f.write(key_content)
     
     if not _verify_cert_key_match(temp_cert, temp_key):
-        show_error("Certificate and key do not match!")
+        handle_error("E6002", "Certificate and key do not match!")
         os.remove(temp_cert)
         os.remove(temp_key)
         press_enter_to_continue()
@@ -403,7 +403,7 @@ def paste_certificate():
         show_success(f"Certificate imported for {domain}!")
         log_event(domain, "imported", "Pasted PEM")
     else:
-        show_error("Failed to import certificate.")
+        handle_error("E6002", "Failed to import certificate.")
     
     press_enter_to_continue()
 
@@ -539,4 +539,4 @@ def _configure_nginx(domain):
         run_command("systemctl reload nginx", check=False, silent=True)
         show_success("Nginx configuration updated!")
     else:
-        show_error("Nginx config test failed. Please check manually.")
+        handle_error("E6002", "Nginx config test failed. Please check manually.")

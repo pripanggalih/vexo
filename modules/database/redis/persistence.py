@@ -2,8 +2,9 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from modules.database.redis.utils import (
     is_redis_ready, redis_info, run_redis_cli, get_redis_config,
@@ -38,7 +39,7 @@ def persistence_status():
     show_panel("Persistence Status", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -77,7 +78,7 @@ def rdb_config():
     show_panel("RDB Configuration", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -115,7 +116,7 @@ def rdb_config():
             if result.returncode == 0:
                 show_success("RDB configuration updated!")
             else:
-                show_error("Failed to update configuration.")
+                handle_error("E4001", "Failed to update configuration.")
             break
     
     press_enter_to_continue()
@@ -128,7 +129,7 @@ def aof_config():
     show_panel("AOF Configuration", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -182,7 +183,7 @@ def trigger_save():
     show_panel("Trigger Save", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -202,7 +203,7 @@ def trigger_save():
         if result.returncode == 0:
             show_success("Background save started!")
         else:
-            show_error("Failed to start background save.")
+            handle_error("E4001", "Failed to start background save.")
     elif "SAVE" in choice:
         show_warning("This will block Redis until complete!")
         if confirm_action("Continue?"):
@@ -210,12 +211,12 @@ def trigger_save():
             if result.returncode == 0:
                 show_success("Save completed!")
             else:
-                show_error("Save failed.")
+                handle_error("E4001", "Save failed.")
     elif "BGREWRITEAOF" in choice:
         result = run_redis_cli("BGREWRITEAOF")
         if result.returncode == 0:
             show_success("AOF rewrite started!")
         else:
-            show_error("Failed to start AOF rewrite.")
+            handle_error("E4001", "Failed to start AOF rewrite.")
     
     press_enter_to_continue()

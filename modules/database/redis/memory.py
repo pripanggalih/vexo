@@ -2,8 +2,9 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import text_input, select_from_list, run_menu_loop
 from modules.database.redis.utils import (
     is_redis_ready, redis_info, run_redis_cli, get_redis_config,
@@ -38,7 +39,7 @@ def memory_stats():
     show_panel("Memory Statistics", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -82,7 +83,7 @@ def set_max_memory():
     show_panel("Set Max Memory", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -131,7 +132,7 @@ def set_max_memory():
         show_success(f"Max memory set to {value}!")
         console.print("[dim]Note: Add to redis.conf for persistence across restarts[/dim]")
     else:
-        show_error("Failed to set max memory.")
+        handle_error("E4001", "Failed to set max memory.")
     
     press_enter_to_continue()
 
@@ -143,7 +144,7 @@ def eviction_policy():
     show_panel("Eviction Policy", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -179,7 +180,7 @@ def eviction_policy():
     if result.returncode == 0:
         show_success(f"Eviction policy set to {choice}!")
     else:
-        show_error("Failed to set policy.")
+        handle_error("E4001", "Failed to set policy.")
     
     press_enter_to_continue()
 
@@ -191,7 +192,7 @@ def memory_analysis():
     show_panel("Memory Analysis", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -200,7 +201,7 @@ def memory_analysis():
     
     result = run_redis_cli('KEYS "*"')
     if result.returncode != 0:
-        show_error("Failed to get keys.")
+        handle_error("E4001", "Failed to get keys.")
         press_enter_to_continue()
         return
     

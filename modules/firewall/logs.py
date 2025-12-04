@@ -10,13 +10,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.firewall.common import is_ufw_installed, get_ufw_status_text
 
 
@@ -137,7 +137,7 @@ def view_logs():
     log_file = _get_log_file()
     
     if not log_file:
-        show_error("UFW log file not found.")
+        handle_error("E6001", "UFW log file not found.")
         show_info("Check if logging is enabled: ufw logging on")
         press_enter_to_continue()
         return
@@ -158,7 +158,7 @@ def view_logs():
         with open(log_file, 'r') as f:
             lines = f.readlines()
     except IOError as e:
-        show_error(f"Cannot read log file: {e}")
+        handle_error("E6001", f"Cannot read log file: {e}")
         press_enter_to_continue()
         return
     
@@ -239,7 +239,7 @@ def show_blocked_stats():
     log_file = _get_log_file()
     
     if not log_file:
-        show_error("UFW log file not found.")
+        handle_error("E6001", "UFW log file not found.")
         press_enter_to_continue()
         return
     
@@ -261,7 +261,7 @@ def show_blocked_stats():
         with open(log_file, 'r') as f:
             lines = f.readlines()
     except IOError as e:
-        show_error(f"Cannot read log file: {e}")
+        handle_error("E6001", f"Cannot read log file: {e}")
         press_enter_to_continue()
         return
     
@@ -375,7 +375,7 @@ def configure_logging():
     show_panel("Log Settings", title="Logs & Monitoring", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -417,7 +417,7 @@ def configure_logging():
     if result.returncode == 0:
         show_success(f"Log level changed to '{new_level}'!")
     else:
-        show_error(f"Failed to change log level: {result.stderr}")
+        handle_error("E6001", f"Failed to change log level: {result.stderr}")
     
     press_enter_to_continue()
 
@@ -431,7 +431,7 @@ def live_monitor():
     log_file = _get_log_file()
     
     if not log_file:
-        show_error("UFW log file not found.")
+        handle_error("E6001", "UFW log file not found.")
         press_enter_to_continue()
         return
     
@@ -503,6 +503,6 @@ def live_monitor():
         console.print("[dim]Monitor stopped.[/dim]")
     
     except Exception as e:
-        show_error(f"Monitor error: {e}")
+        handle_error("E6001", f"Monitor error: {e}")
     
     press_enter_to_continue()

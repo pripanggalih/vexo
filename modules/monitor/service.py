@@ -11,12 +11,12 @@ from ui.components import (
     show_table,
     show_info,
     show_warning,
-    show_error,
     show_success,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, confirm_action, select_from_list, text_input
 from utils.shell import run_command
+from utils.error_handler import handle_error
 
 
 # Predefined vexo-managed services
@@ -360,7 +360,7 @@ def show_service_actions(service_name):
     details = get_service_details(service_name)
     
     if details['active'] == '-':
-        show_error(f"Service '{service_name}' not found.")
+        handle_error("E1006", f"Service '{service_name}' not found.")
         press_enter_to_continue()
         return
     
@@ -461,10 +461,10 @@ def _service_control(service_name, action):
         if result.returncode == 0:
             show_success(f"Service {service_name} {action}ed successfully.")
         else:
-            show_error(f"Failed to {action} service: {result.stderr}")
+            handle_error("E1006", f"Failed to {action} service: {result.stderr}")
     
     except Exception as e:
-        show_error(f"Error: {e}")
+        handle_error("E1006", f"Error: {e}")
     
     press_enter_to_continue()
 
@@ -497,6 +497,6 @@ def _view_service_logs(service_name, lines=50):
             show_info("No logs available or access denied.")
     
     except Exception as e:
-        show_error(f"Failed to retrieve logs: {e}")
+        handle_error("E1006", f"Failed to retrieve logs: {e}")
     
     press_enter_to_continue()

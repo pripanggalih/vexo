@@ -6,13 +6,13 @@ from ui.components import (
     show_header,
     show_panel,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import show_submenu, confirm_action, text_input, select_from_list
 from utils.shell import require_root
+from utils.error_handler import handle_error
 
 from modules.cron.common import (
     CRON_PRESETS,
@@ -60,7 +60,7 @@ def _show_edit_options(job_name):
     job = next((j for j in jobs if j["name"] == job_name), None)
     
     if not job:
-        show_error("Job not found.")
+        handle_error("E7003", "Job not found.")
         press_enter_to_continue()
         return
     
@@ -172,7 +172,7 @@ def _edit_schedule(job_name, job):
     if success:
         show_success(f"Schedule updated to: {new_schedule}")
     else:
-        show_error("Failed to update schedule.")
+        handle_error("E7003", "Failed to update schedule.")
     
     press_enter_to_continue()
 
@@ -215,7 +215,7 @@ def _edit_command(job_name, job):
     if success:
         show_success("Command updated!")
     else:
-        show_error("Failed to update command.")
+        handle_error("E7003", "Failed to update command.")
     
     press_enter_to_continue()
 
@@ -241,7 +241,7 @@ def _edit_job_name(job_name, job):
         return None
     
     if job_exists(new_name):
-        show_error(f"Job '{new_name}' already exists.")
+        handle_error("E7003", f"Job '{new_name}' already exists.")
         press_enter_to_continue()
         return None
     
@@ -269,7 +269,7 @@ def _edit_job_name(job_name, job):
         press_enter_to_continue()
         return new_name
     else:
-        show_error("Failed to rename job.")
+        handle_error("E7003", "Failed to rename job.")
         press_enter_to_continue()
         return None
 
@@ -348,7 +348,7 @@ def clone_job_menu():
     # Get source job
     job = next((j for j in jobs if j["name"] == source), None)
     if not job:
-        show_error("Job not found.")
+        handle_error("E7003", "Job not found.")
         press_enter_to_continue()
         return
     
@@ -368,7 +368,7 @@ def clone_job_menu():
     new_name = new_name.lower().strip().replace(" ", "-")
     
     if job_exists(new_name):
-        show_error(f"Job '{new_name}' already exists.")
+        handle_error("E7003", f"Job '{new_name}' already exists.")
         press_enter_to_continue()
         return
     
@@ -405,6 +405,6 @@ def clone_job_menu():
             if new_job:
                 _show_edit_options(new_name)
     else:
-        show_error("Failed to clone job.")
+        handle_error("E7003", "Failed to clone job.")
     
     press_enter_to_continue()

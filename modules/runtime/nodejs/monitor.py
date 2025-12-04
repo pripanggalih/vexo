@@ -4,10 +4,11 @@ import json
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command
+from utils.error_handler import handle_error
 from modules.runtime.nodejs.utils import (
     run_with_nvm, is_pm2_installed, get_current_nodejs_version,
 )
@@ -300,7 +301,7 @@ def pm2_dashboard():
     show_panel("PM2 Dashboard", title="Monitoring", style="cyan")
     
     if not is_pm2_installed():
-        show_error("PM2 is not installed.")
+        handle_error("E3003", "PM2 is not installed.")
         console.print()
         console.print("[dim]Install PM2 first via 'PM2 Process Manager' menu.[/dim]")
         press_enter_to_continue()

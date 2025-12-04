@@ -2,8 +2,9 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_info, press_enter_to_continue,
+    show_success, show_info, press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.sanitize import escape_mysql, validate_identifier
 from modules.database.mariadb.utils import (
@@ -36,7 +37,7 @@ def list_users():
     show_panel("User List", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -69,7 +70,7 @@ def create_user():
     show_panel("Create User", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -79,7 +80,7 @@ def create_user():
     
     # Validate username
     if not validate_identifier(username, max_length=32):
-        show_error("Invalid username. Use only letters, numbers, and underscore.")
+        handle_error("E4001", "Invalid username. Use only letters, numbers, and underscore.")
         press_enter_to_continue()
         return
     
@@ -112,7 +113,7 @@ def create_user():
         run_mysql("FLUSH PRIVILEGES;")
         show_success(f"User '{username}'@'{host}' created!")
     else:
-        show_error("Failed to create user.")
+        handle_error("E4001", "Failed to create user.")
         console.print(f"[dim]{result.stderr}[/dim]")
     
     press_enter_to_continue()
@@ -125,7 +126,7 @@ def delete_user():
     show_panel("Delete User", title="MariaDB", style="red")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -162,6 +163,6 @@ def delete_user():
         run_mysql("FLUSH PRIVILEGES;")
         show_success(f"User '{username}'@'{host}' deleted!")
     else:
-        show_error("Failed to delete user.")
+        handle_error("E4001", "Failed to delete user.")
     
     press_enter_to_continue()

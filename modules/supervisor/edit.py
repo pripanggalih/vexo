@@ -10,13 +10,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, confirm_action, text_input, select_from_list
 from utils.shell import run_command, is_installed, require_root
+from utils.error_handler import handle_error
 
 from modules.supervisor.common import (
     get_config_path,
@@ -36,7 +36,7 @@ def edit_worker_menu():
     show_panel("Edit Worker", title="Worker Management", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -71,7 +71,7 @@ def _show_edit_options(worker_name):
         # Load current config
         config = parse_worker_config(worker_name)
         if not config:
-            show_error("Failed to parse worker config.")
+            handle_error("E7002", "Failed to parse worker config.")
             press_enter_to_continue()
             return
         
@@ -81,7 +81,7 @@ def _show_edit_options(worker_name):
             with open(config_path, 'r') as f:
                 content = f.read()
         except IOError:
-            show_error("Failed to read config file.")
+            handle_error("E7002", "Failed to read config file.")
             press_enter_to_continue()
             return
         
@@ -164,7 +164,7 @@ def _edit_numprocs(worker_name, config, content):
         if numprocs < 1:
             raise ValueError()
     except ValueError:
-        show_error("Invalid number (must be >= 1).")
+        handle_error("E7002", "Invalid number (must be >= 1).")
         press_enter_to_continue()
         return
     
@@ -248,7 +248,7 @@ def _edit_memory(worker_name, config, content):
         if memory < 32:
             raise ValueError()
     except ValueError:
-        show_error("Invalid memory (minimum 32 MB).")
+        handle_error("E7002", "Invalid memory (minimum 32 MB).")
         press_enter_to_continue()
         return
     
@@ -358,7 +358,7 @@ def _save_and_reload(worker_name, content, success_msg):
         with open(config_path, 'w') as f:
             f.write(content)
     except IOError as e:
-        show_error(f"Failed to save config: {e}")
+        handle_error("E7002", f"Failed to save config: {e}")
         press_enter_to_continue()
         return
     
@@ -385,7 +385,7 @@ def clone_worker_menu():
     show_panel("Clone Worker", title="Worker Management", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -425,12 +425,12 @@ def clone_worker_menu():
     new_name = new_name.lower().strip().replace(" ", "-")
     
     if not validate_worker_name(new_name):
-        show_error("Invalid worker name.")
+        handle_error("E7002", "Invalid worker name.")
         press_enter_to_continue()
         return
     
     if worker_exists(new_name):
-        show_error(f"Worker '{new_name}' already exists.")
+        handle_error("E7002", f"Worker '{new_name}' already exists.")
         press_enter_to_continue()
         return
     
@@ -452,7 +452,7 @@ def clone_worker_menu():
         with open(source_path, 'r') as f:
             content = f.read()
     except IOError as e:
-        show_error(f"Failed to read source config: {e}")
+        handle_error("E7002", f"Failed to read source config: {e}")
         press_enter_to_continue()
         return
     
@@ -466,7 +466,7 @@ def clone_worker_menu():
         with open(new_path, 'w') as f:
             f.write(new_content)
     except IOError as e:
-        show_error(f"Failed to write new config: {e}")
+        handle_error("E7002", f"Failed to write new config: {e}")
         press_enter_to_continue()
         return
     

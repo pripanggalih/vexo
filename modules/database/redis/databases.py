@@ -2,8 +2,9 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from modules.database.redis.utils import (
     is_redis_ready, run_redis_cli, get_db_keys_count,
@@ -37,7 +38,7 @@ def list_databases():
     show_panel("Database List", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -72,7 +73,7 @@ def switch_database():
     show_panel("Switch Database", title="Redis", style="cyan")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -100,7 +101,7 @@ def switch_database():
         show_success(f"Switched to db{db_num}!")
         console.print("[dim]Use redis-cli with -n flag: redis-cli -n " + db_num + "[/dim]")
     else:
-        show_error("Failed to switch database.")
+        handle_error("E4001", "Failed to switch database.")
     
     press_enter_to_continue()
 
@@ -112,7 +113,7 @@ def flush_database():
     show_panel("Flush Database", title="Redis", style="red")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -148,7 +149,7 @@ def flush_database():
     if result.returncode == 0:
         show_success(f"Database db{db_num} flushed!")
     else:
-        show_error("Failed to flush database.")
+        handle_error("E4001", "Failed to flush database.")
     
     press_enter_to_continue()
 
@@ -160,7 +161,7 @@ def flush_all_databases():
     show_panel("Flush All Databases", title="Redis", style="red")
     
     if not is_redis_ready():
-        show_error("Redis is not running.")
+        handle_error("E4001", "Redis is not running.")
         press_enter_to_continue()
         return
     
@@ -186,7 +187,7 @@ def flush_all_databases():
     
     confirm_text = text_input("Type 'FLUSH ALL' to confirm:")
     if confirm_text != "FLUSH ALL":
-        show_error("Confirmation text does not match.")
+        handle_error("E4001", "Confirmation text does not match.")
         press_enter_to_continue()
         return
     
@@ -195,6 +196,6 @@ def flush_all_databases():
     if result.returncode == 0:
         show_success("All databases flushed!")
     else:
-        show_error("Failed to flush databases.")
+        handle_error("E4001", "Failed to flush databases.")
     
     press_enter_to_continue()

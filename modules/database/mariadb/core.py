@@ -2,10 +2,11 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_info, press_enter_to_continue,
+    show_success, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list
 from utils.shell import run_command, is_installed, require_root
+from utils.error_handler import handle_error
 from utils.sanitize import (
     escape_mysql, escape_mysql_identifier, validate_identifier,
 )
@@ -40,7 +41,7 @@ def install_mariadb():
         console.print()
         console.print("[dim]Run 'mysql_secure_installation' to secure your installation.[/dim]")
     else:
-        show_error("Installation failed!")
+        handle_error("E4001", "Installation failed!")
     
     press_enter_to_continue()
 
@@ -52,7 +53,7 @@ def list_databases():
     show_panel("Database List", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -81,7 +82,7 @@ def create_database_interactive():
     show_panel("Create Database", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -91,12 +92,12 @@ def create_database_interactive():
     
     # Validate database name (alphanumeric and underscore only)
     if not validate_identifier(db_name, max_length=64):
-        show_error("Invalid database name. Use only letters, numbers, and underscore.")
+        handle_error("E4001", "Invalid database name. Use only letters, numbers, and underscore.")
         press_enter_to_continue()
         return
     
     if db_name in get_databases():
-        show_error(f"Database '{db_name}' already exists.")
+        handle_error("E4001", f"Database '{db_name}' already exists.")
         press_enter_to_continue()
         return
     
@@ -112,7 +113,7 @@ def create_database_interactive():
         
         # Validate username
         if not validate_identifier(username, max_length=32):
-            show_error("Invalid username. Use only letters, numbers, and underscore.")
+            handle_error("E4001", "Invalid username. Use only letters, numbers, and underscore.")
             press_enter_to_continue()
             return
         
@@ -129,7 +130,7 @@ def create_database_interactive():
     safe_db = escape_mysql_identifier(db_name)
     result = run_mysql(f"CREATE DATABASE {safe_db};")
     if result.returncode != 0:
-        show_error("Failed to create database.")
+        handle_error("E4001", "Failed to create database.")
         console.print(f"[dim]{result.stderr}[/dim]")
         press_enter_to_continue()
         return
@@ -146,7 +147,7 @@ def create_database_interactive():
             run_mysql("FLUSH PRIVILEGES;")
             show_success(f"User '{username}' created with access to {db_name}!")
         else:
-            show_error("Failed to create user.")
+            handle_error("E4001", "Failed to create user.")
     
     press_enter_to_continue()
 
@@ -158,7 +159,7 @@ def delete_database_interactive():
     show_panel("Delete Database", title="MariaDB", style="red")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -180,7 +181,7 @@ def delete_database_interactive():
     
     confirm_name = text_input("Database name:")
     if confirm_name != db_name:
-        show_error("Name does not match.")
+        handle_error("E4001", "Name does not match.")
         press_enter_to_continue()
         return
     
@@ -191,6 +192,6 @@ def delete_database_interactive():
     if result.returncode == 0:
         show_success(f"Database '{db_name}' deleted!")
     else:
-        show_error("Failed to delete database.")
+        handle_error("E4001", "Failed to delete database.")
     
     press_enter_to_continue()

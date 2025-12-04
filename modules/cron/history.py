@@ -11,13 +11,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import show_submenu, select_from_list, confirm_action
 from utils.shell import require_root
+from utils.error_handler import handle_error
 
 from modules.cron.common import (
     CRON_LOG_DIR,
@@ -310,7 +310,7 @@ def clear_history():
             if save_history({}):
                 show_success("History cleared!")
             else:
-                show_error("Failed to clear history.")
+                handle_error("E7003", "Failed to clear history.")
     
     elif choice == "Clear specific job":
         jobs = list(history.keys())
@@ -325,6 +325,6 @@ def clear_history():
             if save_history(history):
                 show_success(f"History for '{job_name}' cleared!")
             else:
-                show_error("Failed to clear history.")
+                handle_error("E7003", "Failed to clear history.")
     
     press_enter_to_continue()

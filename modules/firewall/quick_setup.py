@@ -6,13 +6,13 @@ from ui.components import (
     show_header,
     show_panel,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import confirm_action
 from utils.shell import (
+from utils.error_handler import handle_error
     run_command,
     run_command_with_progress,
     is_installed,
@@ -51,7 +51,7 @@ def install_ufw():
     )
     
     if result.returncode != 0:
-        show_error("Failed to install UFW.")
+        handle_error("E6001", "Failed to install UFW.")
         press_enter_to_continue()
         return False
     
@@ -121,7 +121,7 @@ def enable_firewall():
     if result.returncode == 0:
         show_success("Firewall enabled successfully!")
     else:
-        show_error("Failed to enable UFW.")
+        handle_error("E6001", "Failed to enable UFW.")
     
     press_enter_to_continue()
 
@@ -133,7 +133,7 @@ def disable_firewall():
     show_panel("Disable Firewall", title="Firewall (UFW)", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -164,6 +164,6 @@ def disable_firewall():
         show_warning("Firewall disabled!")
         console.print("[dim]Your server is now unprotected.[/dim]")
     else:
-        show_error("Failed to disable UFW.")
+        handle_error("E6001", "Failed to disable UFW.")
     
     press_enter_to_continue()

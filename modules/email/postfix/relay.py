@@ -5,10 +5,11 @@ import json
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, is_installed, require_root
+from utils.error_handler import handle_error
 from modules.email.postfix.utils import (
     is_postfix_ready, get_postfix_setting, set_postfix_settings,
     reload_postfix, restart_postfix,
@@ -111,7 +112,7 @@ def view_relay_status():
     show_panel("Relay Status", title="SMTP Relay", style="cyan")
     
     if not is_postfix_ready():
-        show_error("Postfix is not running.")
+        handle_error("E5002", "Postfix is not running.")
         press_enter_to_continue()
         return
     
@@ -162,7 +163,7 @@ def configure_relay():
     show_panel("Configure Relay", title="SMTP Relay", style="cyan")
     
     if not is_postfix_ready():
-        show_error("Postfix is not running.")
+        handle_error("E5002", "Postfix is not running.")
         press_enter_to_continue()
         return
     
@@ -555,7 +556,7 @@ def test_relay_connection():
         console.print("[dim]SMTP handshake output:[/dim]")
         console.print(result.stdout[:500])
     else:
-        show_error("Connection failed!")
+        handle_error("E5002", "Connection failed!")
         console.print()
         if result.stderr:
             console.print(f"[dim]{result.stderr}[/dim]")
@@ -576,7 +577,7 @@ def test_relay_connection():
             if result.returncode == 0:
                 show_success("Test email queued!")
             else:
-                show_error("Failed to send test email.")
+                handle_error("E5002", "Failed to send test email.")
     
     press_enter_to_continue()
 

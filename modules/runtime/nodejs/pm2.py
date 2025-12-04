@@ -4,10 +4,11 @@ import json
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import require_root
+from utils.error_handler import handle_error
 from modules.runtime.nodejs.utils import (
     run_with_nvm, run_with_nvm_realtime, is_pm2_installed, get_pm2_version,
 )
@@ -67,7 +68,7 @@ def install_pm2():
         if version:
             console.print(f"[dim]Version: {version}[/dim]")
     else:
-        show_error("Failed to install PM2.")
+        handle_error("E3003", "Failed to install PM2.")
     
     press_enter_to_continue()
 
@@ -79,7 +80,7 @@ def list_processes():
     show_panel("PM2 Processes", title="PM2 Manager", style="cyan")
     
     if not is_pm2_installed():
-        show_error("PM2 is not installed.")
+        handle_error("E3003", "PM2 is not installed.")
         press_enter_to_continue()
         return
     
@@ -87,14 +88,14 @@ def list_processes():
     result = run_with_nvm("pm2 jlist")
     
     if result is None or result.returncode != 0:
-        show_error("Failed to get process list.")
+        handle_error("E3003", "Failed to get process list.")
         press_enter_to_continue()
         return
     
     try:
         processes = json.loads(result.stdout)
     except json.JSONDecodeError:
-        show_error("Failed to parse process list.")
+        handle_error("E3003", "Failed to parse process list.")
         press_enter_to_continue()
         return
     
@@ -164,7 +165,7 @@ def process_control():
     show_panel("Process Control", title="PM2 Manager", style="cyan")
     
     if not is_pm2_installed():
-        show_error("PM2 is not installed.")
+        handle_error("E3003", "PM2 is not installed.")
         press_enter_to_continue()
         return
     
@@ -260,7 +261,7 @@ def _start_new_app():
     if returncode == 0:
         show_success(f"{app_name} started!")
     else:
-        show_error(f"Failed to start {app_name}.")
+        handle_error("E3003", f"Failed to start {app_name}.")
     
     press_enter_to_continue()
 
@@ -285,7 +286,7 @@ def view_logs():
     show_panel("View Logs", title="PM2 Manager", style="cyan")
     
     if not is_pm2_installed():
-        show_error("PM2 is not installed.")
+        handle_error("E3003", "PM2 is not installed.")
         press_enter_to_continue()
         return
     
@@ -321,7 +322,7 @@ def pm2_monit():
     show_panel("PM2 Monitoring", title="PM2 Manager", style="cyan")
     
     if not is_pm2_installed():
-        show_error("PM2 is not installed.")
+        handle_error("E3003", "PM2 is not installed.")
         press_enter_to_continue()
         return
     
@@ -345,7 +346,7 @@ def setup_startup():
     show_panel("Startup Script", title="PM2 Manager", style="cyan")
     
     if not is_pm2_installed():
-        show_error("PM2 is not installed.")
+        handle_error("E3003", "PM2 is not installed.")
         press_enter_to_continue()
         return
     
@@ -375,7 +376,7 @@ def setup_startup():
         console.print("[dim]PM2 will now start on boot.[/dim]")
         console.print("[dim]Don't forget to run 'pm2 save' to save current processes.[/dim]")
     else:
-        show_error("Failed to setup startup script.")
+        handle_error("E3003", "Failed to setup startup script.")
         if result:
             console.print(f"[dim]{result.stderr}[/dim]")
     
@@ -389,7 +390,7 @@ def save_restore():
     show_panel("Save/Restore", title="PM2 Manager", style="cyan")
     
     if not is_pm2_installed():
-        show_error("PM2 is not installed.")
+        handle_error("E3003", "PM2 is not installed.")
         press_enter_to_continue()
         return
     
@@ -410,12 +411,12 @@ def save_restore():
             show_success("Process list saved!")
             console.print("[dim]Processes will be restored on PM2 startup.[/dim]")
         else:
-            show_error("Failed to save process list.")
+            handle_error("E3003", "Failed to save process list.")
     else:
         result = run_with_nvm("pm2 resurrect")
         if result and result.returncode == 0:
             show_success("Process list restored!")
         else:
-            show_error("Failed to restore process list.")
+            handle_error("E3003", "Failed to restore process list.")
     
     press_enter_to_continue()

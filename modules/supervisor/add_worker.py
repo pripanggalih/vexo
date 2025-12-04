@@ -8,13 +8,13 @@ from ui.components import (
     show_header,
     show_panel,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, confirm_action, text_input, select_from_list
 from utils.shell import run_command, is_installed, require_root
+from utils.error_handler import handle_error
 
 from modules.supervisor.common import (
     validate_worker_name,
@@ -64,12 +64,12 @@ def _get_worker_name(default_suffix="queue"):
     worker_name = worker_name.lower().strip().replace(" ", "-")
     
     if not validate_worker_name(worker_name):
-        show_error("Invalid worker name. Use only letters, numbers, and hyphens.")
+        handle_error("E7002", "Invalid worker name. Use only letters, numbers, and hyphens.")
         press_enter_to_continue()
         return None
     
     if worker_exists(worker_name):
-        show_error(f"Worker '{worker_name}' already exists.")
+        handle_error("E7002", f"Worker '{worker_name}' already exists.")
         press_enter_to_continue()
         return None
     
@@ -89,7 +89,7 @@ def _get_laravel_path():
     
     artisan_path = os.path.join(laravel_path, "artisan")
     if not os.path.exists(artisan_path):
-        show_error(f"Laravel artisan not found at {laravel_path}")
+        handle_error("E7002", f"Laravel artisan not found at {laravel_path}")
         press_enter_to_continue()
         return None
     
@@ -104,7 +104,7 @@ def _save_worker_config(name, config_content):
         with open(config_path, 'w') as f:
             f.write(config_content)
     except IOError as e:
-        show_error(f"Failed to write config: {e}")
+        handle_error("E7002", f"Failed to write config: {e}")
         return False
     
     result = run_command("supervisorctl reread", check=False, silent=True)
@@ -122,7 +122,7 @@ def add_laravel_queue_worker():
     show_panel("Laravel Queue Worker", title="Add Worker", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -174,7 +174,7 @@ def add_laravel_queue_worker():
         if numprocs < 1:
             raise ValueError()
     except ValueError:
-        show_error("Invalid number of processes.")
+        handle_error("E7002", "Invalid number of processes.")
         press_enter_to_continue()
         return
     
@@ -194,7 +194,7 @@ def add_laravel_queue_worker():
         if memory < 32:
             raise ValueError()
     except ValueError:
-        show_error("Invalid memory limit (minimum 32 MB).")
+        handle_error("E7002", "Invalid memory limit (minimum 32 MB).")
         press_enter_to_continue()
         return
     
@@ -236,7 +236,7 @@ def add_laravel_queue_worker():
         console.print(f"[dim]Config: {get_config_path(worker_name)}[/dim]")
         console.print(f"[dim]Log: {get_log_path(worker_name)}[/dim]")
     else:
-        show_error("Failed to create worker.")
+        handle_error("E7002", "Failed to create worker.")
     
     press_enter_to_continue()
 
@@ -248,7 +248,7 @@ def add_laravel_horizon_worker():
     show_panel("Laravel Horizon", title="Add Worker", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -308,7 +308,7 @@ def add_laravel_horizon_worker():
         console.print()
         console.print("[cyan]Tip: Access Horizon dashboard at /horizon[/cyan]")
     else:
-        show_error("Failed to create worker.")
+        handle_error("E7002", "Failed to create worker.")
     
     press_enter_to_continue()
 
@@ -320,7 +320,7 @@ def add_priority_queue_worker():
     show_panel("Priority Queue Worker", title="Add Worker", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -373,7 +373,7 @@ def add_priority_queue_worker():
         if numprocs < 1:
             raise ValueError()
     except ValueError:
-        show_error("Invalid number of processes.")
+        handle_error("E7002", "Invalid number of processes.")
         press_enter_to_continue()
         return
     
@@ -414,7 +414,7 @@ def add_priority_queue_worker():
         console.print()
         console.print(f"[dim]Config: {get_config_path(worker_name)}[/dim]")
     else:
-        show_error("Failed to create worker.")
+        handle_error("E7002", "Failed to create worker.")
     
     press_enter_to_continue()
 
@@ -426,7 +426,7 @@ def add_custom_worker():
     show_panel("Custom Command Worker", title="Add Worker", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -476,7 +476,7 @@ def add_custom_worker():
         if numprocs < 1:
             raise ValueError()
     except ValueError:
-        show_error("Invalid number of processes.")
+        handle_error("E7002", "Invalid number of processes.")
         press_enter_to_continue()
         return
     
@@ -516,6 +516,6 @@ def add_custom_worker():
         console.print()
         console.print(f"[dim]Config: {get_config_path(worker_name)}[/dim]")
     else:
-        show_error("Failed to create worker.")
+        handle_error("E7002", "Failed to create worker.")
     
     press_enter_to_continue()

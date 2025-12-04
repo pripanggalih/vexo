@@ -11,13 +11,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 
 from .common import (
     is_fail2ban_installed,
@@ -148,7 +148,7 @@ def ban_ip_menu():
     jails = get_active_jails()
     
     if not jails:
-        show_error("No active jails to ban IP in.")
+        handle_error("E6003", "No active jails to ban IP in.")
         press_enter_to_continue()
         return
     
@@ -163,7 +163,7 @@ def ban_ip_menu():
         return
     
     if not is_valid_ip(ip):
-        show_error("Invalid IP address format.")
+        handle_error("E6003", "Invalid IP address format.")
         press_enter_to_continue()
         return
     
@@ -213,7 +213,7 @@ def ban_ip_menu():
             _add_to_permanent_list(ip, jail, reason)
             show_info("Added to permanent ban list.")
     else:
-        show_error(f"Failed to ban {ip}")
+        handle_error("E6003", f"Failed to ban {ip}")
     
     press_enter_to_continue()
 
@@ -245,7 +245,7 @@ def unban_ip_menu():
         return
     
     if not is_valid_ip(ip):
-        show_error("Invalid IP address format.")
+        handle_error("E6003", "Invalid IP address format.")
         press_enter_to_continue()
         return
     
@@ -298,7 +298,7 @@ def unban_ip_menu():
     if success:
         show_success(f"IP {ip} unbanned!")
     else:
-        show_error(f"Failed to unban {ip}")
+        handle_error("E6003", f"Failed to unban {ip}")
     
     press_enter_to_continue()
 
@@ -406,7 +406,7 @@ def _add_permanent_ban():
         return
     
     if not is_valid_ip(ip) and not is_valid_cidr(ip):
-        show_error("Invalid IP address or CIDR format.")
+        handle_error("E6003", "Invalid IP address or CIDR format.")
         press_enter_to_continue()
         return
     

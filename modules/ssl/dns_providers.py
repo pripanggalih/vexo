@@ -11,13 +11,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, require_root, is_installed
+from utils.error_handler import handle_error
 from utils.sanitize import escape_shell
 from modules.ssl.common import (
     get_certbot_status_text,
@@ -174,7 +174,7 @@ def configure_provider(provider_key):
     """Configure a DNS provider."""
     provider = DNS_PROVIDERS.get(provider_key)
     if not provider:
-        show_error(f"Unknown provider: {provider_key}")
+        handle_error("E6002", f"Unknown provider: {provider_key}")
         press_enter_to_continue()
         return
     
@@ -275,7 +275,7 @@ def configure_provider(provider_key):
         )
         
         if not json_path or not os.path.exists(json_path):
-            show_error("JSON file not found.")
+            handle_error("E6002", "JSON file not found.")
             press_enter_to_continue()
             return
         
@@ -297,7 +297,7 @@ def configure_provider(provider_key):
     if _save_credentials(provider_key, credentials):
         show_success(f"{provider['name']} configured successfully!")
     else:
-        show_error("Failed to save credentials.")
+        handle_error("E6002", "Failed to save credentials.")
     
     press_enter_to_continue()
 
@@ -324,7 +324,7 @@ def _check_install_plugin(provider):
             )
             
             if returncode != 0:
-                show_error("Failed to install plugin.")
+                handle_error("E6002", "Failed to install plugin.")
                 return False
             
             show_success("Plugin installed!")
@@ -523,6 +523,6 @@ def remove_provider():
         os.remove(provider["credentials_file"])
         show_success(f"{provider['name']} configuration removed!")
     except Exception as e:
-        show_error(f"Failed to remove: {e}")
+        handle_error("E6002", f"Failed to remove: {e}")
     
     press_enter_to_continue()

@@ -6,10 +6,11 @@ import secrets
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, is_installed, require_root
+from utils.error_handler import handle_error
 from modules.email.utils import load_email_config, save_email_config
 
 
@@ -102,7 +103,7 @@ def list_mailboxes():
     show_panel("Mailboxes", title="Mailbox Management", style="cyan")
     
     if not is_installed("dovecot-core"):
-        show_error("Dovecot is not installed.")
+        handle_error("E5002", "Dovecot is not installed.")
         press_enter_to_continue()
         return
     
@@ -154,7 +155,7 @@ def create_mailbox():
     show_panel("Create Mailbox", title="Mailbox Management", style="cyan")
     
     if not is_installed("dovecot-core"):
-        show_error("Dovecot is not installed.")
+        handle_error("E5002", "Dovecot is not installed.")
         press_enter_to_continue()
         return
     
@@ -185,7 +186,7 @@ def create_mailbox():
     # Check if exists
     mailboxes = _get_mailboxes()
     if email in mailboxes:
-        show_error(f"Mailbox '{email}' already exists.")
+        handle_error("E5002", f"Mailbox '{email}' already exists.")
         press_enter_to_continue()
         return
     
@@ -202,7 +203,7 @@ def create_mailbox():
         return
     
     if password != confirm:
-        show_error("Passwords do not match.")
+        handle_error("E5002", "Passwords do not match.")
         press_enter_to_continue()
         return
     
@@ -314,7 +315,7 @@ def change_password():
         confirm = text_input("Confirm password:")
     
     if not password or password != confirm:
-        show_error("Passwords do not match.")
+        handle_error("E5002", "Passwords do not match.")
         press_enter_to_continue()
         return
     
@@ -418,7 +419,7 @@ def mailbox_info():
     
     parts = email.split('@')
     if len(parts) != 2:
-        show_error("Invalid email format.")
+        handle_error("E5002", "Invalid email format.")
         press_enter_to_continue()
         return
     

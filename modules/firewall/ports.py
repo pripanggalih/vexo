@@ -9,13 +9,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, require_root
+from utils.error_handler import handle_error
 from modules.firewall.common import (
     is_ufw_installed,
     get_ufw_status_text,
@@ -53,7 +53,7 @@ def add_custom_port():
     show_panel("Add Custom Port", title="Port Management", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed. Enable firewall first.")
+        handle_error("E6001", "UFW is not installed. Enable firewall first.")
         press_enter_to_continue()
         return
     
@@ -70,7 +70,7 @@ def add_custom_port():
     
     # Validate port
     if not _validate_port(port):
-        show_error("Invalid port. Use single port (1-65535) or range (e.g., 6000:6010).")
+        handle_error("E6001", "Invalid port. Use single port (1-65535) or range (e.g., 6000:6010).")
         press_enter_to_continue()
         return
     
@@ -96,7 +96,7 @@ def add_custom_port():
             message="Enter source IP or CIDR (e.g., 192.168.1.0/24):"
         )
         if from_ip and not _validate_ip(from_ip):
-            show_error("Invalid IP address or CIDR notation.")
+            handle_error("E6001", "Invalid IP address or CIDR notation.")
             press_enter_to_continue()
             return
     
@@ -124,7 +124,7 @@ def add_custom_port():
     if success:
         show_success(f"Port {port} added successfully!")
     else:
-        show_error(f"Failed to add port {port}")
+        handle_error("E6001", f"Failed to add port {port}")
     
     press_enter_to_continue()
 
@@ -182,7 +182,7 @@ def list_ports():
     show_panel("Open Ports", title="Port Management", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -247,7 +247,7 @@ def remove_port():
     show_panel("Remove Port", title="Port Management", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed.")
+        handle_error("E6001", "UFW is not installed.")
         press_enter_to_continue()
         return
     
@@ -280,7 +280,7 @@ def remove_port():
         if num < 1 or num > len(rules):
             raise ValueError()
     except ValueError:
-        show_error("Invalid rule number.")
+        handle_error("E6001", "Invalid rule number.")
         press_enter_to_continue()
         return
     
@@ -302,7 +302,7 @@ def remove_port():
     if result.returncode == 0:
         show_success("Rule removed successfully!")
     else:
-        show_error("Failed to remove rule.")
+        handle_error("E6001", "Failed to remove rule.")
     
     press_enter_to_continue()
 
@@ -345,14 +345,14 @@ def apply_preset_category(category):
     
     preset_info = ALL_PRESETS.get(category)
     if not preset_info:
-        show_error(f"Unknown category: {category}")
+        handle_error("E6001", f"Unknown category: {category}")
         press_enter_to_continue()
         return
     
     show_panel(f"Select {preset_info['name']} Ports", title="Port Presets", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed. Enable firewall first.")
+        handle_error("E6001", "UFW is not installed. Enable firewall first.")
         press_enter_to_continue()
         return
     
@@ -441,7 +441,7 @@ def apply_all_presets():
     show_panel("Quick Select All Categories", title="Port Presets", style="cyan")
     
     if not is_ufw_installed():
-        show_error("UFW is not installed. Enable firewall first.")
+        handle_error("E6001", "UFW is not installed. Enable firewall first.")
         press_enter_to_continue()
         return
     

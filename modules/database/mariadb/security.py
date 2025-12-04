@@ -4,10 +4,11 @@ import os
 
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, service_control, require_root
+from utils.error_handler import handle_error
 from modules.database.mariadb.utils import (
     is_mariadb_ready, run_mysql, get_users, get_user_databases,
     MARIA_SYSTEM_USERS,
@@ -45,7 +46,7 @@ def list_users_privileges():
     show_panel("Users & Privileges", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -91,7 +92,7 @@ def manage_privileges():
     show_panel("Manage Privileges", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -155,7 +156,7 @@ def change_user_password():
     show_panel("Change Password", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -191,7 +192,7 @@ def change_user_password():
         return
     
     if password != confirm:
-        show_error("Passwords do not match.")
+        handle_error("E4001", "Passwords do not match.")
         press_enter_to_continue()
         return
     
@@ -206,7 +207,7 @@ def change_user_password():
         run_mysql("FLUSH PRIVILEGES;")
         show_success(f"Password changed for {user}@{host}!")
     else:
-        show_error("Failed to change password.")
+        handle_error("E4001", "Failed to change password.")
     
     press_enter_to_continue()
 
@@ -218,7 +219,7 @@ def remote_access():
     show_panel("Remote Access", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     
@@ -352,7 +353,7 @@ def reset_root_password():
         confirm = text_input("Confirm password:")
     
     if not password or password != confirm:
-        show_error("Passwords do not match.")
+        handle_error("E4001", "Passwords do not match.")
         press_enter_to_continue()
         return
     
@@ -362,7 +363,7 @@ def reset_root_password():
         run_mysql("FLUSH PRIVILEGES;")
         show_success("root password has been reset!")
     else:
-        show_error("Failed to reset password.")
+        handle_error("E4001", "Failed to reset password.")
     
     press_enter_to_continue()
 
@@ -374,7 +375,7 @@ def security_audit():
     show_panel("Security Audit", title="MariaDB", style="cyan")
     
     if not is_mariadb_ready():
-        show_error("MariaDB is not running.")
+        handle_error("E4001", "MariaDB is not running.")
         press_enter_to_continue()
         return
     

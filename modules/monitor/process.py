@@ -13,10 +13,10 @@ from ui.components import (
     show_table,
     show_info,
     show_warning,
-    show_error,
     show_success,
     press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import run_menu_loop, confirm_action, text_input, select_from_list
 from modules.monitor.common import format_bytes
 
@@ -320,7 +320,7 @@ def show_process_actions(pid):
     
     proc = get_process_details(pid)
     if not proc:
-        show_error(f"Process {pid} not found or access denied.")
+        handle_error("E1006", f"Process {pid} not found or access denied.")
         press_enter_to_continue()
         return
     
@@ -390,11 +390,11 @@ def _send_signal(pid, name, sig, sig_name):
         os.kill(pid, sig)
         show_success(f"Sent {sig_name} to process {pid}")
     except ProcessLookupError:
-        show_error(f"Process {pid} not found.")
+        handle_error("E1006", f"Process {pid} not found.")
     except PermissionError:
-        show_error(f"Permission denied. Try running as root.")
+        handle_error("E1006", f"Permission denied. Try running as root.")
     except Exception as e:
-        show_error(f"Failed to send signal: {e}")
+        handle_error("E1006", f"Failed to send signal: {e}")
     
     press_enter_to_continue()
 
@@ -413,11 +413,11 @@ def _change_priority(pid, name, current_nice):
     try:
         new_nice = int(new_nice)
         if new_nice < -20 or new_nice > 19:
-            show_error("Nice value must be between -20 and 19.")
+            handle_error("E1006", "Nice value must be between -20 and 19.")
             press_enter_to_continue()
             return
     except ValueError:
-        show_error("Invalid nice value.")
+        handle_error("E1006", "Invalid nice value.")
         press_enter_to_continue()
         return
     
@@ -431,10 +431,10 @@ def _change_priority(pid, name, current_nice):
         proc.nice(new_nice)
         show_success(f"Changed nice value to {new_nice}")
     except psutil.NoSuchProcess:
-        show_error(f"Process {pid} not found.")
+        handle_error("E1006", f"Process {pid} not found.")
     except psutil.AccessDenied:
-        show_error("Permission denied. Try running as root for negative nice values.")
+        handle_error("E1006", "Permission denied. Try running as root for negative nice values.")
     except Exception as e:
-        show_error(f"Failed to change priority: {e}")
+        handle_error("E1006", f"Failed to change priority: {e}")
     
     press_enter_to_continue()

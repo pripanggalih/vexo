@@ -6,8 +6,9 @@ import json
 from config import DEFAULT_WEB_ROOT
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
+from utils.error_handler import handle_error
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from modules.runtime.nodejs.utils import run_with_nvm, run_with_nvm_realtime, is_pm2_installed
 
@@ -160,7 +161,7 @@ def quick_commands():
     project_dir = project_dir.strip()
     
     if not os.path.exists(os.path.join(project_dir, "package.json")):
-        show_error("No package.json found in directory.")
+        handle_error("E3003", "No package.json found in directory.")
         press_enter_to_continue()
         return
     
@@ -239,7 +240,7 @@ def project_info():
     pkg_path = os.path.join(project_dir, "package.json")
     
     if not os.path.exists(pkg_path):
-        show_error("No package.json found.")
+        handle_error("E3003", "No package.json found.")
         press_enter_to_continue()
         return
     
@@ -247,7 +248,7 @@ def project_info():
         with open(pkg_path, "r") as f:
             pkg = json.load(f)
     except Exception as e:
-        show_error(f"Failed to read package.json: {e}")
+        handle_error("E3003", f"Failed to read package.json: {e}")
         press_enter_to_continue()
         return
     
@@ -327,7 +328,7 @@ def dependency_audit():
     project_dir = project_dir.strip()
     
     if not os.path.exists(os.path.join(project_dir, "package.json")):
-        show_error("No package.json found.")
+        handle_error("E3003", "No package.json found.")
         press_enter_to_continue()
         return
     
@@ -339,7 +340,7 @@ def dependency_audit():
     result = run_with_nvm(f"cd {project_dir} && npm audit --json 2>/dev/null")
     
     if result is None:
-        show_error("Failed to run audit.")
+        handle_error("E3003", "Failed to run audit.")
         press_enter_to_continue()
         return
     
@@ -418,7 +419,7 @@ def clean_project():
     project_dir = project_dir.strip()
     
     if not os.path.exists(os.path.join(project_dir, "package.json")):
-        show_error("No package.json found.")
+        handle_error("E3003", "No package.json found.")
         press_enter_to_continue()
         return
     

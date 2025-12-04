@@ -6,13 +6,13 @@ from ui.components import (
     show_header,
     show_panel,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, confirm_action, select_from_list
 from utils.shell import run_command, is_installed, require_root
+from utils.error_handler import handle_error
 
 from modules.supervisor.common import get_vexo_workers
 
@@ -46,7 +46,7 @@ def control_worker(action):
     show_panel(f"{action.capitalize()} Worker", title="Worker Control", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -83,7 +83,7 @@ def control_worker(action):
         if result.stdout:
             console.print(f"[dim]{result.stdout.strip()}[/dim]")
     else:
-        show_error(f"Failed to {action} worker.")
+        handle_error("E7002", f"Failed to {action} worker.")
         if result.stderr:
             console.print(f"[dim]{result.stderr.strip()}[/dim]")
     
@@ -97,7 +97,7 @@ def restart_all_workers():
     show_panel("Restart All Workers", title="Worker Control", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -131,7 +131,7 @@ def restart_all_workers():
     if result.returncode == 0:
         show_success("All workers restarted!")
     else:
-        show_error("Failed to restart workers.")
+        handle_error("E7002", "Failed to restart workers.")
     
     press_enter_to_continue()
 
@@ -143,7 +143,7 @@ def reload_configuration():
     show_panel("Reload Configuration", title="Worker Control", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -163,6 +163,6 @@ def reload_configuration():
     if result.returncode == 0:
         show_success("Configuration reloaded!")
     else:
-        show_error("Failed to reload configuration.")
+        handle_error("E7002", "Failed to reload configuration.")
     
     press_enter_to_continue()

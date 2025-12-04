@@ -6,10 +6,11 @@ import re
 from config import PHP_FPM_PATH
 from ui.components import (
     console, clear_screen, show_header, show_panel, show_table,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, select_from_list, run_menu_loop
 from utils.shell import (
+from utils.error_handler import handle_error
     run_command, run_command_with_progress, run_command_realtime,
     is_installed, is_service_running, service_control, require_root,
 )
@@ -44,7 +45,7 @@ def add_php_ppa():
             "Installing software-properties-common..."
         )
         if result.returncode != 0:
-            show_error("Failed to install software-properties-common")
+            handle_error("E3001", "Failed to install software-properties-common")
             return False
     
     result = run_command_with_progress(
@@ -53,7 +54,7 @@ def add_php_ppa():
     )
     
     if result.returncode != 0:
-        show_error("Failed to add PHP PPA")
+        handle_error("E3001", "Failed to add PHP PPA")
         return False
     
     result = run_command_with_progress(
@@ -111,7 +112,7 @@ def install_php_interactive():
     if success:
         show_success(f"PHP {version} installed successfully!")
     else:
-        show_error(f"Failed to install PHP {version}")
+        handle_error("E3001", f"Failed to install PHP {version}")
     
     press_enter_to_continue()
 
@@ -147,7 +148,7 @@ def install_php(version, with_extensions=True):
     )
     
     if returncode != 0:
-        show_error(f"Failed to install PHP {version}")
+        handle_error("E3001", f"Failed to install PHP {version}")
         return False
     
     fpm_service = f"php{version}-fpm"
@@ -172,7 +173,7 @@ def switch_php_interactive():
     installed_versions = get_installed_php_versions()
     
     if not installed_versions:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -215,7 +216,7 @@ def switch_php_interactive():
         if result.returncode == 0:
             console.print(f"[dim]{result.stdout.strip()}[/dim]")
     else:
-        show_error(f"Failed to switch to PHP {version}")
+        handle_error("E3001", f"Failed to switch to PHP {version}")
     
     press_enter_to_continue()
 
@@ -233,7 +234,7 @@ def switch_php_version(version):
     php_bin = f"/usr/bin/php{version}"
     
     if not os.path.exists(php_bin):
-        show_error(f"PHP {version} not found at {php_bin}")
+        handle_error("E3001", f"PHP {version} not found at {php_bin}")
         return False
     
     show_info(f"Switching to PHP {version}...")
@@ -329,7 +330,7 @@ def show_php_info_interactive():
     installed = get_installed_php_versions()
     
     if not installed:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -397,7 +398,7 @@ def install_composer():
     show_panel("Install/Update Composer", title="PHP Runtime", style="cyan")
     
     if not get_installed_php_versions():
-        show_error("No PHP versions installed. Please install PHP first.")
+        handle_error("E3001", "No PHP versions installed. Please install PHP first.")
         press_enter_to_continue()
         return
     
@@ -423,7 +424,7 @@ def install_composer():
     )
     
     if result.returncode != 0:
-        show_error("Failed to download Composer installer.")
+        handle_error("E3001", "Failed to download Composer installer.")
         press_enter_to_continue()
         return
     
@@ -437,7 +438,7 @@ def install_composer():
     run_command("rm -f /tmp/composer-setup.php", check=False, silent=True)
     
     if result.returncode != 0:
-        show_error("Failed to install Composer.")
+        handle_error("E3001", "Failed to install Composer.")
         press_enter_to_continue()
         return
     
@@ -459,7 +460,7 @@ def set_site_php_interactive():
     
     installed_php = get_installed_php_versions()
     if not installed_php:
-        show_error("No PHP versions installed.")
+        handle_error("E3001", "No PHP versions installed.")
         press_enter_to_continue()
         return
     
@@ -467,7 +468,7 @@ def set_site_php_interactive():
     domains = get_configured_domains()
     
     if not domains:
-        show_error("No domains configured. Add a domain first.")
+        handle_error("E3001", "No domains configured. Add a domain first.")
         press_enter_to_continue()
         return
     
@@ -512,7 +513,7 @@ def set_site_php_interactive():
         show_success(f"Site {domain} now uses PHP {version}!")
         console.print(f"[dim]FPM Socket: /run/php/php{version}-fpm.sock[/dim]")
     else:
-        show_error(f"Failed to configure PHP for {domain}")
+        handle_error("E3001", f"Failed to configure PHP for {domain}")
     
     press_enter_to_continue()
 
@@ -535,7 +536,7 @@ def set_site_php(domain, version):
     config_path = os.path.join(NGINX_SITES_AVAILABLE, domain)
     
     if not os.path.exists(config_path):
-        show_error(f"Config not found: {config_path}")
+        handle_error("E3001", f"Config not found: {config_path}")
         return False
     
     try:
@@ -573,14 +574,14 @@ def set_site_php(domain, version):
         
         result = run_command("nginx -t", check=False, silent=True)
         if result.returncode != 0:
-            show_error("Nginx configuration test failed!")
+            handle_error("E3001", "Nginx configuration test failed!")
             console.print(f"[dim]{result.stderr}[/dim]")
             return False
         
         return service_control("nginx", "reload")
     
     except Exception as e:
-        show_error(f"Error configuring PHP: {e}")
+        handle_error("E3001", f"Error configuring PHP: {e}")
         return False
 
 

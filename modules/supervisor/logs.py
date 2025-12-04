@@ -12,13 +12,13 @@ from ui.components import (
     show_panel,
     show_table,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from ui.menu import run_menu_loop, select_from_list, text_input, confirm_action
 from utils.shell import run_command, is_installed
+from utils.error_handler import handle_error
 
 from modules.supervisor.common import (
     SUPERVISOR_LOG_DIR,
@@ -78,7 +78,7 @@ def view_logs():
     show_panel("View Logs", title="Logs", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -87,7 +87,7 @@ def view_logs():
         return
     
     if not os.path.exists(log_path):
-        show_error(f"Log file not found: {log_path}")
+        handle_error("E7002", f"Log file not found: {log_path}")
         press_enter_to_continue()
         return
     
@@ -147,7 +147,7 @@ def tail_logs():
     show_panel("Tail Realtime", title="Logs", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -156,7 +156,7 @@ def tail_logs():
         return
     
     if not os.path.exists(log_path):
-        show_error(f"Log file not found: {log_path}")
+        handle_error("E7002", f"Log file not found: {log_path}")
         press_enter_to_continue()
         return
     
@@ -184,7 +184,7 @@ def tail_logs():
         console.print("\n[dim]Tail stopped.[/dim]")
         time.sleep(1)
     except Exception as e:
-        show_error(f"Failed to tail log: {e}")
+        handle_error("E7002", f"Failed to tail log: {e}")
         press_enter_to_continue()
 
 
@@ -195,7 +195,7 @@ def filter_logs():
     show_panel("Filter by Level", title="Logs", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -204,7 +204,7 @@ def filter_logs():
         return
     
     if not os.path.exists(log_path):
-        show_error(f"Log file not found: {log_path}")
+        handle_error("E7002", f"Log file not found: {log_path}")
         press_enter_to_continue()
         return
     
@@ -266,7 +266,7 @@ def search_logs():
     show_panel("Search Logs", title="Logs", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -275,7 +275,7 @@ def search_logs():
         return
     
     if not os.path.exists(log_path):
-        show_error(f"Log file not found: {log_path}")
+        handle_error("E7002", f"Log file not found: {log_path}")
         press_enter_to_continue()
         return
     
@@ -326,7 +326,7 @@ def log_settings():
     show_panel("Log Settings", title="Logs", style="cyan")
     
     if not is_installed("supervisor"):
-        show_error("Supervisor is not installed.")
+        handle_error("E7002", "Supervisor is not installed.")
         press_enter_to_continue()
         return
     
@@ -357,7 +357,7 @@ def _show_log_settings(worker_name):
     
     config = parse_worker_config(worker_name)
     if not config:
-        show_error("Failed to parse worker config.")
+        handle_error("E7002", "Failed to parse worker config.")
         press_enter_to_continue()
         return
     
@@ -412,7 +412,7 @@ def _change_log_maxsize(worker_name):
     
     # Validate format
     if not re.match(r'^\d+[MK]B$', new_size.upper()):
-        show_error("Invalid format. Use format like 50MB or 100MB.")
+        handle_error("E7002", "Invalid format. Use format like 50MB or 100MB.")
         press_enter_to_continue()
         return
     
@@ -435,7 +435,7 @@ def _change_log_backups(worker_name):
         if backups < 0:
             raise ValueError()
     except ValueError:
-        show_error("Invalid number.")
+        handle_error("E7002", "Invalid number.")
         press_enter_to_continue()
         return
     
@@ -475,7 +475,7 @@ def _update_config_setting(worker_name, key, value):
         show_success(f"Setting {key} updated to {value}")
     
     except IOError as e:
-        show_error(f"Failed to update config: {e}")
+        handle_error("E7002", f"Failed to update config: {e}")
     
     press_enter_to_continue()
 
@@ -512,6 +512,6 @@ def _clear_log(worker_name):
             f.write('')
         show_success("Log cleared!")
     except IOError as e:
-        show_error(f"Failed to clear log: {e}")
+        handle_error("E7002", f"Failed to clear log: {e}")
     
     press_enter_to_continue()
