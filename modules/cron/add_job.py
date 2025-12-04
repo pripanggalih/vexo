@@ -34,6 +34,7 @@ from modules.cron.templates import (
     generate_custom_script,
     generate_custom_command,
 )
+from modules.cron.builder import schedule_builder
 
 
 def add_job_menu():
@@ -90,20 +91,23 @@ def _get_job_name(default_prefix):
 
 
 def _get_schedule(default="0 2 * * *"):
-    """Get schedule from user with preset options."""
-    preset_options = [f"{schedule} ({desc})" for schedule, desc in CRON_PRESETS]
-    preset_options.append("Custom (enter manually)")
+    """Get schedule from user with preset options or builder."""
+    options = ["Use Schedule Builder (recommended)"]
+    options.extend([f"{schedule} ({desc})" for schedule, desc in CRON_PRESETS])
+    options.append("Custom (enter manually)")
     
     selection = select_from_list(
         title="Schedule",
         message="Select schedule:",
-        options=preset_options
+        options=options
     )
     
     if not selection:
         return None
     
-    if selection == "Custom (enter manually)":
+    if selection == "Use Schedule Builder (recommended)":
+        return schedule_builder()
+    elif selection == "Custom (enter manually)":
         schedule = text_input(
             title="Cron Expression",
             message="Enter cron expression:",
