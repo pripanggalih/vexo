@@ -6,6 +6,9 @@ from ui.components import (
 )
 from ui.menu import confirm_action, text_input, select_from_list
 from utils.shell import run_command, is_installed, require_root
+from utils.sanitize import (
+    escape_mysql, escape_mysql_identifier, validate_identifier,
+)
 from modules.database.mariadb.utils import (
     is_mariadb_ready, run_mysql, get_databases, get_user_databases,
     get_database_size, format_size, MARIA_SYSTEM_DBS,
@@ -86,6 +89,12 @@ def create_database_interactive():
     if not db_name:
         return
     
+    # Validate database name (alphanumeric and underscore only)
+    if not validate_identifier(db_name, max_length=64):
+        show_error("Invalid database name. Use only letters, numbers, and underscore.")
+        press_enter_to_continue()
+        return
+    
     if db_name in get_databases():
         show_error(f"Database '{db_name}' already exists.")
         press_enter_to_continue()
@@ -101,6 +110,12 @@ def create_database_interactive():
         if not username:
             return
         
+        # Validate username
+        if not validate_identifier(username, max_length=32):
+            show_error("Invalid username. Use only letters, numbers, and underscore.")
+            press_enter_to_continue()
+            return
+        
         from getpass import getpass
         try:
             password = getpass("Password: ")
@@ -110,7 +125,9 @@ def create_database_interactive():
         if not password:
             return
     
-    result = run_mysql(f"CREATE DATABASE `{db_name}`;")
+    # Use safe identifier escaping for database name
+    safe_db = escape_mysql_identifier(db_name)
+    result = run_mysql(f"CREATE DATABASE {safe_db};")
     if result.returncode != 0:
         show_error("Failed to create database.")
         console.print(f"[dim]{result.stderr}[/dim]")
@@ -120,9 +137,12 @@ def create_database_interactive():
     show_success(f"Database '{db_name}' created!")
     
     if create_user and username:
-        result = run_mysql(f"CREATE USER '{username}'@'localhost' IDENTIFIED BY '{password}';")
+        # Escape username and password to prevent SQL injection
+        safe_user = escape_mysql(username)
+        safe_pass = escape_mysql(password)
+        result = run_mysql(f"CREATE USER '{safe_user}'@'localhost' IDENTIFIED BY '{safe_pass}';")
         if result.returncode == 0:
-            run_mysql(f"GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{username}'@'localhost';")
+            run_mysql(f"GRANT ALL PRIVILEGES ON {safe_db}.* TO '{safe_user}'@'localhost';")
             run_mysql("FLUSH PRIVILEGES;")
             show_success(f"User '{username}' created with access to {db_name}!")
         else:
@@ -164,7 +184,9 @@ def delete_database_interactive():
         press_enter_to_continue()
         return
     
-    result = run_mysql(f"DROP DATABASE `{db_name}`;")
+    # Use safe identifier escaping
+    safe_db = escape_mysql_identifier(db_name)
+    result = run_mysql(f"DROP DATABASE {safe_db};")
     
     if result.returncode == 0:
         show_success(f"Database '{db_name}' deleted!")

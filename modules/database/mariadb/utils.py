@@ -4,6 +4,7 @@ import os
 import configparser
 
 from utils.shell import run_command, is_installed, is_service_running
+from utils.sanitize import escape_mysql
 
 # Backup directory
 MARIA_BACKUP_DIR = "/var/backups/mariadb"
@@ -82,17 +83,20 @@ def get_users():
 
 def get_database_size(database):
     """Get database size in bytes."""
+    # Escape database name to prevent SQL injection
+    safe_db = escape_mysql(database)
     sql = f"""
     SELECT SUM(data_length + index_length) 
     FROM information_schema.tables 
-    WHERE table_schema = '{database}';
+    WHERE table_schema = '{safe_db}';
     """
     result = run_mysql(sql)
     if result.returncode == 0 and result.stdout.strip():
         try:
             size = result.stdout.strip()
             return int(float(size)) if size and size != 'NULL' else 0
-        except ValueError:
+        except (ValueError, TypeError):
+            # Handle any unexpected output format
             pass
     return 0
 

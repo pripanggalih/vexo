@@ -5,6 +5,9 @@ from ui.components import (
     show_success, show_error, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
+from utils.sanitize import (
+    escape_postgresql, escape_postgresql_identifier, validate_identifier,
+)
 from modules.database.postgresql.utils import (
     is_postgresql_ready, run_psql, get_users, PG_SYSTEM_USERS,
 )
@@ -84,6 +87,12 @@ def create_user():
     if not username:
         return
     
+    # Validate username (PostgreSQL allows lowercase + underscore + digits)
+    if not validate_identifier(username, max_length=63, allow_chars="a-z0-9_"):
+        show_error("Invalid username. Use only lowercase letters, numbers, and underscore.")
+        press_enter_to_continue()
+        return
+    
     if username in get_users():
         show_error(f"User '{username}' already exists.")
         press_enter_to_continue()
@@ -104,7 +113,10 @@ def create_user():
     if can_createdb:
         options = "CREATEDB"
     
-    result = run_psql(f"CREATE USER {username} WITH PASSWORD '{password}' {options};")
+    # Use safe escaping for username and password
+    safe_user = escape_postgresql_identifier(username)
+    safe_pass = escape_postgresql(password)
+    result = run_psql(f"CREATE USER {safe_user} WITH PASSWORD '{safe_pass}' {options};")
     
     if result.returncode == 0:
         show_success(f"User '{username}' created!")
@@ -138,7 +150,9 @@ def delete_user():
     if not confirm_action(f"Delete user '{username}'?"):
         return
     
-    result = run_psql(f"DROP USER {username};")
+    # Use safe identifier escaping
+    safe_user = escape_postgresql_identifier(username)
+    result = run_psql(f"DROP USER {safe_user};")
     
     if result.returncode == 0:
         show_success(f"User '{username}' deleted!")

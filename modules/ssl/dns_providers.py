@@ -18,6 +18,7 @@ from ui.components import (
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, require_root, is_installed
+from utils.sanitize import escape_shell
 from modules.ssl.common import (
     get_certbot_status_text,
     ensure_config_dir,
@@ -340,7 +341,10 @@ def _test_api(provider_key, credentials):
     show_info("Testing API connection...")
     
     if provider_key == "cloudflare":
-        cmd = provider["test_command"].format(**credentials)
+        # Escape API token to prevent command injection
+        safe_token = escape_shell(credentials.get("api_token", ""))
+        # Build command manually with escaped token (don't use format with user input)
+        cmd = f"curl -s -X GET 'https://api.cloudflare.com/client/v4/user/tokens/verify' -H 'Authorization: Bearer '{safe_token}"
         result = run_command(cmd, check=False, silent=True)
         
         if result.returncode == 0 and '"success":true' in result.stdout:
@@ -351,7 +355,9 @@ def _test_api(provider_key, credentials):
             return False
     
     elif provider_key == "digitalocean":
-        cmd = provider["test_command"].format(**credentials)
+        # Escape API token to prevent command injection
+        safe_token = escape_shell(credentials.get("api_token", ""))
+        cmd = f"curl -s -X GET 'https://api.digitalocean.com/v2/account' -H 'Authorization: Bearer '{safe_token}"
         result = run_command(cmd, check=False, silent=True)
         
         if result.returncode == 0 and '"account"' in result.stdout:

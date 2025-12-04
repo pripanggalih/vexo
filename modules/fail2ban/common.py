@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 
 from utils.shell import run_command, is_installed, is_service_running
+from utils.sanitize import validate_ip as _validate_ip, validate_cidr as _validate_cidr
 
 
 # Paths
@@ -125,32 +126,19 @@ def get_all_banned_ips():
 
 
 def is_valid_ip(ip):
-    """Validate IPv4 address."""
-    parts = ip.split('.')
-    if len(parts) != 4:
-        return False
-    try:
-        for part in parts:
-            num = int(part)
-            if num < 0 or num > 255:
-                return False
-    except ValueError:
-        return False
-    return True
+    """Validate IP address (IPv4 or IPv6).
+    
+    Fail2ban supports both IPv4 and IPv6, so we validate both formats.
+    """
+    return _validate_ip(ip)
 
 
 def is_valid_cidr(cidr):
-    """Validate CIDR notation (e.g., 192.168.0.0/24)."""
-    if '/' not in cidr:
-        return False
-    ip_part, prefix = cidr.rsplit('/', 1)
-    if not is_valid_ip(ip_part):
-        return False
-    try:
-        prefix_int = int(prefix)
-        return 0 <= prefix_int <= 32
-    except ValueError:
-        return False
+    """Validate CIDR notation (e.g., 192.168.0.0/24 or 2001:db8::/32).
+    
+    Supports both IPv4 and IPv6 CIDR notation.
+    """
+    return _validate_cidr(cidr)
 
 
 def detect_services():

@@ -16,6 +16,7 @@ from ui.components import (
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
 from utils.shell import run_command, run_command_realtime, require_root
+from utils.sanitize import escape_shell, validate_username
 
 
 def show_users_menu():
@@ -102,13 +103,17 @@ def add_user():
         press_enter_to_continue()
         return
     
-    if not re.match(r'^[a-z][a-z0-9_-]*$', username):
+    # Validate username format using centralized validation
+    if not validate_username(username):
         show_error("Invalid username. Use lowercase letters, numbers, underscore, dash.")
-        show_error("Must start with a letter.")
+        show_error("Must start with a letter, max 32 characters.")
         press_enter_to_continue()
         return
     
-    result = run_command(f"id {username}", check=False, silent=True)
+    # Escape username for shell commands (defense in depth)
+    safe_user = escape_shell(username)
+    
+    result = run_command(f"id {safe_user}", check=False, silent=True)
     if result.returncode == 0:
         show_error(f"User '{username}' already exists.")
         press_enter_to_continue()
@@ -123,7 +128,7 @@ def add_user():
         press_enter_to_continue()
         return
     
-    cmd = f"useradd -m -s /bin/bash {username}"
+    cmd = f"useradd -m -s /bin/bash {safe_user}"
     result = run_command(cmd, check=False, silent=True)
     if result.returncode != 0:
         show_error(f"Failed to create user: {result.stderr}")
@@ -133,13 +138,13 @@ def add_user():
     show_success(f"User '{username}' created.")
     
     if add_sudo:
-        run_command(f"usermod -aG sudo {username}", check=False, silent=True)
+        run_command(f"usermod -aG sudo {safe_user}", check=False, silent=True)
         show_success("Added to sudo group.")
     
     if set_password:
         console.print()
         show_info("Set password for user (input hidden):")
-        returncode = run_command_realtime(f"passwd {username}", "Setting password...")
+        returncode = run_command_realtime(f"passwd {safe_user}", "Setting password...")
         if returncode == 0:
             show_success("Password set.")
         else:
@@ -196,13 +201,17 @@ def _add_ssh_key_for_user(username):
     except PermissionError:
         return
     
+    # Use escaped paths for shell commands
+    safe_user = escape_shell(username)
     home = f"/home/{username}"
     ssh_dir = f"{home}/.ssh"
     auth_keys = f"{ssh_dir}/authorized_keys"
+    safe_ssh_dir = escape_shell(ssh_dir)
+    safe_auth_keys = escape_shell(auth_keys)
     
-    run_command(f"mkdir -p {ssh_dir}", check=False, silent=True)
-    run_command(f"chmod 700 {ssh_dir}", check=False, silent=True)
-    run_command(f"chown {username}:{username} {ssh_dir}", check=False, silent=True)
+    run_command(f"mkdir -p {safe_ssh_dir}", check=False, silent=True)
+    run_command(f"chmod 700 {safe_ssh_dir}", check=False, silent=True)
+    run_command(f"chown {safe_user}:{safe_user} {safe_ssh_dir}", check=False, silent=True)
     
     try:
         with open(auth_keys, "a") as f:
@@ -211,8 +220,8 @@ def _add_ssh_key_for_user(username):
         show_error(f"Failed to write SSH key: {e}")
         return
     
-    run_command(f"chmod 600 {auth_keys}", check=False, silent=True)
-    run_command(f"chown {username}:{username} {auth_keys}", check=False, silent=True)
+    run_command(f"chmod 600 {safe_auth_keys}", check=False, silent=True)
+    run_command(f"chown {safe_user}:{safe_user} {safe_auth_keys}", check=False, silent=True)
     
     show_success(f"SSH key added for {username}.")
 
@@ -261,7 +270,9 @@ def delete_user():
         press_enter_to_continue()
         return
     
-    cmd = f"userdel {'-r ' if delete_home else ''}{username}"
+    # Escape username for shell command
+    safe_user = escape_shell(username)
+    cmd = f"userdel {'-r ' if delete_home else ''}{safe_user}"
     result = run_command(cmd, check=False, silent=True)
     
     if result.returncode == 0:

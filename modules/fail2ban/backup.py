@@ -603,7 +603,20 @@ def _configure_schedule():
 
 def _create_backup_cron(schedule):
     """Create cron job for scheduled backups."""
-    hour, minute = schedule['time'].split(':')
+    # Parse time with validation
+    time_str = schedule.get('time', '02:00')
+    try:
+        parts = time_str.split(':')
+        if len(parts) < 2:
+            raise ValueError("Invalid time format")
+        hour = parts[0].zfill(2)
+        minute = parts[1].zfill(2)
+        # Validate hour and minute ranges
+        if not (0 <= int(hour) <= 23 and 0 <= int(minute) <= 59):
+            raise ValueError("Hour or minute out of range")
+    except (ValueError, IndexError) as e:
+        show_error(f"Invalid time format: {time_str}. Using default 02:00")
+        hour, minute = "02", "00"
     
     if schedule['frequency'] == 'daily':
         cron_time = f"{minute} {hour} * * *"

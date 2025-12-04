@@ -15,6 +15,7 @@ from ui.components import (
 )
 from ui.menu import run_menu_loop, text_input, select_from_list, confirm_action
 from utils.shell import run_command, run_command_realtime, is_installed, require_root
+from utils.sanitize import validate_email, validate_domain, escape_shell
 from modules.ssl.common import (
     get_certbot_status_text,
     is_certbot_installed,
@@ -102,8 +103,8 @@ def _get_email():
         message="Enter email for certificate notifications:"
     )
     
-    if not email or "@" not in email:
-        show_error("Valid email is required.")
+    if not email or not validate_email(email):
+        show_error("Valid email is required (e.g., user@example.com).")
         return None
     
     return email
@@ -170,6 +171,12 @@ def issue_single_domain():
     domain = domain.strip().lower()
     if domain.startswith("http"):
         domain = domain.split("//")[-1].split("/")[0]
+    
+    # Validate domain format
+    if not validate_domain(domain):
+        show_error(f"Invalid domain format: {domain}")
+        press_enter_to_continue()
+        return
     
     console.print()
     console.print("[bold]Pre-flight checks:[/bold]")

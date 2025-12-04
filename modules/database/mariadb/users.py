@@ -5,6 +5,7 @@ from ui.components import (
     show_success, show_error, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list, run_menu_loop
+from utils.sanitize import escape_mysql, validate_identifier
 from modules.database.mariadb.utils import (
     is_mariadb_ready, run_mysql, get_users, MARIA_SYSTEM_USERS,
 )
@@ -76,6 +77,12 @@ def create_user():
     if not username:
         return
     
+    # Validate username
+    if not validate_identifier(username, max_length=32):
+        show_error("Invalid username. Use only letters, numbers, and underscore.")
+        press_enter_to_continue()
+        return
+    
     from getpass import getpass
     try:
         password = getpass("Password: ")
@@ -95,7 +102,11 @@ def create_user():
         if not host:
             return
     
-    result = run_mysql(f"CREATE USER '{username}'@'{host}' IDENTIFIED BY '{password}';")
+    # Escape values to prevent SQL injection
+    safe_user = escape_mysql(username)
+    safe_host = escape_mysql(host)
+    safe_pass = escape_mysql(password)
+    result = run_mysql(f"CREATE USER '{safe_user}'@'{safe_host}' IDENTIFIED BY '{safe_pass}';")
     
     if result.returncode == 0:
         run_mysql("FLUSH PRIVILEGES;")
@@ -128,7 +139,9 @@ def delete_user():
     if not username:
         return
     
-    result = run_mysql(f"SELECT Host FROM mysql.user WHERE User = '{username}';")
+    # Escape username for query
+    safe_user = escape_mysql(username)
+    result = run_mysql(f"SELECT Host FROM mysql.user WHERE User = '{safe_user}';")
     hosts = [h.strip() for h in result.stdout.strip().split('\n') if h.strip()]
     
     if len(hosts) > 1:
@@ -141,7 +154,9 @@ def delete_user():
     if not confirm_action(f"Delete user '{username}'@'{host}'?"):
         return
     
-    result = run_mysql(f"DROP USER '{username}'@'{host}';")
+    # Escape values for DROP USER
+    safe_host = escape_mysql(host)
+    result = run_mysql(f"DROP USER '{safe_user}'@'{safe_host}';")
     
     if result.returncode == 0:
         run_mysql("FLUSH PRIVILEGES;")
