@@ -165,7 +165,7 @@ def install_basic_tools():
     if installed:
         show_success(f"Installed: {', '.join(installed)}")
     if failed:
-        handle_error("E1006", f"Failed to install: {chr(39)}, {chr(39)}.join(failed)}")
+        handle_error("E1006", f"Failed to install: {', '.join(failed)}")
     if not failed:
         show_success("All tools installed successfully!")
     
