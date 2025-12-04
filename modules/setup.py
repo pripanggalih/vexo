@@ -15,7 +15,7 @@ from ui.components import (
     show_info,
     press_enter_to_continue,
 )
-from utils.shell import run_command, is_installed
+from utils.shell import run_command, run_apt_with_progress, is_installed
 from utils.error_handler import handle_error
 
 
@@ -256,15 +256,14 @@ def install_component(component):
             show_warning(f"Failed to add PPA for {name}")
         run_command("apt update", check=False, silent=True)
     
-    # Install packages
+    # Install packages with progress bar
     if "packages" in component:
-        packages = " ".join(component["packages"])
-        result = run_command(
-            f"apt install -y {packages}",
-            check=False, silent=False
+        success = run_apt_with_progress(
+            component["packages"],
+            step_info=f"Installing {name}"
         )
-        if result.returncode != 0:
-            handle_error("E1006", f"{name} installation failed", details=result.stderr if result.stderr else None)
+        if not success:
+            handle_error("E1006", f"{name} installation failed")
             return False
     
     # Post-install hook
