@@ -4,7 +4,8 @@ from ui.menu import run_menu_loop
 from utils.shell import is_installed, is_service_running
 
 from modules.supervisor.install import install_supervisor
-from modules.supervisor.worker import add_worker_interactive, remove_worker_interactive, list_workers
+from modules.supervisor.add_worker import show_menu as show_add_worker_menu
+from modules.supervisor.worker import remove_worker_interactive, list_workers
 from modules.supervisor.control import show_menu as show_control_menu
 from modules.supervisor.logs import view_logs
 from modules.supervisor.status import show_status
@@ -37,7 +38,7 @@ def show_menu():
     
     handlers = {
         "install": install_supervisor,
-        "add": add_worker_interactive,
+        "add": show_add_worker_menu,
         "remove": remove_worker_interactive,
         "list": list_workers,
         "control": show_control_menu,
