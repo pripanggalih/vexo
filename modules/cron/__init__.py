@@ -2,9 +2,8 @@
 
 from ui.menu import run_menu_loop
 
-from modules.cron.laravel import setup_laravel_scheduler
+from modules.cron.add_job import add_job_menu
 from modules.cron.jobs import (
-    add_cron_job_interactive,
     remove_cron_job_interactive,
     list_cron_jobs,
     toggle_cron_job,
@@ -16,20 +15,18 @@ from modules.cron.status import show_status
 def show_menu():
     """Display the Cron Management submenu."""
     options = [
-        ("laravel", "1. Setup Laravel Scheduler"),
-        ("add", "2. Add Cron Job"),
-        ("remove", "3. Remove Cron Job"),
-        ("list", "4. List Cron Jobs"),
-        ("toggle", "5. Enable/Disable Job"),
-        ("backup", "6. Backup Crontab"),
-        ("restore", "7. Restore Crontab"),
-        ("status", "8. Show Status"),
+        ("add", "1. Add Cron Job"),
+        ("remove", "2. Remove Cron Job"),
+        ("list", "3. List Cron Jobs"),
+        ("toggle", "4. Enable/Disable Job"),
+        ("backup", "5. Backup Crontab"),
+        ("restore", "6. Restore Crontab"),
+        ("status", "7. Show Status"),
         ("back", "← Back to Main Menu"),
     ]
     
     handlers = {
-        "laravel": setup_laravel_scheduler,
-        "add": add_cron_job_interactive,
+        "add": add_job_menu,
         "remove": remove_cron_job_interactive,
         "list": list_cron_jobs,
         "toggle": toggle_cron_job,
