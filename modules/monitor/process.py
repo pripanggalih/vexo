@@ -1,4 +1,4 @@
-"""Process management for vexo-cli."""
+"""Process management for vexo."""
 
 import os
 import signal

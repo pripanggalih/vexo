@@ -1,4 +1,4 @@
-"""Edit and clone workers for vexo-cli supervisor."""
+"""Edit and clone workers for vexo supervisor."""
 
 import os
 import re

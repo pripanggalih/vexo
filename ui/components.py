@@ -1,4 +1,4 @@
-"""Reusable UI components for vexo-cli."""
+"""Reusable UI components for vexo."""
 
 from rich.console import Console
 from rich.panel import Panel

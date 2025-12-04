@@ -1,4 +1,4 @@
-"""Utility functions for vexo-cli - shell commands, logging."""
+"""Utility functions for vexo - shell commands, logging."""
 
 from utils.shell import (
     run_command,

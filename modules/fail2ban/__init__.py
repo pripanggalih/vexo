@@ -1,4 +1,4 @@
-"""Fail2ban (brute force protection) module for vexo-cli."""
+"""Fail2ban (brute force protection) module for vexo."""
 
 from ui.menu import run_menu_loop
 from utils.shell import is_installed, is_service_running

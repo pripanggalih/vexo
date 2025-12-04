@@ -1,4 +1,4 @@
-"""Logging utilities for vexo-cli."""
+"""Logging utilities for vexo."""
 
 from datetime import datetime
 from ui.components import console
@@ -8,7 +8,7 @@ from ui.styles import PRIMARY, SUCCESS, WARNING, ERROR, INFO
 class Logger:
     """Simple logger with Rich formatting."""
     
-    def __init__(self, name="vexo-cli"):
+    def __init__(self, name="vexo"):
         self.name = name
         self.show_timestamp = False
     

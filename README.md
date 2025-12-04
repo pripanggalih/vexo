@@ -75,22 +75,22 @@
 ### Quick Install (Recommended)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/pripanggalih/vexo-cli/main/install.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/pripanggalih/vexo/main/install.sh | sudo bash
 ```
 
 ### Manual Install
 
 ```bash
 # Clone repository
-sudo git clone https://github.com/pripanggalih/vexo-cli.git /opt/vexo-cli
-cd /opt/vexo-cli
+sudo git clone https://github.com/pripanggalih/vexo.git /opt/vexo
+cd /opt/vexo
 
 # Create virtual environment
 sudo python3 -m venv venv
 sudo ./venv/bin/pip install -r requirements.txt
 
 # Create symlink
-sudo ln -sf /opt/vexo-cli/vexo /usr/local/bin/vexo
+sudo ln -sf /opt/vexo/vexo /usr/local/bin/vexo
 
 # Run
 sudo vexo
@@ -186,7 +186,7 @@ To skip: `sudo vexo --no-update`
 ## Project Structure
 
 ```
-vexo-cli/
+vexo/
 ├── main.py              # Entry point
 ├── config.py            # Global configuration
 ├── requirements.txt     # Python dependencies

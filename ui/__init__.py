@@ -1,4 +1,4 @@
-"""UI components for vexo-cli - menus, styles, and reusable widgets."""
+"""UI components for vexo - menus, styles, and reusable widgets."""
 
 from ui.styles import (
     PRIMARY, SUCCESS, WARNING, ERROR, INFO, MUTED,

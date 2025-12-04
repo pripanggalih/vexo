@@ -20,7 +20,7 @@
 **Step 1: Create service.py with service discovery**
 
 ```python
-"""Service monitoring for vexo-cli."""
+"""Service monitoring for vexo."""
 
 import re
 from collections import defaultdict
@@ -572,7 +572,7 @@ git commit -m "feat(monitor): add service actions and log viewer"
 **Step 1: Update __init__.py to import service module**
 
 ```python
-"""System monitoring module for vexo-cli."""
+"""System monitoring module for vexo."""
 
 from ui.menu import run_menu_loop
 

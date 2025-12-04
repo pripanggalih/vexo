@@ -321,7 +321,7 @@ def reload_nginx(silent=False):
 **Step 6: Create __init__.py with main menu**
 
 ```python
-"""Domain & Nginx management module for vexo-cli."""
+"""Domain & Nginx management module for vexo."""
 
 from ui.menu import run_menu_loop
 from utils.shell import is_installed

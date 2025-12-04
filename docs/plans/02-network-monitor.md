@@ -20,7 +20,7 @@
 **Step 1: Create network.py with interface stats**
 
 ```python
-"""Network monitoring for vexo-cli."""
+"""Network monitoring for vexo."""
 
 import psutil
 import socket
@@ -486,7 +486,7 @@ git commit -m "feat(monitor): add traffic by process view"
 Replace the `_coming_soon` handler for network:
 
 ```python
-"""System monitoring module for vexo-cli."""
+"""System monitoring module for vexo."""
 
 from ui.menu import run_menu_loop
 

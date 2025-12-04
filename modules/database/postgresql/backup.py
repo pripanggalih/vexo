@@ -323,7 +323,7 @@ def scheduled_backups():
         prefix = target
     
     script_content = f'''#!/bin/bash
-# PostgreSQL backup script - managed by vexo-cli
+# PostgreSQL backup script - managed by vexo
 BACKUP_DIR="{PG_BACKUP_DIR}"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BACKUP_FILE="$BACKUP_DIR/{prefix}_$TIMESTAMP.sql.gz"

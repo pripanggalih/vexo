@@ -178,7 +178,7 @@ def install_roundcube():
     smtp_port = "587"
     
     config_content = f"""<?php
-// Roundcube configuration - managed by vexo-cli
+// Roundcube configuration - managed by vexo
 
 $config['db_dsnw'] = '{db_dsn}';
 $config['imap_host'] = 'ssl://{imap_host}:993';

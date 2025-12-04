@@ -193,7 +193,7 @@ def _regenerate_aliases_file(config):
     aliases = config.get("aliases", {})
     
     with open(POSTFIX_ALIASES, 'w') as f:
-        f.write("# Email aliases - managed by vexo-cli\n")
+        f.write("# Email aliases - managed by vexo\n")
         for alias, dest in aliases.items():
             f.write(f"{alias} {dest}\n")
     
@@ -354,7 +354,7 @@ def _regenerate_forwards(config):
     aliases = config.get("aliases", {})
     
     with open(POSTFIX_ALIASES, 'w') as f:
-        f.write("# Email aliases and forwards - managed by vexo-cli\n")
+        f.write("# Email aliases and forwards - managed by vexo\n")
         
         # Write aliases
         for alias, dest in aliases.items():
@@ -471,7 +471,7 @@ def install_spamassassin():
     run_command("systemctl enable spamassassin", check=False, silent=True)
     
     # Basic configuration
-    config_content = """# SpamAssassin configuration - managed by vexo-cli
+    config_content = """# SpamAssassin configuration - managed by vexo
 required_score 5.0
 report_safe 0
 rewrite_header Subject [SPAM]
@@ -515,7 +515,7 @@ def _add_spamassassin_to_master_cf():
         return
     
     spamassassin_config = """
-# SpamAssassin - added by vexo-cli
+# SpamAssassin - added by vexo
 spamassassin unix - n n - - pipe
   user=spamd argv=/usr/bin/spamc -f -e /usr/sbin/sendmail -oi -f ${sender} ${recipient}
 """
@@ -871,7 +871,7 @@ def _regenerate_access_file(config):
     whitelist = config.get("whitelist", [])
     
     with open(POSTFIX_ACCESS, 'w') as f:
-        f.write("# Sender access control - managed by vexo-cli\n")
+        f.write("# Sender access control - managed by vexo\n")
         
         # Whitelist first (OK)
         for entry in whitelist:

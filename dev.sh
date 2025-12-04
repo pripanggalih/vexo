@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# vexo-cli local development runner
+# vexo local development runner
 # Usage: ./dev.sh
 #
 
@@ -15,7 +15,7 @@ CYAN='\033[0;36m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-echo -e "${CYAN}vexo-cli Development Runner${NC}"
+echo -e "${CYAN}vexo Development Runner${NC}"
 echo "─────────────────────────────"
 
 # Detect OS
@@ -108,9 +108,9 @@ if ! check_deps; then
     install_deps
 fi
 
-echo -e "${GREEN}✓ Starting vexo-cli...${NC}"
+echo -e "${GREEN}✓ Starting vexo...${NC}"
 echo ""
 
-# Run vexo-cli
+# Run vexo
 cd "$SCRIPT_DIR"
 python3 main.py "$@"

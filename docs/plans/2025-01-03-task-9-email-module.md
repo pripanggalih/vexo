@@ -34,7 +34,7 @@
 **Step 1: Create email module with menu**
 
 ```python
-"""Email server module for vexo-cli (Postfix)."""
+"""Email server module for vexo (Postfix)."""
 
 from ui.components import (
     console,
@@ -606,7 +606,7 @@ def test_email(recipient):
     """
     hostname = get_hostname()
     subject = f"Test Email from {hostname}"
-    body = f"""This is a test email from vexo-cli.
+    body = f"""This is a test email from vexo.
 
 Server: {hostname}
 Time: $(date)
@@ -614,7 +614,7 @@ Time: $(date)
 If you received this email, your Postfix configuration is working correctly.
 
 --
-Sent by vexo-cli
+Sent by vexo
 """
     
     result = run_command(
@@ -639,14 +639,14 @@ git commit -m "feat(email): add test_email() for sending test emails"
 
 **Files:**
 - Modify: `modules/__init__.py`
-- Modify: `tasks/tasks-vexo-cli.md`
+- Modify: `tasks/tasks-vexo.md`
 
 **Step 1: Update modules/__init__.py**
 
 Add email import:
 
 ```python
-"""Business logic modules for vexo-cli - system, webserver, runtime, database, email."""
+"""Business logic modules for vexo - system, webserver, runtime, database, email."""
 
 from modules import system
 from modules import webserver
@@ -662,7 +662,7 @@ Mark all Task 9.x items as `[x]` complete.
 **Step 3: Commit**
 
 ```bash
-git add modules/__init__.py tasks/tasks-vexo-cli.md
+git add modules/__init__.py tasks/tasks-vexo.md
 git commit -m "docs: mark Task 9.0 Email Module as complete"
 ```
 

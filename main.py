@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-vexo-cli - VPS Management CLI for Ubuntu/Debian
+vexo - VPS Management CLI for Ubuntu/Debian
 
 Entry point for the application.
 """
@@ -14,7 +14,7 @@ from ui.components import clear_screen, show_header, show_system_bar, console
 from ui.menu import show_main_menu
 
 # Installation directory (when installed via install.sh)
-INSTALL_DIR = "/opt/vexo-cli"
+INSTALL_DIR = "/opt/vexo"
 
 from modules import system
 from modules import webserver
@@ -85,7 +85,7 @@ def check_for_updates():
 
 def perform_update():
     """Perform auto-update from GitHub with rollback support."""
-    console.print("[cyan]⚡ Updating vexo-cli...[/cyan]")
+    console.print("[cyan]⚡ Updating vexo...[/cyan]")
     
     previous_commit = None
     
@@ -258,7 +258,7 @@ def show_help():
     print(APP_DESCRIPTION)
     print()
     print("Usage:")
-    print("  sudo vexo              Run vexo-cli")
+    print("  sudo vexo              Run vexo")
     print("  vexo --help            Show this help")
     print("  vexo --version         Show version")
     print()

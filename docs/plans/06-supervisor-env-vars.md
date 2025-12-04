@@ -20,7 +20,7 @@
 **Step 1: Create env.py with environment management functions**
 
 ```python
-"""Environment variables management for vexo-cli supervisor."""
+"""Environment variables management for vexo supervisor."""
 
 import os
 import re
@@ -641,7 +641,7 @@ git commit -m "feat(supervisor): add environment variables management"
 **Step 1: Update __init__.py to include env menu**
 
 ```python
-"""Supervisor module for vexo-cli (Queue Workers)."""
+"""Supervisor module for vexo (Queue Workers)."""
 
 from ui.menu import run_menu_loop, show_submenu
 from utils.shell import is_installed, is_service_running

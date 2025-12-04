@@ -1,4 +1,4 @@
-"""Supervisor installation for vexo-cli."""
+"""Supervisor installation for vexo."""
 
 from ui.components import (
     console,

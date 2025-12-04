@@ -20,7 +20,7 @@
 **Step 1: Create edit.py with edit and clone functions**
 
 ```python
-"""Edit and clone jobs for vexo-cli cron."""
+"""Edit and clone jobs for vexo cron."""
 
 import os
 
@@ -451,7 +451,7 @@ git commit -m "feat(cron): add edit and clone job functionality"
 **Step 1: Update __init__.py to include edit and clone options**
 
 ```python
-"""Cron module for vexo-cli (Scheduled Tasks)."""
+"""Cron module for vexo (Scheduled Tasks)."""
 
 from ui.menu import run_menu_loop, show_submenu
 

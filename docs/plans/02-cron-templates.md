@@ -20,7 +20,7 @@
 **Step 1: Create templates.py with all template generators**
 
 ```python
-"""Job templates for vexo-cli cron."""
+"""Job templates for vexo cron."""
 
 import os
 
@@ -325,7 +325,7 @@ git commit -m "feat(cron): add job templates for various tasks"
 **Step 1: Create add_job.py with template selection wizards**
 
 ```python
-"""Add job wizards for vexo-cli cron."""
+"""Add job wizards for vexo cron."""
 
 import os
 
@@ -1052,7 +1052,7 @@ git commit -m "feat(cron): add job creation wizards for all templates"
 **Step 1: Update __init__.py to use new add_job menu**
 
 ```python
-"""Cron module for vexo-cli (Scheduled Tasks)."""
+"""Cron module for vexo (Scheduled Tasks)."""
 
 from ui.menu import run_menu_loop
 

@@ -1,4 +1,4 @@
-"""Worker config templates for vexo-cli supervisor."""
+"""Worker config templates for vexo supervisor."""
 
 from modules.supervisor.common import SUPERVISOR_LOG_DIR, format_env_string
 

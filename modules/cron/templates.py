@@ -1,4 +1,4 @@
-"""Job templates for vexo-cli cron."""
+"""Job templates for vexo cron."""
 
 import os
 

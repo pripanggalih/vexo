@@ -1,4 +1,4 @@
-"""Network monitoring for vexo-cli."""
+"""Network monitoring for vexo."""
 
 import psutil
 import socket

@@ -20,7 +20,7 @@
 **Step 1: Create styles.py with theme constants**
 
 ```python
-"""Theme and style definitions for vexo-cli."""
+"""Theme and style definitions for vexo."""
 
 from prompt_toolkit.styles import Style
 
@@ -96,7 +96,7 @@ git add ui/styles.py && git commit -m "feat(ui): add styles.py with theme consta
 **Step 1: Create components.py with console and show_header()**
 
 ```python
-"""Reusable UI components for vexo-cli."""
+"""Reusable UI components for vexo."""
 
 from rich.console import Console
 from rich.panel import Panel
@@ -297,7 +297,7 @@ git add ui/components.py && git commit -m "feat(ui): add message functions (succ
 **Step 1: Create menu.py with show_main_menu()**
 
 ```python
-"""Interactive menu system for vexo-cli using Prompt Toolkit."""
+"""Interactive menu system for vexo using Prompt Toolkit."""
 
 from prompt_toolkit.shortcuts import radiolist_dialog, yes_no_dialog, input_dialog
 
@@ -497,7 +497,7 @@ git add ui/menu.py && git commit -m "feat(ui): add text_input() and select_from_
 **Step 1: Update __init__.py to export all public functions**
 
 ```python
-"""UI components for vexo-cli - menus, styles, and reusable widgets."""
+"""UI components for vexo - menus, styles, and reusable widgets."""
 
 from ui.styles import (
     PRIMARY, SUCCESS, WARNING, ERROR, INFO, MUTED,
@@ -539,7 +539,7 @@ git add ui/__init__.py && git commit -m "feat(ui): update __init__.py with all e
 
 ## Task 2.11: Update task list
 
-Mark Task 2.0 and all sub-tasks as completed in `tasks/tasks-vexo-cli.md`
+Mark Task 2.0 and all sub-tasks as completed in `tasks/tasks-vexo.md`
 
 ---
 

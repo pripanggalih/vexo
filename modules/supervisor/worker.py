@@ -1,4 +1,4 @@
-"""Worker management for vexo-cli supervisor."""
+"""Worker management for vexo supervisor."""
 
 import os
 

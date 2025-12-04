@@ -1,4 +1,4 @@
-"""Interactive schedule builder for vexo-cli cron."""
+"""Interactive schedule builder for vexo cron."""
 
 from ui.components import (
     console,

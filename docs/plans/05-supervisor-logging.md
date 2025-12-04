@@ -20,7 +20,7 @@
 **Step 1: Replace logs.py with enhanced version**
 
 ```python
-"""Advanced log viewing for vexo-cli supervisor."""
+"""Advanced log viewing for vexo supervisor."""
 
 import os
 import re
@@ -561,7 +561,7 @@ git commit -m "feat(supervisor): add advanced logging with tail, filter, search,
 Replace the `view_logs` import with `logs_menu`:
 
 ```python
-"""Supervisor module for vexo-cli (Queue Workers)."""
+"""Supervisor module for vexo (Queue Workers)."""
 
 from ui.menu import run_menu_loop, show_submenu
 from utils.shell import is_installed, is_service_running

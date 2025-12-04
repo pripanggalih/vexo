@@ -1,4 +1,4 @@
-"""Status display for vexo-cli cron."""
+"""Status display for vexo cron."""
 
 import os
 

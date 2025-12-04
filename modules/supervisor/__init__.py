@@ -1,4 +1,4 @@
-"""Supervisor module for vexo-cli (Queue Workers)."""
+"""Supervisor module for vexo (Queue Workers)."""
 
 from ui.menu import run_menu_loop
 from utils.shell import is_installed, is_service_running

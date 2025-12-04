@@ -110,7 +110,7 @@ def install_dovecot():
 def _configure_dovecot():
     """Configure Dovecot for virtual mailboxes."""
     # Main config
-    main_conf = """# Dovecot configuration - managed by vexo-cli
+    main_conf = """# Dovecot configuration - managed by vexo
 protocols = imap pop3 lmtp
 listen = *, ::
 mail_location = maildir:/var/mail/vhosts/%d/%n

@@ -2,7 +2,7 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Setup the foundational project structure and dependencies for vexo-cli VPS management application.
+**Goal:** Setup the foundational project structure and dependencies for vexo VPS management application.
 
 **Architecture:** Modular Python CLI with separated concerns - UI layer (`ui/`), business logic (`modules/`), utilities (`utils/`), and configuration templates (`templates/`). Entry point is `main.py` with global config in `config.py`.
 
@@ -44,19 +44,19 @@ git add -A && git commit -m "chore: create folder structure for modular architec
 **Step 1: Create ui/__init__.py**
 
 ```python
-"""UI components for vexo-cli - menus, styles, and reusable widgets."""
+"""UI components for vexo - menus, styles, and reusable widgets."""
 ```
 
 **Step 2: Create modules/__init__.py**
 
 ```python
-"""Business logic modules for vexo-cli - system, webserver, runtime, database, email."""
+"""Business logic modules for vexo - system, webserver, runtime, database, email."""
 ```
 
 **Step 3: Create utils/__init__.py**
 
 ```python
-"""Utility functions for vexo-cli - shell commands, logging."""
+"""Utility functions for vexo - shell commands, logging."""
 ```
 
 **Step 4: Commit**
@@ -96,12 +96,12 @@ git add requirements.txt && git commit -m "chore: add requirements.txt with core
 **Step 1: Create config.py**
 
 ```python
-"""Global configuration for vexo-cli."""
+"""Global configuration for vexo."""
 
 import os
 
 # Application Info
-APP_NAME = "vexo-cli"
+APP_NAME = "vexo"
 APP_VERSION = "1.0.0"
 APP_DESCRIPTION = "VPS Management CLI for Ubuntu/Debian"
 
@@ -166,7 +166,7 @@ git add config.py && git commit -m "feat: add config.py with global constants an
 ```python
 #!/usr/bin/env python3
 """
-vexo-cli - VPS Management CLI for Ubuntu/Debian
+vexo - VPS Management CLI for Ubuntu/Debian
 
 Entry point for the application.
 """
@@ -227,7 +227,7 @@ git add main.py && git commit -m "feat: add main.py entry point with version and
 
 ## Task 1.6: Update task list
 
-Mark Task 1.0 and all sub-tasks as completed in `tasks/tasks-vexo-cli.md`
+Mark Task 1.0 and all sub-tasks as completed in `tasks/tasks-vexo.md`
 
 ---
 
@@ -236,7 +236,7 @@ Mark Task 1.0 and all sub-tasks as completed in `tasks/tasks-vexo-cli.md`
 After completing this plan:
 
 ```
-vexo-cli/
+vexo/
 ├── main.py              ✅ Entry point with version/root checks
 ├── config.py            ✅ Global constants and paths
 ├── requirements.txt     ✅ Dependencies (rich, prompt_toolkit, psutil)

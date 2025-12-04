@@ -212,7 +212,7 @@ git commit -m "feat(cron): create cron package with common utilities"
 **Step 1: Create jobs.py with add/remove/list functions**
 
 ```python
-"""Job management for vexo-cli cron."""
+"""Job management for vexo cron."""
 
 import os
 
@@ -517,7 +517,7 @@ git commit -m "feat(cron): add job management module"
 **Step 1: Create laravel.py**
 
 ```python
-"""Laravel scheduler setup for vexo-cli cron."""
+"""Laravel scheduler setup for vexo cron."""
 
 import os
 
@@ -639,7 +639,7 @@ git commit -m "feat(cron): add Laravel scheduler module"
 **Step 1: Create backup.py**
 
 ```python
-"""Backup and restore for vexo-cli cron."""
+"""Backup and restore for vexo cron."""
 
 import os
 from datetime import datetime
@@ -804,7 +804,7 @@ git commit -m "feat(cron): add backup and restore module"
 **Step 1: Create status.py**
 
 ```python
-"""Status display for vexo-cli cron."""
+"""Status display for vexo cron."""
 
 import os
 
@@ -878,7 +878,7 @@ git commit -m "feat(cron): add status module"
 **Step 1: Create __init__.py with menu**
 
 ```python
-"""Cron module for vexo-cli (Scheduled Tasks)."""
+"""Cron module for vexo (Scheduled Tasks)."""
 
 from ui.menu import run_menu_loop
 

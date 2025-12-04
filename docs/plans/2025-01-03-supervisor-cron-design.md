@@ -21,7 +21,7 @@ modules/
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
-| Module structure | Separate modules | Konsisten dengan arsitektur vexo-cli |
+| Module structure | Separate modules | Konsisten dengan arsitektur vexo |
 | Supervisor scope | Standard | Multi-worker, numprocs, logs |
 | Cron scope | General + Laravel | Scheduler + custom cron jobs |
 | Worker config | Direct to Supervisor | No abstraction layer needed |

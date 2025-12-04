@@ -1,4 +1,4 @@
-"""Environment variables management for vexo-cli supervisor."""
+"""Environment variables management for vexo supervisor."""
 
 import os
 import re

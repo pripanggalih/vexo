@@ -1,4 +1,4 @@
-"""Firewall (UFW) management module for vexo-cli."""
+"""Firewall (UFW) management module for vexo."""
 
 from ui.menu import run_menu_loop
 from modules.firewall.common import is_ufw_installed, get_ufw_status_text

@@ -106,7 +106,7 @@ def view_ssl_status():
             issuer = result.stdout.strip().replace('issuer=', '')
             if "Let's Encrypt" in issuer:
                 console.print("[bold]Type:[/bold] [green]Let's Encrypt[/green]")
-            elif "O = vexo-cli" in issuer or "Self" in issuer:
+            elif "O = vexo" in issuer or "Self" in issuer:
                 console.print("[bold]Type:[/bold] [yellow]Self-Signed[/yellow]")
             else:
                 console.print(f"[bold]Issuer:[/bold] {issuer[:50]}")
@@ -206,7 +206,7 @@ def generate_self_signed():
     result = run_command(
         f'openssl req -new -x509 -days 365 -nodes '
         f'-out {cert_path} -keyout {key_path} '
-        f'-subj "/O=vexo-cli/CN={domain}"',
+        f'-subj "/O=vexo/CN={domain}"',
         check=False, silent=True
     )
     

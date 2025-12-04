@@ -1,4 +1,4 @@
-"""Backup and restore for vexo-cli cron."""
+"""Backup and restore for vexo cron."""
 
 import os
 from datetime import datetime

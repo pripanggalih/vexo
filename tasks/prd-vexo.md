@@ -1,12 +1,12 @@
-# PRD: vexo-cli - VPS Management CLI
+# PRD: vexo - VPS Management CLI
 
 ## 1. Introduction/Overview
 
-**vexo-cli** adalah aplikasi Command Line Interface (CLI) berbasis Python untuk mengelola VPS Ubuntu/Debian. Berbeda dengan CLI konvensional yang menggunakan perintah teks, vexo-cli menggunakan antarmuka menu interaktif (menu-driven) dengan navigasi arrow keys, tampilan visual modern (tabel, warna, progress bar), dan arsitektur modular.
+**vexo** adalah aplikasi Command Line Interface (CLI) berbasis Python untuk mengelola VPS Ubuntu/Debian. Berbeda dengan CLI konvensional yang menggunakan perintah teks, vexo menggunakan antarmuka menu interaktif (menu-driven) dengan navigasi arrow keys, tampilan visual modern (tabel, warna, progress bar), dan arsitektur modular.
 
 **Problem Statement:** Developer individu yang mengelola VPS pribadi seringkali harus mengingat banyak command Linux untuk setup server, install dependencies, konfigurasi Nginx, PHP, Node.js, database, dan email. Proses ini memakan waktu, rawan error, dan tidak efisien.
 
-**Solution:** vexo-cli menyediakan interface terpusat yang intuitif untuk mengelola semua aspek VPS dari satu aplikasi terminal.
+**Solution:** vexo menyediakan interface terpusat yang intuitif untuk mengelola semua aspek VPS dari satu aplikasi terminal.
 
 ---
 
@@ -67,7 +67,7 @@
 ### 4.1 Core Application
 
 1. Aplikasi harus berjalan di terminal dengan interface menu interaktif menggunakan arrow keys
-2. Aplikasi harus menampilkan header/branding "vexo-cli" saat startup
+2. Aplikasi harus menampilkan header/branding "vexo" saat startup
 3. Aplikasi harus memiliki navigasi menu utama dengan opsi: System Setup, Domain & Nginx, PHP & Node.js, Database, Email, Monitoring, Exit
 4. Aplikasi harus menampilkan feedback visual (progress bar, spinner) saat menjalankan operasi panjang
 5. Aplikasi harus menangani error dengan graceful dan menampilkan pesan error yang informatif
@@ -173,7 +173,7 @@
 ### Project Structure
 
 ```
-vexo-cli/
+vexo/
 ├── main.py                  # Entry point
 ├── requirements.txt         # Dependencies
 ├── config.py                # Global configuration
@@ -195,9 +195,9 @@ vexo-cli/
 ### Distribution Method
 
 -   Download via raw GitHub URL menggunakan curl/wget
--   One-liner install script: `curl -fsSL https://raw.githubusercontent.com/[user]/vexo-cli/main/install.sh | sudo bash`
+-   One-liner install script: `curl -fsSL https://raw.githubusercontent.com/[user]/vexo/main/install.sh | sudo bash`
 -   Install script akan:
-    1. Clone/download repository ke `/opt/vexo-cli`
+    1. Clone/download repository ke `/opt/vexo`
     2. Install Python dependencies
     3. Create symlink `/usr/local/bin/vexo`
     4. Set proper permissions
@@ -235,7 +235,7 @@ psutil==latest
 2. **Database Default** - Apakah default ke MySQL atau MariaDB?
 3. **Postfix Configuration** - Seberapa detail konfigurasi email yang dibutuhkan? Apakah cukup send-only?
 4. **Logging** - Apakah perlu menyimpan log operasi ke file untuk debugging?
-5. **Update Mechanism** - Bagaimana mekanisme update vexo-cli ke versi terbaru?
+5. **Update Mechanism** - Bagaimana mekanisme update vexo ke versi terbaru?
 
 ---
 

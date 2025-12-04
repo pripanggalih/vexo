@@ -1,4 +1,4 @@
-"""Monitor logging utility for vexo-cli."""
+"""Monitor logging utility for vexo."""
 
 import os
 import json

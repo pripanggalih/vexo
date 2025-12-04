@@ -34,7 +34,7 @@
 **Step 1: Create firewall module with menu**
 
 ```python
-"""Firewall (UFW) management module for vexo-cli."""
+"""Firewall (UFW) management module for vexo."""
 
 from ui.components import (
     console,
@@ -656,7 +656,7 @@ def show_status():
 **Step 2: Update modules/__init__.py**
 
 ```python
-"""Business logic modules for vexo-cli - system, webserver, runtime, database, email."""
+"""Business logic modules for vexo - system, webserver, runtime, database, email."""
 
 from modules import system
 from modules import webserver

@@ -1,4 +1,4 @@
-"""Status display for vexo-cli supervisor."""
+"""Status display for vexo supervisor."""
 
 from ui.components import (
     console,

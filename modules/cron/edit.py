@@ -1,4 +1,4 @@
-"""Edit and clone jobs for vexo-cli cron."""
+"""Edit and clone jobs for vexo cron."""
 
 from ui.components import (
     console,

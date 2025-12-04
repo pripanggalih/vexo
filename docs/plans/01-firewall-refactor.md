@@ -122,7 +122,7 @@ def ensure_config_dir():
 **Step 2: Create package __init__.py**
 
 ```python
-"""Firewall (UFW) management module for vexo-cli."""
+"""Firewall (UFW) management module for vexo."""
 
 from ui.menu import run_menu_loop
 from modules.firewall.common import is_ufw_installed, get_ufw_status_text

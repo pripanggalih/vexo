@@ -20,7 +20,7 @@
 **Step 1: Create runtime.py with imports and PHP menu**
 
 ```python
-"""PHP & Node.js Runtime management module for vexo-cli."""
+"""PHP & Node.js Runtime management module for vexo."""
 
 import os
 
@@ -1079,7 +1079,7 @@ git add config.py && git commit -m "chore(config): update PHP versions to 8.3, 8
 **Step 1: Add runtime module export**
 
 ```python
-"""Business logic modules for vexo-cli - system, webserver, runtime, database, email."""
+"""Business logic modules for vexo - system, webserver, runtime, database, email."""
 
 from modules import system
 from modules import webserver
@@ -1096,7 +1096,7 @@ git add modules/__init__.py && git commit -m "feat(modules): add runtime module 
 
 ## Task 6.12: Update task list
 
-Mark Task 6.0 and all sub-tasks as completed in `tasks/tasks-vexo-cli.md`
+Mark Task 6.0 and all sub-tasks as completed in `tasks/tasks-vexo.md`
 
 ---
 

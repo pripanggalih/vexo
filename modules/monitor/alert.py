@@ -1,4 +1,4 @@
-"""Alert settings for vexo-cli."""
+"""Alert settings for vexo."""
 
 import os
 

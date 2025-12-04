@@ -1,4 +1,4 @@
-"""Log viewing for vexo-cli cron."""
+"""Log viewing for vexo cron."""
 
 import os
 import subprocess

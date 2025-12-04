@@ -320,7 +320,7 @@ def full_ssl_audit():
         max_attempts = 30
         for attempt in range(max_attempts):
             try:
-                req = Request(api_url, headers={'User-Agent': 'vexo-cli/1.0'})
+                req = Request(api_url, headers={'User-Agent': 'vexo/1.0'})
                 response = urlopen(req, timeout=30)
                 data = json.loads(response.read().decode())
                 

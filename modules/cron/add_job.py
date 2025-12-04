@@ -1,4 +1,4 @@
-"""Add job wizards for vexo-cli cron."""
+"""Add job wizards for vexo cron."""
 
 import os
 

@@ -1,4 +1,4 @@
-"""History and logs viewer for vexo-cli."""
+"""History and logs viewer for vexo."""
 
 import os
 import re

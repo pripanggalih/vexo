@@ -1,8 +1,8 @@
-# AGENTS.md - vexo-cli
+# AGENTS.md - vexo
 
 ## Project Overview
 
-**vexo-cli** adalah VPS Management CLI berbasis Python untuk Ubuntu/Debian. Aplikasi ini menggunakan interface menu interaktif (bukan command-based) dengan tampilan visual modern.
+**vexo** adalah VPS Management CLI berbasis Python untuk Ubuntu/Debian. Aplikasi ini menggunakan interface menu interaktif (bukan command-based) dengan tampilan visual modern.
 
 ## Tech Stack
 
@@ -15,7 +15,7 @@
 ## Project Structure
 
 ```
-vexo-cli/
+vexo/
 ├── main.py                  # Entry point
 ├── config.py                # Global configuration & constants
 ├── requirements.txt         # Python dependencies
@@ -144,8 +144,8 @@ vexo-cli/
 ├── docs/
 │   └── plans/               # Implementation plans
 └── tasks/                   # PRD & task tracking
-    ├── prd-vexo-cli.md
-    └── tasks-vexo-cli.md
+    ├── prd-vexo.md
+    └── tasks-vexo.md
 ```
 
 ## Development Guidelines
@@ -207,8 +207,8 @@ if not is_installed("nginx"):
 
 ## Task Tracking
 
-- PRD: `tasks/prd-vexo-cli.md`
-- Tasks: `tasks/tasks-vexo-cli.md`
+- PRD: `tasks/prd-vexo.md`
+- Tasks: `tasks/tasks-vexo.md`
 - Plans: `docs/plans/`
 
 ## Do NOT

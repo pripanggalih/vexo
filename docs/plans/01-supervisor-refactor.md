@@ -217,7 +217,7 @@ git commit -m "feat(supervisor): create supervisor package with common utilities
 **Step 1: Create install.py**
 
 ```python
-"""Supervisor installation for vexo-cli."""
+"""Supervisor installation for vexo."""
 
 from ui.components import (
     console,
@@ -316,7 +316,7 @@ git commit -m "feat(supervisor): add install module"
 **Step 1: Create worker.py with add/remove functions**
 
 ```python
-"""Worker management for vexo-cli supervisor."""
+"""Worker management for vexo supervisor."""
 
 import os
 
@@ -695,7 +695,7 @@ git commit -m "feat(supervisor): add worker management module"
 **Step 1: Create control.py**
 
 ```python
-"""Worker control operations for vexo-cli supervisor."""
+"""Worker control operations for vexo supervisor."""
 
 from ui.components import (
     console,
@@ -892,7 +892,7 @@ git commit -m "feat(supervisor): add worker control module"
 **Step 1: Create logs.py**
 
 ```python
-"""Log viewing for vexo-cli supervisor."""
+"""Log viewing for vexo supervisor."""
 
 import os
 
@@ -981,7 +981,7 @@ git commit -m "feat(supervisor): add logs viewing module"
 **Step 1: Create status.py**
 
 ```python
-"""Status display for vexo-cli supervisor."""
+"""Status display for vexo supervisor."""
 
 from ui.components import (
     console,
@@ -1051,7 +1051,7 @@ git commit -m "feat(supervisor): add status module"
 **Step 1: Create __init__.py with menu**
 
 ```python
-"""Supervisor module for vexo-cli (Queue Workers)."""
+"""Supervisor module for vexo (Queue Workers)."""
 
 from ui.menu import run_menu_loop
 from utils.shell import is_installed, is_service_running

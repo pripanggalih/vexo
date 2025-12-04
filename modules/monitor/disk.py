@@ -1,4 +1,4 @@
-"""Disk monitoring for vexo-cli."""
+"""Disk monitoring for vexo."""
 
 import psutil
 

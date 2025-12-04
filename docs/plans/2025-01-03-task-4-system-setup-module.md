@@ -20,7 +20,7 @@
 **Step 1: Create system.py with menu and basic structure**
 
 ```python
-"""System Setup module for vexo-cli."""
+"""System Setup module for vexo."""
 
 from ui.components import (
     console,
@@ -381,7 +381,7 @@ git add modules/system.py && git commit -m "feat(modules): add show_system_info(
 **Step 1: Update __init__.py with system module export**
 
 ```python
-"""Business logic modules for vexo-cli - system, webserver, runtime, database, email."""
+"""Business logic modules for vexo - system, webserver, runtime, database, email."""
 
 from modules import system
 ```
@@ -396,7 +396,7 @@ git add modules/__init__.py && git commit -m "feat(modules): update __init__.py 
 
 ## Task 4.6: Update task list
 
-Mark Task 4.0 and all sub-tasks as completed in `tasks/tasks-vexo-cli.md`
+Mark Task 4.0 and all sub-tasks as completed in `tasks/tasks-vexo.md`
 
 ---
 

@@ -1,4 +1,4 @@
-"""CPU monitoring for vexo-cli."""
+"""CPU monitoring for vexo."""
 
 import psutil
 

@@ -1,4 +1,4 @@
-"""Advanced log viewing for vexo-cli supervisor."""
+"""Advanced log viewing for vexo supervisor."""
 
 import os
 import re

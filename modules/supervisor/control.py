@@ -1,4 +1,4 @@
-"""Worker control operations for vexo-cli supervisor."""
+"""Worker control operations for vexo supervisor."""
 
 from ui.components import (
     console,

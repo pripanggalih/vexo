@@ -20,7 +20,7 @@
 **Step 1: Create edit.py with edit and clone functions**
 
 ```python
-"""Edit and clone workers for vexo-cli supervisor."""
+"""Edit and clone workers for vexo supervisor."""
 
 import os
 import re
@@ -512,7 +512,7 @@ git commit -m "feat(supervisor): add edit and clone worker functionality"
 **Step 1: Update __init__.py to include edit and clone options**
 
 ```python
-"""Supervisor module for vexo-cli (Queue Workers)."""
+"""Supervisor module for vexo (Queue Workers)."""
 
 from ui.menu import run_menu_loop, show_submenu
 from utils.shell import is_installed, is_service_running

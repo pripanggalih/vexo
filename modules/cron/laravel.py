@@ -1,4 +1,4 @@
-"""Laravel scheduler setup for vexo-cli cron."""
+"""Laravel scheduler setup for vexo cron."""
 
 import os
 

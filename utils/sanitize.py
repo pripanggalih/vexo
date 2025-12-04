@@ -1,4 +1,4 @@
-"""Input sanitization and escaping utilities for vexo-cli.
+"""Input sanitization and escaping utilities for vexo.
 
 This module provides secure escaping functions to prevent:
 - SQL injection attacks

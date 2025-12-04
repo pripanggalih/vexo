@@ -35,7 +35,7 @@
 **Step 1: Create the module file with imports, constants, and menu**
 
 ```python
-"""Supervisor module for vexo-cli (Queue Workers)."""
+"""Supervisor module for vexo (Queue Workers)."""
 
 import os
 

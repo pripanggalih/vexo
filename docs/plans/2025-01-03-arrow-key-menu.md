@@ -43,7 +43,7 @@ git commit -m "deps: add questionary for arrow-key menus"
 Replace the top of `ui/menu.py`:
 
 ```python
-"""Interactive menu system for vexo-cli using questionary."""
+"""Interactive menu system for vexo using questionary."""
 
 import questionary
 from questionary import Style, Choice
@@ -281,7 +281,7 @@ git commit -m "feat(menu): rewrite select_from_list with questionary"
 The complete `ui/menu.py` should now be:
 
 ```python
-"""Interactive menu system for vexo-cli using questionary."""
+"""Interactive menu system for vexo using questionary."""
 
 import questionary
 from questionary import Style, Choice

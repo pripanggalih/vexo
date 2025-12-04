@@ -1,4 +1,4 @@
-"""Email server management module for vexo-cli."""
+"""Email server management module for vexo."""
 
 from ui.menu import run_menu_loop
 from modules.email.utils import get_email_status, format_service_status

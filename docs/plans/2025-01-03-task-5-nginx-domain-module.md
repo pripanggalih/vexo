@@ -77,7 +77,7 @@ git add templates/nginx_vhost.conf && git commit -m "feat(templates): add nginx 
 **Step 1: Create webserver.py with imports and menu**
 
 ```python
-"""Domain & Nginx management module for vexo-cli."""
+"""Domain & Nginx management module for vexo."""
 
 import os
 
@@ -716,7 +716,7 @@ git add modules/webserver.py && git commit -m "feat(modules): add reload_nginx()
 **Step 1: Add webserver module export**
 
 ```python
-"""Business logic modules for vexo-cli - system, webserver, runtime, database, email."""
+"""Business logic modules for vexo - system, webserver, runtime, database, email."""
 
 from modules import system
 from modules import webserver
@@ -732,7 +732,7 @@ git add modules/__init__.py && git commit -m "feat(modules): add webserver modul
 
 ## Task 5.8: Update task list
 
-Mark Task 5.0 and all sub-tasks as completed in `tasks/tasks-vexo-cli.md`
+Mark Task 5.0 and all sub-tasks as completed in `tasks/tasks-vexo.md`
 
 ---
 

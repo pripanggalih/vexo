@@ -594,16 +594,16 @@ git commit -m "feat(runtime): add show_nodejs_info() for detailed Node.js inform
 ## Task 7.7: Update Task List
 
 **Files:**
-- Modify: `tasks/tasks-vexo-cli.md`
+- Modify: `tasks/tasks-vexo.md`
 
 **Step 1: Mark Task 7.0 as complete**
 
-Update tasks-vexo-cli.md to mark all Task 7.x items as `[x]`.
+Update tasks-vexo.md to mark all Task 7.x items as `[x]`.
 
 **Step 2: Commit**
 
 ```bash
-git add tasks/tasks-vexo-cli.md
+git add tasks/tasks-vexo.md
 git commit -m "docs: mark Task 7.0 Node.js Runtime Module as complete"
 ```
 

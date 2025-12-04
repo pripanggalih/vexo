@@ -1,4 +1,4 @@
-"""Cron module for vexo-cli (Scheduled Tasks)."""
+"""Cron module for vexo (Scheduled Tasks)."""
 
 from ui.menu import run_menu_loop, show_submenu
 

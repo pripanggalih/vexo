@@ -20,7 +20,7 @@
 **Step 1: Create control.py with job control functions**
 
 ```python
-"""Job control for vexo-cli cron."""
+"""Job control for vexo cron."""
 
 import os
 import subprocess
@@ -518,7 +518,7 @@ git commit -m "feat(cron): add job control with run now and test features"
 **Step 1: Final update to __init__.py**
 
 ```python
-"""Cron module for vexo-cli (Scheduled Tasks)."""
+"""Cron module for vexo (Scheduled Tasks)."""
 
 from ui.menu import run_menu_loop, show_submenu
 

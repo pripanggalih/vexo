@@ -61,7 +61,7 @@ git commit -m "feat(config): add alert thresholds and logging configuration"
 **Step 1: Create monitor_logger.py**
 
 ```python
-"""Monitor logging utility for vexo-cli."""
+"""Monitor logging utility for vexo."""
 
 import os
 import json
@@ -342,7 +342,7 @@ git commit -m "feat(utils): add monitor logging utility"
 **Step 1: Create alert.py**
 
 ```python
-"""Alert settings for vexo-cli."""
+"""Alert settings for vexo."""
 
 from ui.components import (
     console,
@@ -694,7 +694,7 @@ git commit -m "feat(monitor): add alert settings configuration"
 **Step 1: Update __init__.py to import alert module**
 
 ```python
-"""System monitoring module for vexo-cli."""
+"""System monitoring module for vexo."""
 
 from ui.menu import run_menu_loop
 

@@ -417,7 +417,7 @@ def show_log_viewer():
         "Filter by status",
         "Filter by domain",
         "Real-time monitor (tail -f)",
-        "View vexo-cli pipe log",
+        "View vexo pipe log",
     ]
     
     choice = select_from_list("View", "Select:", options)

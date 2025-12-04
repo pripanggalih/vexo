@@ -1,1 +1,1 @@
-"""Business logic modules for vexo-cli."""
+"""Business logic modules for vexo."""

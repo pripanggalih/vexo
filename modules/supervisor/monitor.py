@@ -1,4 +1,4 @@
-"""Resource monitoring for vexo-cli supervisor."""
+"""Resource monitoring for vexo supervisor."""
 
 import os
 import time

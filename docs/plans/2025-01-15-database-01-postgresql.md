@@ -207,7 +207,7 @@ def show_menu():
 **Step 4: Create modules/database/__init__.py**
 
 ```python
-"""Database management module for vexo-cli."""
+"""Database management module for vexo."""
 
 from ui.menu import run_menu_loop
 from utils.shell import is_installed
@@ -598,7 +598,7 @@ def scheduled_backups():
         prefix = target
     
     script_content = f'''#!/bin/bash
-# PostgreSQL backup script - managed by vexo-cli
+# PostgreSQL backup script - managed by vexo
 BACKUP_DIR="{PG_BACKUP_DIR}"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BACKUP_FILE="$BACKUP_DIR/{prefix}_$TIMESTAMP.sql.gz"
@@ -2047,7 +2047,7 @@ def remote_access():
         if hba_file:
             rule = "host    all             all             0.0.0.0/0               md5"
             with open(hba_file, 'a') as f:
-                f.write(f"\n# Added by vexo-cli - allow remote\n{rule}\n")
+                f.write(f"\n# Added by vexo - allow remote\n{rule}\n")
         
         show_success("Remote access enabled!")
         show_warning("Restart PostgreSQL to apply changes.")
@@ -2066,7 +2066,7 @@ def remote_access():
         if hba_file:
             rule = f"host    all             all             {ip_range}               md5"
             with open(hba_file, 'a') as f:
-                f.write(f"\n# Added by vexo-cli - allow {ip_range}\n{rule}\n")
+                f.write(f"\n# Added by vexo - allow {ip_range}\n{rule}\n")
         
         show_success(f"Added rule for {ip_range}!")
         show_warning("Restart PostgreSQL to apply changes.")

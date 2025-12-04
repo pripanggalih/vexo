@@ -290,7 +290,7 @@ def log_event(domain: str, event: str, details: str = ""):
 **Step 2: Create package __init__.py**
 
 ```python
-"""SSL Certificate management module for vexo-cli."""
+"""SSL Certificate management module for vexo."""
 
 from ui.menu import run_menu_loop
 from modules.ssl.common import is_certbot_installed, get_certbot_status_text

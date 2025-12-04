@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# vexo-cli installer
-# Usage: curl -sSL https://raw.githubusercontent.com/YOUR_USERNAME/vexo-cli/main/install.sh | sudo bash
+# vexo installer
+# Usage: curl -sSL https://raw.githubusercontent.com/pripanggalih/vexo/main/install.sh | sudo bash
 #
 
 set -e
@@ -14,8 +14,8 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Configuration
-REPO_URL="https://github.com/YOUR_USERNAME/vexo-cli.git"
-INSTALL_DIR="/opt/vexo-cli"
+REPO_URL="https://github.com/pripanggalih/vexo.git"
+INSTALL_DIR="/opt/vexo"
 SYMLINK_PATH="/usr/local/bin/vexo"
 MIN_PYTHON_VERSION="3.8"
 
@@ -23,7 +23,7 @@ MIN_PYTHON_VERSION="3.8"
 print_banner() {
     echo -e "${CYAN}"
     echo "╔═══════════════════════════════════════════════╗"
-    echo "║            vexo-cli Installer                 ║"
+    echo "║            vexo Installer                 ║"
     echo "║   VPS Easy eXecution Orchestrator             ║"
     echo "║   Management CLI for Ubuntu/Debian            ║"
     echo "╚═══════════════════════════════════════════════╝"
@@ -116,9 +116,9 @@ check_git() {
     print_success "git is installed"
 }
 
-# Download/clone vexo-cli
+# Download/clone vexo
 install_vexo() {
-    print_info "Installing vexo-cli to $INSTALL_DIR..."
+    print_info "Installing vexo to $INSTALL_DIR..."
     
     # Remove existing installation
     if [ -d "$INSTALL_DIR" ]; then
@@ -128,7 +128,7 @@ install_vexo() {
     
     # Clone repository
     git clone "$REPO_URL" "$INSTALL_DIR"
-    print_success "Downloaded vexo-cli"
+    print_success "Downloaded vexo"
 }
 
 # Install Python dependencies
@@ -205,11 +205,11 @@ main() {
     echo ""
     
     echo -e "${GREEN}═══════════════════════════════════════════${NC}"
-    echo -e "${GREEN}   vexo-cli installed successfully!        ${NC}"
+    echo -e "${GREEN}   vexo installed successfully!        ${NC}"
     echo -e "${GREEN}═══════════════════════════════════════════${NC}"
     echo ""
     echo "Usage:"
-    echo "  sudo vexo          - Run vexo-cli"
+    echo "  sudo vexo          - Run vexo"
     echo "  sudo vexo --help   - Show help"
     echo ""
     echo "Or run directly:"
@@ -220,7 +220,7 @@ main() {
 # Uninstall function
 uninstall() {
     print_banner
-    print_info "Uninstalling vexo-cli..."
+    print_info "Uninstalling vexo..."
     
     if [ -L "$SYMLINK_PATH" ]; then
         rm "$SYMLINK_PATH"
@@ -232,16 +232,16 @@ uninstall() {
         print_success "Removed $INSTALL_DIR"
     fi
     
-    echo -e "${GREEN}vexo-cli uninstalled successfully${NC}"
+    echo -e "${GREEN}vexo uninstalled successfully${NC}"
 }
 
 # Update function
 update() {
     print_banner
-    print_info "Updating vexo-cli..."
+    print_info "Updating vexo..."
     
     if [ ! -d "$INSTALL_DIR" ]; then
-        print_error "vexo-cli is not installed. Run install first."
+        print_error "vexo is not installed. Run install first."
         exit 1
     fi
     
@@ -266,7 +266,7 @@ update() {
     print_success "Dependencies updated"
     
     echo ""
-    echo -e "${GREEN}vexo-cli updated successfully!${NC}"
+    echo -e "${GREEN}vexo updated successfully!${NC}"
 }
 
 # Handle arguments
@@ -282,9 +282,9 @@ case "${1:-}" in
     --help)
         print_banner
         echo "Usage:"
-        echo "  sudo ./install.sh              Install vexo-cli"
+        echo "  sudo ./install.sh              Install vexo"
         echo "  sudo ./install.sh --update     Update to latest version"
-        echo "  sudo ./install.sh --uninstall  Uninstall vexo-cli"
+        echo "  sudo ./install.sh --uninstall  Uninstall vexo"
         echo "  ./install.sh --help            Show this help"
         ;;
     *)

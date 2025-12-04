@@ -1,4 +1,4 @@
-"""System dashboard for vexo-cli."""
+"""System dashboard for vexo."""
 
 import datetime
 import psutil

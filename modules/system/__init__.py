@@ -1,4 +1,4 @@
-"""System Setup module for vexo-cli."""
+"""System Setup module for vexo."""
 
 from ui.menu import run_menu_loop
 

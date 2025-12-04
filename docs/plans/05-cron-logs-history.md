@@ -20,7 +20,7 @@
 **Step 1: Create logs.py with log viewing functions**
 
 ```python
-"""Log viewing for vexo-cli cron."""
+"""Log viewing for vexo cron."""
 
 import os
 import subprocess
@@ -338,7 +338,7 @@ git commit -m "feat(cron): add log viewing with tail, search, clear"
 **Step 1: Create history.py with execution tracking**
 
 ```python
-"""Execution history for vexo-cli cron."""
+"""Execution history for vexo cron."""
 
 import os
 import json

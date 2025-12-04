@@ -20,7 +20,7 @@
 **Step 1: Create builder.py with interactive wizard**
 
 ```python
-"""Interactive schedule builder for vexo-cli cron."""
+"""Interactive schedule builder for vexo cron."""
 
 from ui.components import (
     console,

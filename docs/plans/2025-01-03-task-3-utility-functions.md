@@ -20,7 +20,7 @@
 **Step 1: Create shell.py with run_command() function**
 
 ```python
-"""Shell command utilities for vexo-cli."""
+"""Shell command utilities for vexo."""
 
 import subprocess
 import os
@@ -342,7 +342,7 @@ git add utils/shell.py && git commit -m "feat(utils): add service management fun
 **Step 1: Create logger.py with logging functions**
 
 ```python
-"""Logging utilities for vexo-cli."""
+"""Logging utilities for vexo."""
 
 from datetime import datetime
 from ui.components import console
@@ -352,7 +352,7 @@ from ui.styles import PRIMARY, SUCCESS, WARNING, ERROR, INFO
 class Logger:
     """Simple logger with Rich formatting."""
     
-    def __init__(self, name="vexo-cli"):
+    def __init__(self, name="vexo"):
         self.name = name
         self.show_timestamp = False
     
@@ -561,7 +561,7 @@ git add utils/shell.py && git commit -m "feat(utils): add system check functions
 **Step 1: Update __init__.py with all exports**
 
 ```python
-"""Utility functions for vexo-cli - shell commands, logging."""
+"""Utility functions for vexo - shell commands, logging."""
 
 from utils.shell import (
     run_command,
@@ -601,7 +601,7 @@ git add utils/__init__.py && git commit -m "feat(utils): update __init__.py with
 
 ## Task 3.8: Update task list
 
-Mark Task 3.0 and all sub-tasks as completed in `tasks/tasks-vexo-cli.md`
+Mark Task 3.0 and all sub-tasks as completed in `tasks/tasks-vexo.md`
 
 ---
 

@@ -1,4 +1,4 @@
-"""Shell command utilities for vexo-cli."""
+"""Shell command utilities for vexo."""
 
 import subprocess
 import os

@@ -1,4 +1,4 @@
-"""Memory monitoring for vexo-cli."""
+"""Memory monitoring for vexo."""
 
 import psutil
 

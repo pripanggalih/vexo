@@ -33,7 +33,7 @@
 **Step 1: Create SSL module with menu**
 
 ```python
-"""SSL Certificate (Let's Encrypt) management module for vexo-cli."""
+"""SSL Certificate (Let's Encrypt) management module for vexo."""
 
 import os
 

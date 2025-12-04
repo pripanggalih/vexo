@@ -1,4 +1,4 @@
-"""Execution history for vexo-cli cron."""
+"""Execution history for vexo cron."""
 
 import os
 import json

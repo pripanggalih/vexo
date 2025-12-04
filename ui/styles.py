@@ -1,4 +1,4 @@
-"""Theme and style definitions for vexo-cli."""
+"""Theme and style definitions for vexo."""
 
 # Color constants
 PRIMARY = "cyan"

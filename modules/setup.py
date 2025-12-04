@@ -1,4 +1,4 @@
-"""Setup wizard module for vexo-cli (First Run Setup)."""
+"""Setup wizard module for vexo (First Run Setup)."""
 
 import os
 
@@ -315,7 +315,7 @@ def show_setup_wizard():
     clear_screen()
     show_header()
     
-    console.print("[bold cyan]Welcome to vexo-cli![/bold cyan]")
+    console.print("[bold cyan]Welcome to vexo![/bold cyan]")
     console.print()
     console.print("This appears to be a fresh VPS. Let's set up your server.")
     console.print("Select the components you want to install:")

@@ -1,4 +1,4 @@
-"""System monitoring module for vexo-cli."""
+"""System monitoring module for vexo."""
 
 from ui.menu import run_menu_loop
 

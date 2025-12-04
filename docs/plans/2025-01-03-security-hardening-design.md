@@ -1,8 +1,8 @@
-# Security Hardening Design for vexo-cli
+# Security Hardening Design for vexo
 
 ## Overview
 
-Add security hardening features to vexo-cli: UFW Firewall, Let's Encrypt SSL, and Fail2ban brute force protection.
+Add security hardening features to vexo: UFW Firewall, Let's Encrypt SSL, and Fail2ban brute force protection.
 
 ## Decisions Made
 
@@ -189,14 +189,14 @@ if is_installed("postfix"):
 
 - 15.1: Update `modules/__init__.py` with new imports
 - 15.2: Update `main.py` with 3 new menu entries
-- 15.3: Update `tasks/tasks-vexo-cli.md` with new tasks
+- 15.3: Update `tasks/tasks-vexo.md` with new tasks
 
 ---
 
 ## Updated Main Menu
 
 ```
-vexo-cli v1.0.0
+vexo v1.0.0
 ├── 1. System Setup & Update
 ├── 2. Domain & Nginx
 ├── 3. PHP Runtime

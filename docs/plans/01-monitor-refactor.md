@@ -74,7 +74,7 @@ git commit -m "feat(monitor): create monitor package with common utilities"
 **Step 1: Create cpu.py**
 
 ```python
-"""CPU monitoring for vexo-cli."""
+"""CPU monitoring for vexo."""
 
 import psutil
 
@@ -166,7 +166,7 @@ git commit -m "feat(monitor): add CPU monitoring module"
 **Step 1: Create memory.py**
 
 ```python
-"""Memory monitoring for vexo-cli."""
+"""Memory monitoring for vexo."""
 
 import psutil
 
@@ -248,7 +248,7 @@ git commit -m "feat(monitor): add memory monitoring module"
 **Step 1: Create disk.py**
 
 ```python
-"""Disk monitoring for vexo-cli."""
+"""Disk monitoring for vexo."""
 
 import psutil
 
@@ -361,7 +361,7 @@ git commit -m "feat(monitor): add disk monitoring module"
 **Step 1: Create dashboard.py**
 
 ```python
-"""System dashboard for vexo-cli."""
+"""System dashboard for vexo."""
 
 import datetime
 import psutil
@@ -464,7 +464,7 @@ git commit -m "feat(monitor): add system dashboard module"
 **Step 1: Create __init__.py with menu**
 
 ```python
-"""System monitoring module for vexo-cli."""
+"""System monitoring module for vexo."""
 
 from ui.menu import run_menu_loop
 

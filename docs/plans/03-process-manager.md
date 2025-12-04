@@ -20,7 +20,7 @@
 **Step 1: Create process.py with process listing**
 
 ```python
-"""Process management for vexo-cli."""
+"""Process management for vexo."""
 
 import os
 import signal
@@ -513,7 +513,7 @@ git commit -m "feat(monitor): add process actions (kill, signal, nice)"
 Update the imports and handlers:
 
 ```python
-"""System monitoring module for vexo-cli."""
+"""System monitoring module for vexo."""
 
 from ui.menu import run_menu_loop
 

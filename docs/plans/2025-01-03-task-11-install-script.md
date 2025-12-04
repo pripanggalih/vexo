@@ -4,7 +4,7 @@
 
 **Goal:** Create install.sh for one-liner installation and update main.py with full main loop connecting all modules.
 
-**Architecture:** Bash install script downloads from GitHub, installs to /opt/vexo-cli, creates symlink at /usr/local/bin/vexo. main.py updated with full menu integration connecting all modules (system, webserver, runtime, database, email, monitor).
+**Architecture:** Bash install script downloads from GitHub, installs to /opt/vexo, creates symlink at /usr/local/bin/vexo. main.py updated with full menu integration connecting all modules (system, webserver, runtime, database, email, monitor).
 
 **Tech Stack:** Bash shell script, Python main loop, existing modules
 
@@ -32,8 +32,8 @@
 ```bash
 #!/bin/bash
 #
-# vexo-cli installer
-# Usage: curl -sSL https://raw.githubusercontent.com/YOUR_USERNAME/vexo-cli/main/install.sh | sudo bash
+# vexo installer
+# Usage: curl -sSL https://raw.githubusercontent.com/YOUR_USERNAME/vexo/main/install.sh | sudo bash
 #
 
 set -e
@@ -46,8 +46,8 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Configuration
-REPO_URL="https://github.com/YOUR_USERNAME/vexo-cli.git"
-INSTALL_DIR="/opt/vexo-cli"
+REPO_URL="https://github.com/YOUR_USERNAME/vexo.git"
+INSTALL_DIR="/opt/vexo"
 SYMLINK_PATH="/usr/local/bin/vexo"
 MIN_PYTHON_VERSION="3.8"
 
@@ -55,7 +55,7 @@ MIN_PYTHON_VERSION="3.8"
 print_banner() {
     echo -e "${CYAN}"
     echo "╔═══════════════════════════════════════════╗"
-    echo "║         vexo-cli Installer                ║"
+    echo "║         vexo Installer                ║"
     echo "║   VPS Management CLI for Ubuntu/Debian    ║"
     echo "╚═══════════════════════════════════════════╝"
     echo -e "${NC}"
@@ -147,9 +147,9 @@ check_git() {
     print_success "git is installed"
 }
 
-# Download/clone vexo-cli
+# Download/clone vexo
 install_vexo() {
-    print_info "Installing vexo-cli to $INSTALL_DIR..."
+    print_info "Installing vexo to $INSTALL_DIR..."
     
     # Remove existing installation
     if [ -d "$INSTALL_DIR" ]; then
@@ -159,7 +159,7 @@ install_vexo() {
     
     # Clone repository
     git clone "$REPO_URL" "$INSTALL_DIR"
-    print_success "Downloaded vexo-cli"
+    print_success "Downloaded vexo"
 }
 
 # Install Python dependencies
@@ -218,11 +218,11 @@ main() {
     echo ""
     
     echo -e "${GREEN}═══════════════════════════════════════════${NC}"
-    echo -e "${GREEN}   vexo-cli installed successfully!        ${NC}"
+    echo -e "${GREEN}   vexo installed successfully!        ${NC}"
     echo -e "${GREEN}═══════════════════════════════════════════${NC}"
     echo ""
     echo "Usage:"
-    echo "  sudo vexo          - Run vexo-cli"
+    echo "  sudo vexo          - Run vexo"
     echo "  sudo vexo --help   - Show help"
     echo ""
     echo "Or run directly:"
@@ -233,7 +233,7 @@ main() {
 # Uninstall function
 uninstall() {
     print_banner
-    print_info "Uninstalling vexo-cli..."
+    print_info "Uninstalling vexo..."
     
     if [ -L "$SYMLINK_PATH" ]; then
         rm "$SYMLINK_PATH"
@@ -245,7 +245,7 @@ uninstall() {
         print_success "Removed $INSTALL_DIR"
     fi
     
-    echo -e "${GREEN}vexo-cli uninstalled successfully${NC}"
+    echo -e "${GREEN}vexo uninstalled successfully${NC}"
 }
 
 # Handle arguments
@@ -257,8 +257,8 @@ case "${1:-}" in
     --help)
         print_banner
         echo "Usage:"
-        echo "  sudo ./install.sh            Install vexo-cli"
-        echo "  sudo ./install.sh --uninstall  Uninstall vexo-cli"
+        echo "  sudo ./install.sh            Install vexo"
+        echo "  sudo ./install.sh --uninstall  Uninstall vexo"
         echo "  ./install.sh --help          Show this help"
         ;;
     *)
@@ -286,7 +286,7 @@ git commit -m "feat: add install.sh for one-liner installation"
 ```python
 #!/usr/bin/env python3
 """
-vexo-cli - VPS Management CLI for Ubuntu/Debian
+vexo - VPS Management CLI for Ubuntu/Debian
 
 Entry point for the application.
 """
@@ -371,7 +371,7 @@ def show_help():
     print(APP_DESCRIPTION)
     print()
     print("Usage:")
-    print("  sudo vexo              Run vexo-cli")
+    print("  sudo vexo              Run vexo")
     print("  vexo --help            Show this help")
     print("  vexo --version         Show version")
     print()
@@ -428,7 +428,7 @@ git commit -m "feat(main): implement full main loop with all module integration"
 ## Task 11.9: Update Task List
 
 **Files:**
-- Modify: `tasks/tasks-vexo-cli.md`
+- Modify: `tasks/tasks-vexo.md`
 
 **Step 1: Mark all Task 11.x as complete**
 
@@ -437,7 +437,7 @@ Note: Task 11.9 (Test full flow) is marked as complete because testing is user r
 **Step 2: Commit**
 
 ```bash
-git add tasks/tasks-vexo-cli.md
+git add tasks/tasks-vexo.md
 git commit -m "docs: mark Task 11.0 Install Script & Distribution as complete - ALL TASKS DONE"
 ```
 
@@ -453,7 +453,7 @@ After completion:
 - Python 3.8+ version check
 - pip availability check
 - git check/install
-- Clone to /opt/vexo-cli
+- Clone to /opt/vexo
 - Install Python dependencies
 - Create /usr/local/bin/vexo symlink
 - Set permissions (755)
@@ -476,7 +476,7 @@ After completion:
 
 **Installation command (after GitHub push):**
 ```bash
-curl -sSL https://raw.githubusercontent.com/YOUR_USERNAME/vexo-cli/main/install.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/YOUR_USERNAME/vexo/main/install.sh | sudo bash
 ```
 
 **Usage after install:**

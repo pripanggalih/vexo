@@ -1,4 +1,4 @@
-"""Job control for vexo-cli cron."""
+"""Job control for vexo cron."""
 
 import os
 import re

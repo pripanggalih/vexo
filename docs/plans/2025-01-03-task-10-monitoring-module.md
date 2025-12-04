@@ -34,7 +34,7 @@
 **Step 1: Create monitoring module with menu**
 
 ```python
-"""System monitoring module for vexo-cli."""
+"""System monitoring module for vexo."""
 
 import psutil
 
@@ -491,14 +491,14 @@ git commit -m "feat(monitor): add show_status() with overview table and legend"
 
 **Files:**
 - Modify: `modules/__init__.py`
-- Modify: `tasks/tasks-vexo-cli.md`
+- Modify: `tasks/tasks-vexo.md`
 
 **Step 1: Update modules/__init__.py**
 
 Add monitor import:
 
 ```python
-"""Business logic modules for vexo-cli - system, webserver, runtime, database, email."""
+"""Business logic modules for vexo - system, webserver, runtime, database, email."""
 
 from modules import system
 from modules import webserver
@@ -515,7 +515,7 @@ Mark all Task 10.x items as `[x]` complete.
 **Step 3: Commit**
 
 ```bash
-git add modules/__init__.py tasks/tasks-vexo-cli.md
+git add modules/__init__.py tasks/tasks-vexo.md
 git commit -m "docs: mark Task 10.0 Monitoring Module as complete"
 ```
 

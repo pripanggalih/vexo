@@ -55,7 +55,7 @@ Update the file after completing each sub-task, not just after completing an ent
 -   [x] 2.0 Implement Core UI Components
 
     -   [x] 2.1 Buat `ui/styles.py` - definisikan color scheme (cyan primary, green success, yellow warning, red error)
-    -   [x] 2.2 Buat `ui/components.py` - implement fungsi `show_header()` untuk menampilkan branding vexo-cli
+    -   [x] 2.2 Buat `ui/components.py` - implement fungsi `show_header()` untuk menampilkan branding vexo
     -   [x] 2.3 Buat `ui/components.py` - implement fungsi `show_panel()` untuk wrapper Rich Panel
     -   [x] 2.4 Buat `ui/components.py` - implement fungsi `show_table()` untuk generic table rendering
     -   [x] 2.5 Buat `ui/components.py` - implement fungsi `show_success()`, `show_error()`, `show_warning()` messages
@@ -144,8 +144,8 @@ Update the file after completing each sub-task, not just after completing an ent
     -   [x] 10.6 Implement fungsi `show_status()` - tampilkan semua metrics dalam Rich table dengan status indicators
 
 -   [x] 11.0 Create Install Script & Distribution
-    -   [x] 11.1 Buat `install.sh` - script untuk download vexo-cli dari GitHub
-    -   [x] 11.2 Implement logic untuk clone/download ke `/opt/vexo-cli`
+    -   [x] 11.1 Buat `install.sh` - script untuk download vexo dari GitHub
+    -   [x] 11.2 Implement logic untuk clone/download ke `/opt/vexo`
     -   [x] 11.3 Implement logic untuk install Python dependencies dengan pip
     -   [x] 11.4 Implement logic untuk create symlink `/usr/local/bin/vexo` ke `main.py`
     -   [x] 11.5 Implement logic untuk set proper permissions (executable)

@@ -15,7 +15,7 @@
 | Sub-task | Description | Commit |
 |----------|-------------|--------|
 | 15.1 | Update main.py with new menu entries | Yes |
-| 15.2 | Update tasks-vexo-cli.md with new tasks | Yes |
+| 15.2 | Update tasks-vexo.md with new tasks | Yes |
 
 **Total: 2 sub-tasks, 2 commits**
 
@@ -105,7 +105,7 @@ def show_help():
     print(APP_DESCRIPTION)
     print()
     print("Usage:")
-    print("  sudo vexo              Run vexo-cli")
+    print("  sudo vexo              Run vexo")
     print("  vexo --help            Show this help")
     print("  vexo --version         Show version")
     print()
@@ -131,14 +131,14 @@ git commit -m "feat(main): add firewall, ssl, fail2ban menu entries"
 
 ---
 
-## Task 15.2: Update tasks-vexo-cli.md
+## Task 15.2: Update tasks-vexo.md
 
 **Files:**
-- Modify: `tasks/tasks-vexo-cli.md`
+- Modify: `tasks/tasks-vexo.md`
 
 **Step 1: Add new tasks to task list**
 
-Append to tasks-vexo-cli.md after Task 11.0:
+Append to tasks-vexo.md after Task 11.0:
 
 ```markdown
 -   [x] 12.0 Implement Firewall Module
@@ -179,7 +179,7 @@ Append to tasks-vexo-cli.md after Task 11.0:
 **Step 2: Commit**
 
 ```bash
-git add tasks/tasks-vexo-cli.md
+git add tasks/tasks-vexo.md
 git commit -m "docs: add security hardening tasks (12.0-15.0) - ALL SECURITY TASKS DONE"
 ```
 
@@ -201,7 +201,7 @@ After completion:
 
 **Final Menu Structure:**
 ```
-vexo-cli v1.0.0
+vexo v1.0.0
 ├── 1. System Setup & Update
 ├── 2. Domain & Nginx
 ├── 3. PHP Runtime

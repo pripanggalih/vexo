@@ -215,7 +215,7 @@ def show_menu():
 **Step 5: Create modules/runtime/__init__.py**
 
 ```python
-"""Runtime management module for vexo-cli (PHP & Node.js)."""
+"""Runtime management module for vexo (PHP & Node.js)."""
 
 from modules.runtime.php import show_menu as show_php_menu
 from modules.runtime.nodejs import show_nodejs_menu

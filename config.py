@@ -1,9 +1,9 @@
-"""Global configuration for vexo-cli."""
+"""Global configuration for vexo."""
 
 import os
 
 # Application Info
-APP_NAME = "vexo-cli"
+APP_NAME = "vexo"
 APP_VERSION = "1.0.0"
 APP_TAGLINE = "VPS Easy eXecution Orchestrator"
 APP_DESCRIPTION = "Management CLI for Ubuntu/Debian"

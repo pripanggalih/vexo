@@ -1,4 +1,4 @@
-"""Service monitoring for vexo-cli."""
+"""Service monitoring for vexo."""
 
 import re
 from collections import defaultdict

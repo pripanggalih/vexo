@@ -36,7 +36,7 @@
 **Step 1: Create the module file**
 
 ```python
-"""Cron module for vexo-cli (Scheduled Tasks)."""
+"""Cron module for vexo (Scheduled Tasks)."""
 
 import os
 import subprocess

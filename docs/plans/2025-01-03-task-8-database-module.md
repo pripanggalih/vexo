@@ -37,7 +37,7 @@
 **Step 1: Create database module with menu**
 
 ```python
-"""Database management module for vexo-cli (PostgreSQL & MariaDB)."""
+"""Database management module for vexo (PostgreSQL & MariaDB)."""
 
 from ui.components import (
     console,
@@ -1040,14 +1040,14 @@ git commit -m "feat(database): add delete_user() with system user protection"
 
 **Files:**
 - Modify: `modules/__init__.py`
-- Modify: `tasks/tasks-vexo-cli.md`
+- Modify: `tasks/tasks-vexo.md`
 
 **Step 1: Update modules/__init__.py**
 
 Add database import:
 
 ```python
-"""Business logic modules for vexo-cli - system, webserver, runtime, database, email."""
+"""Business logic modules for vexo - system, webserver, runtime, database, email."""
 
 from modules import system
 from modules import webserver
@@ -1062,7 +1062,7 @@ Mark all Task 8.x items as `[x]` complete.
 **Step 3: Commit**
 
 ```bash
-git add modules/__init__.py tasks/tasks-vexo-cli.md
+git add modules/__init__.py tasks/tasks-vexo.md
 git commit -m "docs: mark Task 8.0 Database Module as complete"
 ```
 

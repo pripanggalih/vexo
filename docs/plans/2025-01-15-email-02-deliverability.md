@@ -191,7 +191,7 @@ def install_opendkim():
     os.makedirs(OPENDKIM_KEYS_DIR, mode=0o700, exist_ok=True)
     
     # Configure OpenDKIM
-    config_content = """# OpenDKIM configuration - managed by vexo-cli
+    config_content = """# OpenDKIM configuration - managed by vexo
 AutoRestart             Yes
 AutoRestartRate         10/1h
 Canonicalization        relaxed/simple
@@ -692,7 +692,7 @@ def test_deliverability():
         from utils.shell import get_hostname
         hostname = get_hostname()
         subject = f"Deliverability Test from {hostname}"
-        body = f"""This is a deliverability test email from vexo-cli.
+        body = f"""This is a deliverability test email from vexo.
 
 Server: {hostname}
 

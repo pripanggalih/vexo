@@ -1,4 +1,4 @@
-"""Add worker wizards for vexo-cli supervisor."""
+"""Add worker wizards for vexo supervisor."""
 
 import os
 

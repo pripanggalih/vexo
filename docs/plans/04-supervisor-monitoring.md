@@ -20,7 +20,7 @@
 **Step 1: Create monitor.py with worker status and monitoring functions**
 
 ```python
-"""Resource monitoring for vexo-cli supervisor."""
+"""Resource monitoring for vexo supervisor."""
 
 import os
 import time
@@ -463,7 +463,7 @@ git commit -m "feat(supervisor): add resource monitoring with live dashboard"
 **Step 1: Update __init__.py to include monitoring menu**
 
 ```python
-"""Supervisor module for vexo-cli (Queue Workers)."""
+"""Supervisor module for vexo (Queue Workers)."""
 
 from ui.menu import run_menu_loop, show_submenu
 from utils.shell import is_installed, is_service_running

@@ -20,7 +20,7 @@
 **Step 1: Create templates.py with all template generators**
 
 ```python
-"""Worker config templates for vexo-cli supervisor."""
+"""Worker config templates for vexo supervisor."""
 
 from modules.supervisor.common import SUPERVISOR_LOG_DIR, format_env_string
 
@@ -264,7 +264,7 @@ git commit -m "feat(supervisor): add worker config templates"
 **Step 1: Create add_worker.py with template selection**
 
 ```python
-"""Add worker wizards for vexo-cli supervisor."""
+"""Add worker wizards for vexo supervisor."""
 
 import os
 
@@ -813,7 +813,7 @@ git commit -m "feat(supervisor): add worker creation wizards for all templates"
 **Step 1: Update __init__.py to use new add_worker menu**
 
 ```python
-"""Supervisor module for vexo-cli (Queue Workers)."""
+"""Supervisor module for vexo (Queue Workers)."""
 
 from ui.menu import run_menu_loop
 from utils.shell import is_installed, is_service_running

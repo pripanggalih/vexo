@@ -1,4 +1,4 @@
-"""Interactive menu system for vexo-cli using InquirerPy."""
+"""Interactive menu system for vexo using InquirerPy."""
 
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice

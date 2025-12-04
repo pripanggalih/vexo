@@ -20,7 +20,7 @@
 **Step 1: Create history.py with log parsing**
 
 ```python
-"""History and logs viewer for vexo-cli."""
+"""History and logs viewer for vexo."""
 
 import os
 import re
@@ -538,7 +538,7 @@ git commit -m "feat(monitor): add summary statistics view"
 **Step 1: Update __init__.py to import history module**
 
 ```python
-"""System monitoring module for vexo-cli."""
+"""System monitoring module for vexo."""
 
 from ui.menu import run_menu_loop
 

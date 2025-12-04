@@ -262,7 +262,7 @@ def remote_access():
         if hba_file:
             rule = "host    all             all             0.0.0.0/0               md5"
             with open(hba_file, 'a') as f:
-                f.write(f"\n# Added by vexo-cli - allow remote\n{rule}\n")
+                f.write(f"\n# Added by vexo - allow remote\n{rule}\n")
         
         show_success("Remote access enabled!")
         show_warning("Restart PostgreSQL to apply changes.")
@@ -281,7 +281,7 @@ def remote_access():
         if hba_file:
             rule = f"host    all             all             {ip_range}               md5"
             with open(hba_file, 'a') as f:
-                f.write(f"\n# Added by vexo-cli - allow {ip_range}\n{rule}\n")
+                f.write(f"\n# Added by vexo - allow {ip_range}\n{rule}\n")
         
         show_success(f"Added rule for {ip_range}!")
         show_warning("Restart PostgreSQL to apply changes.")
