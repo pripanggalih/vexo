@@ -139,14 +139,6 @@ COMPONENTS = [
             "logrotate", "chrony", "rsync", "jq",
         ],
     },
-    {
-        "key": "docker",
-        "name": "Docker",
-        "description": "Container Runtime",
-        "default": False,
-        "check": lambda: is_installed("docker-ce") or is_installed("docker.io"),
-        "custom_install": "_install_docker",
-    },
 ]
 
 
@@ -209,21 +201,6 @@ def _configure_ufw():
         "ufw allow http",
         "ufw allow https",
         "ufw --force enable",
-    ]
-    for cmd in commands:
-        result = run_command(cmd, check=False, silent=True)
-        if result.returncode != 0:
-            return False
-    return True
-
-
-def _install_docker():
-    """Install Docker using official script."""
-    show_info("Installing Docker...")
-    commands = [
-        "curl -fsSL https://get.docker.com | bash",
-        "systemctl enable docker",
-        "systemctl start docker",
     ]
     for cmd in commands:
         result = run_command(cmd, check=False, silent=True)
