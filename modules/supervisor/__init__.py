@@ -10,6 +10,7 @@ from modules.supervisor.edit import edit_worker_menu, clone_worker_menu
 from modules.supervisor.control import show_menu as show_control_menu
 from modules.supervisor.monitor import show_menu as show_monitor_menu
 from modules.supervisor.logs import show_menu as show_logs_menu
+from modules.supervisor.env import show_menu as show_env_menu
 from modules.supervisor.status import show_status
 
 
@@ -30,7 +31,8 @@ def show_menu():
                 ("control", "2. Worker Control"),
                 ("monitor", "3. Monitoring"),
                 ("logs", "4. Logs"),
-                ("status", "5. Show Status"),
+                ("env", "5. Environment Variables"),
+                ("status", "6. Show Status"),
             ])
         else:
             options.append(("install", "1. Install Supervisor"))
@@ -43,6 +45,7 @@ def show_menu():
         "control": show_control_menu,
         "monitor": show_monitor_menu,
         "logs": show_logs_menu,
+        "env": show_env_menu,
         "status": show_status,
     }
     
