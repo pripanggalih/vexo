@@ -6,9 +6,9 @@ from modules.cron.add_job import add_job_menu
 from modules.cron.jobs import (
     remove_cron_job_interactive,
     list_cron_jobs,
-    toggle_cron_job,
 )
 from modules.cron.edit import edit_job_menu, clone_job_menu
+from modules.cron.control import control_menu
 from modules.cron.logs import logs_menu
 from modules.cron.history import history_menu
 from modules.cron.backup import backup_crontab, restore_crontab
@@ -19,7 +19,7 @@ def show_menu():
     """Display the Cron Management submenu."""
     options = [
         ("manage", "1. Job Management"),
-        ("toggle", "2. Enable/Disable Job"),
+        ("control", "2. Job Control"),
         ("logs", "3. Logs & History"),
         ("backup", "4. Backup & Restore"),
         ("status", "5. Show Status"),
@@ -28,7 +28,7 @@ def show_menu():
     
     handlers = {
         "manage": job_management_menu,
-        "toggle": toggle_cron_job,
+        "control": control_menu,
         "logs": logs_history_menu,
         "backup": backup_restore_menu,
         "status": show_status,
