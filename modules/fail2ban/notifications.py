@@ -26,6 +26,7 @@ from .common import (
     ensure_data_dir,
     get_active_jails,
 )
+from utils.error_handler import handle_error
 
 
 NOTIFICATIONS_FILE = VEXO_FAIL2BAN_DIR / "notifications.json"
@@ -601,7 +602,6 @@ def install_action_script():
     
     try:
         from utils.shell import require_root
-from utils.error_handler import handle_error
         require_root()
     except PermissionError:
         press_enter_to_continue()

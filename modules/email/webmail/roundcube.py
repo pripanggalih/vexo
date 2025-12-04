@@ -10,10 +10,10 @@ from ui.components import (
 )
 from ui.menu import confirm_action, text_input, select_from_list
 from utils.shell import (
-from utils.error_handler import handle_error
     run_command, run_command_realtime, is_installed, is_service_running,
     require_root,
 )
+from utils.error_handler import handle_error
 
 
 # Paths

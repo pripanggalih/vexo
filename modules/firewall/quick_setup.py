@@ -12,12 +12,12 @@ from ui.components import (
 )
 from ui.menu import confirm_action
 from utils.shell import (
-from utils.error_handler import handle_error
     run_command,
     run_command_with_progress,
     is_installed,
     require_root,
 )
+from utils.error_handler import handle_error
 from modules.firewall.common import is_ufw_installed, is_ufw_active
 
 

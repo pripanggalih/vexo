@@ -25,6 +25,7 @@ from .common import (
     get_jail_stats,
     FAIL2BAN_LOG,
 )
+from utils.error_handler import handle_error
 
 
 def show_dashboard():
@@ -156,7 +157,6 @@ def _render_alerts():
 def _get_service_uptime():
     """Get fail2ban service uptime."""
     from utils.shell import run_command
-from utils.error_handler import handle_error
     
     result = run_command(
         "systemctl show fail2ban --property=ActiveEnterTimestamp",

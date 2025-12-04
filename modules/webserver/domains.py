@@ -15,9 +15,9 @@ from ui.components import (
 )
 from ui.menu import confirm_action, text_input, select_from_list
 from utils.shell import (
-from utils.error_handler import handle_error
     run_command, is_installed, service_control, require_root,
 )
+from utils.error_handler import handle_error
 from modules.webserver.utils import (
     SITE_TYPES, DEFAULT_SITE_CONFIG, get_site_config, get_configured_domains,
     is_domain_enabled, domain_to_safe_name, is_valid_domain,

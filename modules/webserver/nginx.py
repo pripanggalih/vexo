@@ -6,10 +6,10 @@ from ui.components import (
 )
 from ui.menu import confirm_action
 from utils.shell import (
-from utils.error_handler import handle_error
     run_command, run_command_with_progress, is_installed,
     is_service_running, service_control, require_root,
 )
+from utils.error_handler import handle_error
 from modules.webserver.utils import get_configured_domains
 
 

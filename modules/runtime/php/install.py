@@ -10,10 +10,10 @@ from ui.components import (
 )
 from ui.menu import confirm_action, select_from_list, run_menu_loop
 from utils.shell import (
-from utils.error_handler import handle_error
     run_command, run_command_with_progress, run_command_realtime,
     is_installed, is_service_running, service_control, require_root,
 )
+from utils.error_handler import handle_error
 from modules.runtime.php.utils import (
     PHP_VERSIONS, PHP_EXTENSIONS,
     get_installed_php_versions, get_default_php_version, get_fpm_service_name,
