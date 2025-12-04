@@ -10,6 +10,7 @@ from modules.monitor.network import show_menu as show_network_menu
 from modules.monitor.process import show_menu as show_process_menu
 from modules.monitor.service import show_menu as show_service_menu
 from modules.monitor.alert import show_menu as show_alert_menu
+from modules.monitor.history import show_menu as show_history_menu
 
 
 def show_menu():
@@ -36,24 +37,7 @@ def show_menu():
         "process": show_process_menu,
         "service": show_service_menu,
         "alert": show_alert_menu,
-        # Phase 6 handler will be added later
-        "history": _coming_soon,
+        "history": show_history_menu,
     }
     
     run_menu_loop("System Monitoring", options, handlers)
-
-
-def _coming_soon():
-    """Placeholder for features under development."""
-    from ui.components import (
-        clear_screen,
-        show_header,
-        show_panel,
-        show_info,
-        press_enter_to_continue,
-    )
-    clear_screen()
-    show_header()
-    show_panel("Coming Soon", title="Monitoring", style="cyan")
-    show_info("This feature is under development.")
-    press_enter_to_continue()
