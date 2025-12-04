@@ -8,6 +8,7 @@ from modules.supervisor.add_worker import show_menu as show_add_worker_menu
 from modules.supervisor.worker import remove_worker_interactive, list_workers
 from modules.supervisor.edit import edit_worker_menu, clone_worker_menu
 from modules.supervisor.control import show_menu as show_control_menu
+from modules.supervisor.monitor import show_menu as show_monitor_menu
 from modules.supervisor.logs import view_logs
 from modules.supervisor.status import show_status
 
@@ -27,8 +28,9 @@ def show_menu():
             options.extend([
                 ("manage", "1. Worker Management"),
                 ("control", "2. Worker Control"),
-                ("logs", "3. View Logs"),
-                ("status", "4. Show Status"),
+                ("monitor", "3. Monitoring"),
+                ("logs", "4. View Logs"),
+                ("status", "5. Show Status"),
             ])
         else:
             options.append(("install", "1. Install Supervisor"))
@@ -39,6 +41,7 @@ def show_menu():
         "install": install_supervisor,
         "manage": worker_management_menu,
         "control": show_control_menu,
+        "monitor": show_monitor_menu,
         "logs": view_logs,
         "status": show_status,
     }
