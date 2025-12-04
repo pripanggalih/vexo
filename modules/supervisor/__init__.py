@@ -9,7 +9,7 @@ from modules.supervisor.worker import remove_worker_interactive, list_workers
 from modules.supervisor.edit import edit_worker_menu, clone_worker_menu
 from modules.supervisor.control import show_menu as show_control_menu
 from modules.supervisor.monitor import show_menu as show_monitor_menu
-from modules.supervisor.logs import view_logs
+from modules.supervisor.logs import show_menu as show_logs_menu
 from modules.supervisor.status import show_status
 
 
@@ -29,7 +29,7 @@ def show_menu():
                 ("manage", "1. Worker Management"),
                 ("control", "2. Worker Control"),
                 ("monitor", "3. Monitoring"),
-                ("logs", "4. View Logs"),
+                ("logs", "4. Logs"),
                 ("status", "5. Show Status"),
             ])
         else:
@@ -42,7 +42,7 @@ def show_menu():
         "manage": worker_management_menu,
         "control": show_control_menu,
         "monitor": show_monitor_menu,
-        "logs": view_logs,
+        "logs": show_logs_menu,
         "status": show_status,
     }
     
