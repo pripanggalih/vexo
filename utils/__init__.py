@@ -1,4 +1,4 @@
-"""Utility functions for vexo - shell commands, logging."""
+"""Utility functions for vexo - shell commands, logging, error handling."""
 
 from utils.shell import (
     run_command,
@@ -25,4 +25,16 @@ from utils.logger import (
     log_error,
     log_debug,
     log_step,
+)
+
+from utils.error_handler import (
+    VexoError,
+    handle_error,
+    handle_exception,
+    init_error_handler,
+    permission_error,
+    network_error,
+    file_error,
+    service_error,
+    ERROR_CODES,
 )

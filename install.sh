@@ -23,7 +23,7 @@ MIN_PYTHON_VERSION="3.8"
 print_banner() {
     echo -e "${CYAN}"
     echo "╔═══════════════════════════════════════════════╗"
-    echo "║            vexo Installer                 ║"
+    echo "║            Vexo Installer                 	  ║"
     echo "║   VPS Easy eXecution Orchestrator             ║"
     echo "║   Management CLI for Ubuntu/Debian            ║"
     echo "╚═══════════════════════════════════════════════╝"

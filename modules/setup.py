@@ -11,12 +11,12 @@ from ui.components import (
     clear_screen,
     show_header,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
 )
 from utils.shell import run_command, is_installed
+from utils.error_handler import handle_error
 
 
 # Cyan theme for checkbox
@@ -264,7 +264,7 @@ def install_component(component):
             if success:
                 show_success(f"{name} installed")
             else:
-                show_error(f"{name} installation failed")
+                handle_error("E1006", f"{name} installation failed")
             return success
         return False
     
@@ -287,7 +287,7 @@ def install_component(component):
             check=False, silent=False
         )
         if result.returncode != 0:
-            show_error(f"{name} installation failed")
+            handle_error("E1006", f"{name} installation failed", details=result.stderr if result.stderr else None)
             return False
     
     # Post-install hook
@@ -406,7 +406,7 @@ def run_setup(selected_keys):
     else:
         show_warning(f"Setup complete: {success_count}/{total} installed")
         if failed:
-            show_error(f"Failed: {', '.join(failed)}")
+            handle_error("E1006", f"Failed to install: {', '.join(failed)}")
     
     press_enter_to_continue()
     return success_count == total

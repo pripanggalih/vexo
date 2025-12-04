@@ -6,7 +6,6 @@ from ui.components import (
     show_header,
     show_panel,
     show_success,
-    show_error,
     show_warning,
     show_info,
     press_enter_to_continue,
@@ -19,6 +18,7 @@ from utils.shell import (
     service_control,
     require_root,
 )
+from utils.error_handler import handle_error
 
 
 def install_supervisor():
@@ -65,7 +65,7 @@ def install_supervisor():
     )
     
     if returncode != 0:
-        show_error("Failed to install Supervisor.")
+        handle_error("E7001", "Failed to install Supervisor")
         press_enter_to_continue()
         return
     

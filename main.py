@@ -28,6 +28,10 @@ from modules import fail2ban
 from modules import supervisor
 from modules import cron
 from modules import setup
+from utils.error_handler import init_error_handler
+
+# Initialize error handler (ensure log dir, cleanup old logs)
+init_error_handler()
 
 
 def check_python_version():

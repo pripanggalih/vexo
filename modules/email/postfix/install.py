@@ -2,13 +2,14 @@
 
 from ui.components import (
     console, clear_screen, show_header, show_panel,
-    show_success, show_error, show_warning, show_info, press_enter_to_continue,
+    show_success, show_warning, show_info, press_enter_to_continue,
 )
 from ui.menu import confirm_action, text_input, select_from_list
 from utils.shell import (
     run_command, run_command_realtime, is_installed, is_service_running,
     service_control, require_root, get_hostname,
 )
+from utils.error_handler import handle_error
 
 
 def install_postfix():
@@ -100,7 +101,7 @@ postfix postfix/mailname string {mail_hostname}
     )
     
     if returncode != 0:
-        show_error("Failed to install Postfix.")
+        handle_error("E5001", "Failed to install Postfix")
         press_enter_to_continue()
         return
     
