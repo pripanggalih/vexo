@@ -8,6 +8,7 @@ from modules.monitor.memory import show_ram_details
 from modules.monitor.disk import show_disk_details
 from modules.monitor.network import show_menu as show_network_menu
 from modules.monitor.process import show_menu as show_process_menu
+from modules.monitor.service import show_menu as show_service_menu
 
 
 def show_menu():
@@ -32,8 +33,8 @@ def show_menu():
         "disk": show_disk_details,
         "network": show_network_menu,
         "process": show_process_menu,
-        # Phase 4-6 handlers will be added later
-        "service": _coming_soon,
+        "service": show_service_menu,
+        # Phase 5-6 handlers will be added later
         "alert": _coming_soon,
         "history": _coming_soon,
     }
