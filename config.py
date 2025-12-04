@@ -49,3 +49,24 @@ THRESHOLDS = {
     "warning": 85,   # 70-85% = yellow
                      # > 85% = red
 }
+
+# Alert Thresholds (percentage, can be overridden by user config)
+ALERT_THRESHOLDS = {
+    "cpu": {"warning": 70, "critical": 90},
+    "memory": {"warning": 80, "critical": 95},
+    "disk": {"warning": 80, "critical": 90},
+    "swap": {"warning": 50, "critical": 80},
+    "load_avg": {"warning": 2.0, "critical": 5.0},  # multiplier of CPU cores
+}
+
+# Logging Configuration
+LOG_CONFIG = {
+    "log_dir": "/var/log/vexo",
+    "log_file": "monitor.log",
+    "retention_days": 7,
+    "log_interval": 60,  # seconds between log entries
+    "max_log_size_mb": 50,
+}
+
+# User config file path
+USER_CONFIG_PATH = os.path.expanduser("~/.vexo/config.json")
