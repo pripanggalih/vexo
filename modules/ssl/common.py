@@ -258,3 +258,114 @@ def log_event(domain: str, event: str, details: str = ""):
     
     with open(HISTORY_LOG, "a") as f:
         f.write(log_line)
+
+
+# Certificate Authorities
+CERTIFICATE_AUTHORITIES = {
+    "letsencrypt": {
+        "name": "Let's Encrypt",
+        "server": None,
+        "validity": 90,
+        "description": "Free, 90 days, widely trusted"
+    },
+    "letsencrypt_staging": {
+        "name": "Let's Encrypt (Staging)",
+        "server": "https://acme-staging-v02.api.letsencrypt.org/directory",
+        "validity": 90,
+        "description": "Testing only, not trusted"
+    },
+    "zerossl": {
+        "name": "ZeroSSL",
+        "server": "https://acme.zerossl.com/v2/DV90",
+        "validity": 90,
+        "description": "Free, 90 days, alternative to LE"
+    },
+    "buypass": {
+        "name": "Buypass",
+        "server": "https://api.buypass.com/acme/directory",
+        "validity": 180,
+        "description": "Free, 180 days, longer validity"
+    }
+}
+
+
+def get_default_ca():
+    """Get default CA from settings."""
+    settings = load_settings()
+    return settings.get("default_ca", "letsencrypt")
+
+
+def load_settings():
+    """Load SSL settings."""
+    if not os.path.exists(SETTINGS_FILE):
+        return {"default_ca": "letsencrypt"}
+    try:
+        with open(SETTINGS_FILE, 'r') as f:
+            return json.load(f)
+    except (json.JSONDecodeError, IOError):
+        return {"default_ca": "letsencrypt"}
+
+
+def save_settings(settings):
+    """Save SSL settings."""
+    ensure_config_dir()
+    with open(SETTINGS_FILE, 'w') as f:
+        json.dump(settings, f, indent=2)
+
+
+def run_preflight_checks(domains):
+    """
+    Run pre-flight checks before issuing certificate.
+    
+    Returns:
+        tuple: (success: bool, messages: list)
+    """
+    messages = []
+    success = True
+    
+    # Check nginx installed
+    if not is_installed("nginx"):
+        messages.append(("[red]✗[/red]", "Nginx is not installed"))
+        success = False
+    else:
+        messages.append(("[green]✓[/green]", "Nginx is installed"))
+    
+    # Check nginx running
+    result = run_command("systemctl is-active nginx", check=False, silent=True)
+    if result.returncode == 0:
+        messages.append(("[green]✓[/green]", "Nginx is running"))
+    else:
+        messages.append(("[yellow]![/yellow]", "Nginx is not running"))
+    
+    # Check port 80
+    result = run_command("ss -tlnp | grep ':80 '", check=False, silent=True)
+    if result.returncode == 0:
+        messages.append(("[green]✓[/green]", "Port 80 is listening"))
+    else:
+        messages.append(("[red]✗[/red]", "Port 80 is not listening"))
+        success = False
+    
+    # Check DNS for each domain
+    import socket
+    server_ip = _get_server_ip()
+    
+    for domain in domains:
+        try:
+            resolved_ip = socket.gethostbyname(domain)
+            if resolved_ip == server_ip:
+                messages.append(("[green]✓[/green]", f"DNS {domain} -> {resolved_ip} (correct)"))
+            else:
+                messages.append(("[yellow]![/yellow]", f"DNS {domain} -> {resolved_ip} (expected {server_ip})"))
+        except socket.gaierror:
+            messages.append(("[red]✗[/red]", f"DNS {domain} - cannot resolve"))
+            success = False
+    
+    return success, messages
+
+
+def _get_server_ip():
+    """Get server's public IP."""
+    result = run_command("curl -s ifconfig.me", check=False, silent=True)
+    if result.returncode == 0:
+        return result.stdout.strip()
+    return "unknown"
