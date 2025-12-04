@@ -19,14 +19,20 @@
 ### System Management
 
 -   **System Setup** - Update/upgrade system, install basic tools
--   **System Monitoring** - Real-time CPU, RAM, Disk, and Swap usage
+-   **System Monitoring** - Real-time CPU, RAM, Disk, Swap, Network, Process monitoring
+-   **Monitoring History** - Historical data with graphs and analytics
+-   **Alerts** - Configurable threshold alerts with notifications
+-   **User Management** - Create, manage system users
+-   **Hostname & Security** - SSH hardening, hostname configuration
 
 ### Web Server
 
 -   **Nginx Management** - Install, configure, manage virtual hosts
--   **Domain Management** - Add/remove domains with preset templates
+-   **Domain Management** - Add/remove domains with preset templates, bulk operations
 -   **Site Configuration** - Laravel, WordPress, Static, SPA, Node.js presets
--   **SSL Certificates** - Let's Encrypt integration via Certbot
+-   **SSL Certificates** - Let's Encrypt, DNS challenge providers, certificate import
+-   **Site Cloning** - Clone existing site configurations
+-   **Traffic Stats** - Access/error logs viewer, traffic statistics
 
 ### Runtimes
 
@@ -35,25 +41,28 @@
 
 ### Databases
 
--   **PostgreSQL** - Install, create databases/users
--   **MariaDB** - Install, secure installation, create databases/users
--   **Redis** - Install, status, flush cache
+-   **PostgreSQL** - Install, create databases/users, backup/restore
+-   **MariaDB** - Install, secure installation, create databases/users, backup/restore
+-   **Redis** - Install, status, flush cache, configuration
 
 ### Email
 
 -   **Postfix** - Send-only and receive mode (catch-all)
+-   **Dovecot** - IMAP/POP3 support
+-   **Webmail** - Roundcube integration
 -   **Multi-domain** - Configure multiple domains with Laravel pipe integration
 
 ### Security
 
--   **UFW Firewall** - Enable/disable, manage ports
--   **Fail2ban** - Brute force protection, ban/unban IPs
--   **SSL/TLS** - Automatic HTTPS with Let's Encrypt
+-   **UFW Firewall** - Enable/disable, manage ports, rate limiting, security profiles
+-   **Fail2ban** - Brute force protection, ban/unban IPs, history analytics, multi-channel notifications, filter management
+-   **SSL/TLS** - Automatic HTTPS with Let's Encrypt, DNS challenge providers, certificate import
+-   **Input Sanitization** - Protection against injection attacks
 
 ### Process Management
 
--   **Supervisor** - Queue workers for Laravel/PHP applications
--   **Cron Jobs** - Laravel scheduler, custom cron jobs
+-   **Supervisor** - Queue workers with templates, monitoring, environment variables
+-   **Cron Jobs** - Laravel scheduler, cron expression builder, execution history, backup/restore
 
 ## Requirements
 
@@ -182,27 +191,54 @@ vexo-cli/
 ├── config.py            # Global configuration
 ├── requirements.txt     # Python dependencies
 ├── install.sh           # Installation script
+├── dev.sh               # Development helper script
 ├── ui/                  # UI components
 │   ├── components.py    # Rich-based UI elements
 │   ├── menu.py          # InquirerPy menu system
 │   └── styles.py        # Color themes
-├── modules/             # Feature modules
-│   ├── system.py        # System setup
-│   ├── webserver.py     # Nginx & domains
-│   ├── runtime.py       # PHP & Node.js
-│   ├── database.py      # PostgreSQL, MariaDB, Redis
-│   ├── email.py         # Postfix
-│   ├── monitor.py       # System monitoring
-│   ├── supervisor.py    # Queue workers
-│   ├── cron.py          # Scheduled tasks
-│   ├── firewall.py      # UFW
-│   ├── ssl.py           # Let's Encrypt
-│   ├── fail2ban.py      # Brute force protection
+├── modules/             # Feature modules (modular structure)
+│   ├── system/          # System setup & management
+│   │   ├── cleanup.py, hostname.py, info.py
+│   │   ├── power.py, security.py, swap.py, users.py
+│   ├── webserver/       # Nginx & domains
+│   │   ├── backup.py, bulk.py, clone.py, configure.py
+│   │   ├── domains.py, logs.py, nginx.py, ssl.py, stats.py
+│   ├── runtime/         # PHP & Node.js
+│   │   ├── php/         # PHP versions, extensions, Composer
+│   │   └── nodejs/      # NVM, Node.js versions
+│   ├── database/        # Database management
+│   │   ├── postgresql/, mariadb/, redis/
+│   ├── email/           # Email server
+│   │   ├── postfix/, dovecot/, webmail/
+│   ├── monitor/         # System monitoring
+│   │   ├── alert.py, cpu.py, dashboard.py, disk.py
+│   │   ├── history.py, memory.py, network.py, process.py, service.py
+│   ├── supervisor/      # Queue workers
+│   │   ├── add_worker.py, control.py, edit.py, env.py
+│   │   ├── logs.py, monitor.py, templates.py, worker.py
+│   ├── cron/            # Scheduled tasks
+│   │   ├── add_job.py, backup.py, builder.py, control.py
+│   │   ├── edit.py, history.py, jobs.py, laravel.py, logs.py
+│   ├── firewall/        # UFW Firewall
+│   │   ├── backup.py, ip_management.py, logs.py, ports.py
+│   │   ├── presets.py, profiles.py, quick_setup.py, rate_limiting.py
+│   ├── ssl/             # SSL Certificates
+│   │   ├── backup.py, dashboard.py, dns_providers.py
+│   │   ├── import_cert.py, issue.py, manage.py, security.py
+│   ├── fail2ban/        # Brute force protection
+│   │   ├── backup.py, bans.py, dashboard.py, filters.py
+│   │   ├── history.py, jails.py, notifications.py, settings.py
+│   │   ├── whitelist.py, templates/
 │   └── setup.py         # First-run wizard
 ├── utils/               # Utilities
-│   └── shell.py         # Shell command wrapper
-└── templates/           # Config templates
-    └── nginx/           # Nginx presets & snippets
+│   ├── shell.py         # Shell command wrapper
+│   ├── logger.py        # Logging utility
+│   ├── monitor_logger.py # Monitoring data logger
+│   └── sanitize.py      # Input sanitization & escaping
+├── templates/           # Config templates
+│   └── nginx/           # Nginx presets & snippets
+└── scripts/             # Helper scripts
+    └── vexo-cron-wrapper # Cron job wrapper
 ```
 
 ## Dependencies
