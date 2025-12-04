@@ -425,3 +425,56 @@ def run_apt_with_progress(packages, step_info="Installing"):
     
     process.wait()
     return process.returncode == 0
+
+
+def run_apt_update_with_progress():
+    """
+    Run apt update with live progress indicator.
+    
+    Returns:
+        bool: True if successful
+    """
+    import re
+    from rich.live import Live
+    from rich.text import Text
+    from rich.console import Group
+    
+    current_status = "Updating package lists..."
+    repo_count = 0
+    
+    def make_display():
+        lines = []
+        lines.append(Text("Updating package lists", style="bold"))
+        lines.append(Text(f"     ↓ {current_status}", style="dim"))
+        if repo_count > 0:
+            lines.append(Text(f"     ({repo_count} repositories)", style="dim"))
+        return Group(*lines)
+    
+    pattern = re.compile(r"(Get|Hit|Ign):\d+\s+(\S+)")
+    
+    process = subprocess.Popen(
+        "apt-get update",
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+    )
+    
+    with Live(make_display(), refresh_per_second=10, console=console) as live:
+        for line in process.stdout:
+            line = line.strip()
+            match = pattern.search(line)
+            if match:
+                url = match.group(2)
+                if len(url) > 50:
+                    url = url[:47] + "..."
+                current_status = f"{url}"
+                repo_count += 1
+                live.update(make_display())
+        
+        current_status = "Complete"
+        live.update(make_display())
+    
+    process.wait()
+    return process.returncode == 0
