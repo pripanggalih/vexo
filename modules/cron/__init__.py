@@ -9,6 +9,8 @@ from modules.cron.jobs import (
     toggle_cron_job,
 )
 from modules.cron.edit import edit_job_menu, clone_job_menu
+from modules.cron.logs import logs_menu
+from modules.cron.history import history_menu
 from modules.cron.backup import backup_crontab, restore_crontab
 from modules.cron.status import show_status
 
@@ -18,19 +20,46 @@ def show_menu():
     options = [
         ("manage", "1. Job Management"),
         ("toggle", "2. Enable/Disable Job"),
-        ("backup", "3. Backup & Restore"),
-        ("status", "4. Show Status"),
+        ("logs", "3. Logs & History"),
+        ("backup", "4. Backup & Restore"),
+        ("status", "5. Show Status"),
         ("back", "← Back to Main Menu"),
     ]
     
     handlers = {
         "manage": job_management_menu,
         "toggle": toggle_cron_job,
+        "logs": logs_history_menu,
         "backup": backup_restore_menu,
         "status": show_status,
     }
     
     run_menu_loop("Cron Jobs", options, handlers, lambda: "Cron Jobs Manager")
+
+
+def logs_history_menu():
+    """Submenu for logs and history."""
+    from ui.components import clear_screen, show_header
+    
+    while True:
+        clear_screen()
+        show_header()
+        
+        choice = show_submenu(
+            title="Logs & History",
+            options=[
+                ("logs", "1. View Logs"),
+                ("history", "2. Execution History"),
+                ("back", "← Back"),
+            ],
+        )
+        
+        if choice == "logs":
+            logs_menu()
+        elif choice == "history":
+            history_menu()
+        elif choice == "back" or choice is None:
+            break
 
 
 def job_management_menu():
