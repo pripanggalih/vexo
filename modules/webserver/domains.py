@@ -257,8 +257,8 @@ def add_domain_interactive():
     # Step 4: PHP version (only for PHP sites)
     php_version = "8.3"
     if site_type_key in ["laravel", "wordpress"]:
-        from modules.runtime import _get_installed_php_versions
-        installed_php = _get_installed_php_versions()
+        from modules.runtime.php.utils import get_installed_php_versions
+        installed_php = get_installed_php_versions()
         if installed_php:
             console.print()
             php_choice = select_from_list(

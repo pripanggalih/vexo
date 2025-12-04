@@ -156,8 +156,8 @@ def configure_php_version(domain, config):
         press_enter_to_continue()
         return
     
-    from modules.runtime import _get_installed_php_versions
-    installed = _get_installed_php_versions()
+    from modules.runtime.php.utils import get_installed_php_versions
+    installed = get_installed_php_versions()
     
     if not installed:
         show_error("No PHP versions installed.")
