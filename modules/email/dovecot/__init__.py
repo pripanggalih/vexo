@@ -1,9 +1,5 @@
 """Dovecot mailbox server management (optional)."""
 
-from ui.components import (
-    console, clear_screen, show_header, show_panel,
-    show_info, press_enter_to_continue,
-)
 from ui.menu import run_menu_loop
 from utils.shell import is_installed, is_service_running
 
@@ -32,21 +28,17 @@ def show_menu():
         ]
     
     def get_handlers():
+        from modules.email.dovecot.install import install_dovecot, service_control_menu
+        from modules.email.dovecot.mailboxes import show_mailboxes_menu
+        from modules.email.dovecot.quota import show_quota_menu
+        from modules.email.dovecot.ssl import show_ssl_menu
+        
         return {
-            "install": _coming_soon,
-            "mailboxes": _coming_soon,
-            "quota": _coming_soon,
-            "ssl": _coming_soon,
-            "service": _coming_soon,
+            "install": install_dovecot,
+            "mailboxes": show_mailboxes_menu,
+            "quota": show_quota_menu,
+            "ssl": show_ssl_menu,
+            "service": service_control_menu,
         }
     
     run_menu_loop("Dovecot Mailbox Server", get_options, get_handlers(), get_status)
-
-
-def _coming_soon():
-    """Placeholder for features to be implemented."""
-    clear_screen()
-    show_header()
-    show_panel("Coming Soon", title="Dovecot", style="yellow")
-    show_info("This feature will be implemented in a future update.")
-    press_enter_to_continue()
