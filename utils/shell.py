@@ -313,3 +313,115 @@ def get_service_status(package_name, service_name=None):
         return "[green]Running[/green]", True, True
     else:
         return "[red]Stopped[/red]", True, False
+
+
+def run_apt_with_progress(packages, step_info="Installing"):
+    """
+    Run apt install with live progress bar showing download/unpack/setup phases.
+    
+    Args:
+        packages: List of package names to install
+        step_info: Header text (e.g., "[2/9] PHP 8.3")
+    
+    Returns:
+        bool: True if installation successful, False otherwise
+    """
+    import re
+    from rich.live import Live
+    from rich.text import Text
+    from rich.console import Group
+    
+    if not packages:
+        return True
+    
+    total_packages = len(packages)
+    packages_str = " ".join(packages)
+    
+    # Track progress
+    processed = 0
+    current_status = "Preparing..."
+    current_phase = ""
+    
+    # Regex patterns for apt output
+    patterns = {
+        "download": re.compile(r"Get:\d+.*?(\S+)\s+\S+\s+\S+\s+\[([^\]]+)\]"),
+        "unpack": re.compile(r"Unpacking\s+(\S+)"),
+        "setup": re.compile(r"Setting up\s+(\S+)"),
+    }
+    
+    # Track which packages we've seen to count progress
+    seen_packages = set()
+    
+    def make_display():
+        """Generate the display content."""
+        progress_pct = (processed / total_packages * 100) if total_packages > 0 else 0
+        bar_width = 40
+        filled = int(bar_width * processed / total_packages) if total_packages > 0 else 0
+        bar = "█" * filled + "░" * (bar_width - filled)
+        
+        lines = []
+        lines.append(Text(step_info, style="bold"))
+        lines.append(Text(f"[{bar}] {progress_pct:.0f}% ({processed}/{total_packages} packages)", style="cyan"))
+        if current_status:
+            lines.append(Text(f"     {current_phase} {current_status}", style="dim"))
+        
+        return Group(*lines)
+    
+    cmd = f"DEBIAN_FRONTEND=noninteractive apt-get install -y {packages_str}"
+    
+    process = subprocess.Popen(
+        cmd,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+        env={**os.environ, "DEBIAN_FRONTEND": "noninteractive"},
+    )
+    
+    with Live(make_display(), refresh_per_second=10, console=console) as live:
+        for line in process.stdout:
+            line = line.strip()
+            
+            # Check download phase
+            match = patterns["download"].search(line)
+            if match:
+                pkg_name = match.group(1).split(":")[0]
+                size = match.group(2)
+                current_phase = "↓"
+                current_status = f"Downloading {pkg_name} ({size})"
+                live.update(make_display())
+                continue
+            
+            # Check unpack phase
+            match = patterns["unpack"].search(line)
+            if match:
+                pkg_name = match.group(1).split(":")[0]
+                current_phase = "⚙"
+                current_status = f"Unpacking {pkg_name}..."
+                live.update(make_display())
+                continue
+            
+            # Check setup phase
+            match = patterns["setup"].search(line)
+            if match:
+                pkg_name = match.group(1).split(":")[0]
+                if pkg_name not in seen_packages:
+                    seen_packages.add(pkg_name)
+                    for req_pkg in packages:
+                        if pkg_name.startswith(req_pkg.split("-")[0]):
+                            processed = min(processed + 1, total_packages)
+                            break
+                current_phase = "✦"
+                current_status = f"Setting up {pkg_name}..."
+                live.update(make_display())
+                continue
+        
+        # Final update
+        processed = total_packages
+        current_phase = "✓"
+        current_status = "Complete"
+        live.update(make_display())
+    
+    process.wait()
+    return process.returncode == 0
