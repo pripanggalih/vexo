@@ -1,5 +1,6 @@
 """Common utilities for firewall module."""
 
+import json
 import os
 import re
 from utils.shell import run_command, is_installed
@@ -96,3 +97,70 @@ def ensure_config_dir():
     """Ensure vexo firewall config directory exists."""
     os.makedirs(VEXO_FIREWALL_DIR, exist_ok=True)
     os.makedirs(VEXO_FIREWALL_BACKUPS, exist_ok=True)
+
+
+def load_ip_groups():
+    """Load IP groups from config file."""
+    if not os.path.exists(IP_GROUPS_FILE):
+        return {}
+    
+    try:
+        with open(IP_GROUPS_FILE, 'r') as f:
+            return json.load(f)
+    except (json.JSONDecodeError, IOError):
+        return {}
+
+
+def save_ip_groups(groups):
+    """Save IP groups to config file."""
+    ensure_config_dir()
+    with open(IP_GROUPS_FILE, 'w') as f:
+        json.dump(groups, f, indent=2)
+
+
+def get_ip_group(name):
+    """Get a specific IP group."""
+    groups = load_ip_groups()
+    return groups.get(name)
+
+
+def create_ip_group(name, ips=None, rules=None):
+    """Create or update an IP group."""
+    groups = load_ip_groups()
+    groups[name] = {
+        "ips": ips or [],
+        "rules": rules or []
+    }
+    save_ip_groups(groups)
+
+
+def delete_ip_group(name):
+    """Delete an IP group."""
+    groups = load_ip_groups()
+    if name in groups:
+        del groups[name]
+        save_ip_groups(groups)
+        return True
+    return False
+
+
+def add_ip_to_group(group_name, ip):
+    """Add an IP to a group."""
+    groups = load_ip_groups()
+    if group_name not in groups:
+        groups[group_name] = {"ips": [], "rules": []}
+    if ip not in groups[group_name]["ips"]:
+        groups[group_name]["ips"].append(ip)
+        save_ip_groups(groups)
+        return True
+    return False
+
+
+def remove_ip_from_group(group_name, ip):
+    """Remove an IP from a group."""
+    groups = load_ip_groups()
+    if group_name in groups and ip in groups[group_name]["ips"]:
+        groups[group_name]["ips"].remove(ip)
+        save_ip_groups(groups)
+        return True
+    return False
