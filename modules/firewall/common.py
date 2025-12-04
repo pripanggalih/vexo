@@ -164,3 +164,47 @@ def remove_ip_from_group(group_name, ip):
         save_ip_groups(groups)
         return True
     return False
+
+
+def load_rate_limits():
+    """Load rate limit configurations."""
+    if not os.path.exists(RATE_LIMITS_FILE):
+        return {}
+    
+    try:
+        with open(RATE_LIMITS_FILE, 'r') as f:
+            return json.load(f)
+    except (json.JSONDecodeError, IOError):
+        return {}
+
+
+def save_rate_limits(limits):
+    """Save rate limit configurations."""
+    ensure_config_dir()
+    with open(RATE_LIMITS_FILE, 'w') as f:
+        json.dump(limits, f, indent=2)
+
+
+def add_rate_limit_config(port, protocol, preset_name, threshold=None):
+    """Add a rate limit configuration."""
+    limits = load_rate_limits()
+    key = f"{port}/{protocol}"
+    limits[key] = {
+        "port": port,
+        "protocol": protocol,
+        "preset": preset_name,
+        "threshold": threshold,
+        "enabled": True
+    }
+    save_rate_limits(limits)
+
+
+def remove_rate_limit_config(port, protocol):
+    """Remove a rate limit configuration."""
+    limits = load_rate_limits()
+    key = f"{port}/{protocol}"
+    if key in limits:
+        del limits[key]
+        save_rate_limits(limits)
+        return True
+    return False
