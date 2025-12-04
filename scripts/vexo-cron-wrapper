@@ -1,0 +1,82 @@
+#!/bin/bash
+# vexo-cron-wrapper - Wrapper script for tracking cron job execution
+# Usage: vexo-cron-wrapper "job-name" "command to run"
+
+JOB_NAME="$1"
+COMMAND="$2"
+
+LOG_DIR="/var/log/vexo/cron"
+HISTORY_FILE="$LOG_DIR/history.json"
+
+# Ensure log directory exists
+mkdir -p "$LOG_DIR"
+
+# Record start time
+START_TIME=$(date +%s)
+START_ISO=$(date -Iseconds)
+
+# Run the command and capture output
+OUTPUT=$(eval "$COMMAND" 2>&1)
+EXIT_CODE=$?
+
+# Record end time
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+
+# Get last 500 chars of output for snippet
+OUTPUT_SNIPPET=$(echo "$OUTPUT" | tail -c 500)
+
+# Escape JSON special characters
+OUTPUT_SNIPPET=$(echo "$OUTPUT_SNIPPET" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | tr '\n' ' ')
+
+# Determine status
+if [ $EXIT_CODE -eq 0 ]; then
+    STATUS="success"
+else
+    STATUS="failed"
+fi
+
+# Create history entry
+ENTRY=$(cat <<EOF
+{
+  "timestamp": "$START_ISO",
+  "exit_code": $EXIT_CODE,
+  "duration_seconds": $DURATION,
+  "output_snippet": "$OUTPUT_SNIPPET",
+  "status": "$STATUS"
+}
+EOF
+)
+
+# Update history file (using Python for JSON manipulation)
+python3 << PYTHON
+import json
+import os
+
+history_file = "$HISTORY_FILE"
+job_name = "$JOB_NAME"
+max_entries = 100
+
+# Load existing history
+history = {}
+if os.path.exists(history_file):
+    try:
+        with open(history_file, 'r') as f:
+            history = json.load(f)
+    except:
+        pass
+
+# Add new entry
+if job_name not in history:
+    history[job_name] = []
+
+entry = json.loads('''$ENTRY''')
+history[job_name].insert(0, entry)
+history[job_name] = history[job_name][:max_entries]
+
+# Save
+with open(history_file, 'w') as f:
+    json.dump(history, f, indent=2)
+PYTHON
+
+exit $EXIT_CODE
